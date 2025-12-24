@@ -1,11 +1,14 @@
 services:
   - type: web
-    name: audit-metabolique
+    name: audit-metabolique-complet
     runtime: node
-    plan: free
+    region: frankfurt
+    plan: starter
     buildCommand: npm install && npx prisma generate && npm run build
     startCommand: npm run start
     envVars:
+      - key: NODE_VERSION
+        value: "20"
       - key: DATABASE_URL
         sync: false
       - key: NEXTAUTH_URL
