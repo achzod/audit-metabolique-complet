@@ -10,13 +10,11 @@ import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dum
 
 // Zod validation schema
 const questionnaireSchema = z.object({
-  // Section 1: Profil de Base (10Q)
+  // Section 1: Profil de Base (8Q)
   age: z.number().min(18).max(100),
   sexe: z.enum(['homme', 'femme', 'autre']),
   poidsActuel: z.number().min(30).max(300),
   taille: z.number().min(120).max(250),
-  tourDeTaille: z.number().min(50).max(200),
-  tourDeHanches: z.number().min(50).max(200),
   poidsObjectif: z.number().min(30).max(300),
   timelineObjectif: z.enum(['1_3_mois', '3_6_mois', '6_12_mois', 'plus_12_mois']),
   objectifPrincipal: z.enum(['perte_graisse', 'gain_muscle', 'recomposition', 'performance', 'sante', 'energie']),
@@ -337,7 +335,7 @@ export default function QuestionnairePage() {
                 <div className="space-y-6">
                   {currentSection === 0 && (
                     <>
-                      {/* Section 1: Profil de Base (10Q) */}
+                      {/* Section 1: Profil de Base (8Q) */}
                       <QuestionCard title="1. Quel est votre âge ?" error={errors.age?.message}>
                         <input
                           type="number"
@@ -375,25 +373,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="5. Quel est votre tour de taille ? (cm)" error={errors.tourDeTaille?.message}>
-                        <input
-                          type="number"
-                          {...register('tourDeTaille', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 85"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="6. Quel est votre tour de hanches ? (cm)" error={errors.tourDeHanches?.message}>
-                        <input
-                          type="number"
-                          {...register('tourDeHanches', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 95"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="7. Quel est votre poids objectif ? (kg)" error={errors.poidsObjectif?.message}>
+                      <QuestionCard title="5. Quel est votre poids objectif ? (kg)" error={errors.poidsObjectif?.message}>
                         <input
                           type="number"
                           step="0.1"
@@ -403,7 +383,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="8. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
+                      <QuestionCard title="6. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
                         <select {...register('timelineObjectif')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="1_3_mois">1-3 mois</option>
@@ -413,7 +393,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="9. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
+                      <QuestionCard title="7. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
                         <select {...register('objectifPrincipal')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="perte_graisse">Perte de graisse</option>
@@ -425,7 +405,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="10. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
+                      <QuestionCard title="8. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
                         <textarea
                           {...register('motivationPrincipale')}
                           className="input-field"
