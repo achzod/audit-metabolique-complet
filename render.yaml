@@ -4,7 +4,7 @@ services:
     runtime: node
     region: frankfurt
     plan: starter
-    buildCommand: npm install --legacy-peer-deps && npx prisma generate && NODE_OPTIONS="--max-old-space-size=2048" npm run build
+    buildCommand: npm install --legacy-peer-deps && NODE_OPTIONS="--max-old-space-size=2048" npm run build
     startCommand: npm run start
     envVars:
       - key: NODE_VERSION
