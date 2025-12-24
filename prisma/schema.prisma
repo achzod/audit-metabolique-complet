@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String?
+  emailVerified DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  audits        Audit[]
+  payments      Payment[]
+
+  @@map("users")
+}
+
+model Audit {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  type           String   // "GRATUIT" ou "PREMIUM"
+  status         String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "ERROR"
+
+  // Données du questionnaire (JSON)
+  responses      Json
+
+  // Résultats de l'audit (HTML généré par Claude)
+  htmlContent    String?  @db.Text
+
+  // Métadonnées
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  completedAt    DateTime?
+
+  payment        Payment?
+
+  @@map("audits")
+}
+
+model Payment {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  auditId         String   @unique
+  audit           Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+
+  amount          Float    // 79.00 pour premium
+  currency        String   @default("EUR")
+
+  provider        String   // "STRIPE" ou "PAYPAL"
+  providerPaymentId String? // ID de transaction du provider
+
+  status          String   @default("PENDING") // "PENDING", "COMPLETED", "FAILED", "REFUNDED"
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  paidAt          DateTime?
+
+  @@map("payments")
+}
