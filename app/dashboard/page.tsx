@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -18,6 +19,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen py-12 px-4">
+      <BackToHomeButton />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-12">

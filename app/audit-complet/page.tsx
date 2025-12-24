@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 export default function LandingPage() {
   const [mounted, setMounted] = useState(false)
@@ -13,6 +14,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen relative overflow-hidden">
+      <BackToHomeButton />
       {/* Animated particles background */}
       {mounted && (
         <div className="absolute inset-0 pointer-events-none">

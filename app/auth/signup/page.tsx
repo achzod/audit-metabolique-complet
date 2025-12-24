@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 function SignupForm() {
   const router = useRouter()
@@ -89,6 +90,7 @@ function SignupForm() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12">
+      <BackToHomeButton />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

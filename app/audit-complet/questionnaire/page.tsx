@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3 } from 'lucide-react';
+import BackToHomeButton from '@/components/BackToHomeButton';
 
 // Zod validation schema
 const questionnaireSchema = z.object({
@@ -262,6 +263,7 @@ export default function QuestionnairePage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white">
+      <BackToHomeButton />
       {/* Header with Progress */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-white/5">
         <div className="max-w-5xl mx-auto px-4 py-4">

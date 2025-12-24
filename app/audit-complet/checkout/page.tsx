@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { loadStripe } from '@stripe/stripe-js'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
@@ -86,6 +87,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="min-h-screen py-20 px-4">
+      <BackToHomeButton />
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <motion.div
