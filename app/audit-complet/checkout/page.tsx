@@ -215,8 +215,8 @@ export default function CheckoutPage() {
                 <span>Feuille de Route 90 Jours</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-cyan-400 text-xl">🤖</span>
-                <span>Claude Sonnet 4 (16000 tokens)</span>
+                <span className="text-cyan-400 text-xl">📝</span>
+                <span>Analyse ultra-détaillée (16 000+ mots)</span>
               </li>
             </ul>
 

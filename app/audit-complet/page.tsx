@@ -48,7 +48,7 @@ export default function LandingPage() {
               L'analyse métabolique la plus complète du marché
             </p>
             <p className="text-lg md:text-xl text-light/60 mb-12 max-w-3xl mx-auto">
-              105 questions scientifiques • Analyse par IA Claude Sonnet 4 • Plan personnalisé d'optimisation
+              105 questions scientifiques • Diagnostic personnalisé • Plan d'action sur-mesure
             </p>
 
             {/* CTA Principal */}
@@ -68,8 +68,8 @@ export default function LandingPage() {
                     1
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Tu réponds au questionnaire (gratuit)</h3>
-                    <p className="text-light/70 text-sm">105 questions sur ton métabolisme, nutrition, sommeil, HRV, tracking...</p>
+                    <h3 className="font-bold text-lg mb-1">Tu réponds au questionnaire</h3>
+                    <p className="text-light/70 text-sm">105 questions sur ton métabolisme, nutrition, sommeil, HRV, tracking... (10-15 min)</p>
                   </div>
                 </div>
 
@@ -80,7 +80,7 @@ export default function LandingPage() {
                   <div>
                     <h3 className="font-bold text-lg mb-1">Tu choisis ta version</h3>
                     <p className="text-light/70 text-sm">
-                      <span className="text-cyan-400 font-semibold">Gratuite (4 sections)</span> ou <span className="text-purple-400 font-semibold">Premium (15 sections, 79€)</span>
+                      <span className="text-cyan-400 font-semibold">Gratuit (4 sections)</span> ou <span className="text-purple-400 font-semibold">Premium (15 sections, 79€)</span>
                     </p>
                   </div>
                 </div>
@@ -90,8 +90,8 @@ export default function LandingPage() {
                     3
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Claude Sonnet 4 analyse tes réponses</h3>
-                    <p className="text-light/70 text-sm">IA médicale de pointe • 16 000 tokens • Analyse scientifique personnalisée</p>
+                    <h3 className="font-bold text-lg mb-1">Ton audit est généré automatiquement</h3>
+                    <p className="text-light/70 text-sm">Analyse approfondie de tes réponses • Diagnostic métabolique • Identification des points faibles</p>
                   </div>
                 </div>
 
@@ -100,8 +100,8 @@ export default function LandingPage() {
                     4
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-1">Tu reçois ton audit complet</h3>
-                    <p className="text-light/70 text-sm">Diagnostic + Plan d'action + Protocoles nutrition/entraînement/suppléments</p>
+                    <h3 className="font-bold text-lg mb-1">Tu accèdes à ton dashboard personnel</h3>
+                    <p className="text-light/70 text-sm">Audit complet consultable en ligne • Format HTML optimisé • Accès illimité depuis ton compte</p>
                   </div>
                 </div>
               </div>
@@ -151,30 +151,48 @@ export default function LandingPage() {
                   <p className="text-light/50 text-sm">Pour toujours</p>
                 </div>
 
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>4 sections d'analyse :</strong><br/>
-                    <span className="text-sm text-light/70">Résumé exécutif • Profil anthropométrique • Métabolisme & énergie • Plan d'action 30 jours</span>
-                    </span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span>Analyse par Claude Sonnet 4</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span>Métriques clés (IMC, rapport taille/hanches...)</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span>Diagnostic métabolique de base</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-purple-400 text-xl">🔒</span>
-                    <span className="text-light/40">11 sections verrouillées</span>
-                  </li>
-                </ul>
+                <div className="mb-6 p-4 bg-cyan-400/10 rounded-xl border border-cyan-400/30">
+                  <p className="text-sm font-semibold text-cyan-400 mb-2">✅ Ce que tu reçois :</p>
+                  <p className="text-sm text-light/80">Audit HTML consultable sur ton <strong>dashboard personnel</strong> sur le site</p>
+                </div>
+
+                <div className="mb-8">
+                  <p className="font-bold mb-3 text-light">📊 Contenu de l'audit (4 sections) :</p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">1. Résumé Exécutif</p>
+                        <p className="text-sm text-light/60">Vue d'ensemble, métriques clés (IMC, rapport taille/hanches)</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">2. Profil Anthropométrique</p>
+                        <p className="text-sm text-light/60">Analyse de ta composition corporelle actuelle</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">3. Métabolisme & Énergie</p>
+                        <p className="text-sm text-light/60">Diagnostic de tes niveaux d'énergie et métabolisme</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">4. Plan d'Action 30 Jours</p>
+                        <p className="text-sm text-light/60">Actions concrètes pour améliorer ton métabolisme</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-purple-400 text-xl">🔒</span>
+                      <span className="text-light/40">11 sections premium verrouillées</span>
+                    </li>
+                  </ul>
+                </div>
 
                 <Link
                   href="/audit-complet/questionnaire"
@@ -202,48 +220,64 @@ export default function LandingPage() {
                   <p className="text-light/50 text-sm">Paiement unique</p>
                 </div>
 
-                <ul className="space-y-4 mb-8">
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span className="font-semibold">15 sections complètes d'analyse</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Digestion & Microbiome</strong> approfondi</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Hormones & Signaux</strong> métaboliques</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>HRV & Récupération</strong> cardiaque</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Performance & Activité</strong> personnalisée</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Plan Nutritionnel</strong> avec macros détaillées</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Protocole Entraînement</strong> sur-mesure</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Protocole Suppléments</strong> personnalisé</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-green-400 text-xl">✅</span>
-                    <span><strong>Feuille de Route 90 Jours</strong> étape par étape</span>
-                  </li>
-                  <li className="flex items-start gap-3">
-                    <span className="text-cyan-400 text-xl">🤖</span>
-                    <span>Analyse ultra-détaillée (16 000 tokens)</span>
-                  </li>
-                </ul>
+                <div className="mb-6 p-4 bg-purple-400/10 rounded-xl border border-purple-400/30">
+                  <p className="text-sm font-semibold text-purple-400 mb-2">✅ Ce que tu reçois :</p>
+                  <p className="text-sm text-light/80">Audit HTML ultra-complet sur ton <strong>dashboard personnel</strong> sur le site</p>
+                </div>
+
+                <div className="mb-8">
+                  <p className="font-bold mb-3 gradient-text">📊 Contenu de l'audit (15 sections) :</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Tout le contenu gratuit</strong> (4 sections)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Digestion & Microbiome</strong> approfondi</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Hormones & Signaux</strong> métaboliques</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>HRV & Récupération</strong> cardiaque</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Performance & Activité</strong> personnalisée</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Sommeil Détaillé</strong> (phases, scores)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Analyses Sanguines</strong> interprétation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Plan Nutritionnel</strong> avec macros détaillées</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Protocole Entraînement</strong> sur-mesure</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Protocole Suppléments</strong> personnalisé</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Optimisation Hormonale</strong> stratégies</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Feuille de Route 90 Jours</strong> étape par étape</span>
+                    </li>
+                  </ul>
+                </div>
 
                 <Link
                   href="/audit-complet/questionnaire"
@@ -268,11 +302,19 @@ export default function LandingPage() {
                 </p>
                 <p className="flex items-start gap-3">
                   <span className="text-cyan-400 text-xl">•</span>
-                  <span>La version gratuite te donne déjà <strong>un vrai diagnostic + plan d'action</strong></span>
+                  <span>Ton audit est <strong>consultable sur ton dashboard personnel</strong> sur le site (pas d'email, pas de PDF)</span>
                 </p>
                 <p className="flex items-start gap-3">
                   <span className="text-cyan-400 text-xl">•</span>
-                  <span>Tu peux <strong>tester la version gratuite</strong> et décider ensuite si tu veux upgrader</span>
+                  <span>La version gratuite te donne déjà <strong>un vrai diagnostic + plan d'action 30 jours</strong></span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>Tu peux <strong>commencer gratuit</strong> et upgrader plus tard si tu veux les 11 sections supplémentaires</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span><strong>Accès illimité</strong> à ton audit depuis ton compte • Tu peux le consulter quand tu veux</span>
                 </p>
               </div>
             </div>
@@ -295,11 +337,6 @@ export default function LandingPage() {
                 desc: '105 questions couvrant métabolisme, hormones, HRV, sommeil profond, nutrition trackée, analyses sanguines...',
               },
               {
-                icon: '🤖',
-                title: 'Intelligence Artificielle',
-                desc: 'Claude Sonnet 4 (le meilleur modèle médical) analyse tes réponses comme un expert métabolique',
-              },
-              {
                 icon: '📊',
                 title: 'Diagnostic Précis',
                 desc: 'Identification de tes points faibles métaboliques, déséquilibres hormonaux, carences potentielles',
@@ -313,6 +350,11 @@ export default function LandingPage() {
                 icon: '📈',
                 title: 'Données Quantifiables',
                 desc: 'Integration wearables (Whoop, Oura, Apple Watch), tracking, analyses sanguines, biomarqueurs',
+              },
+              {
+                icon: '💻',
+                title: 'Dashboard Personnel',
+                desc: 'Ton audit consultable en ligne depuis ton compte • Format HTML optimisé • Accès illimité',
               },
               {
                 icon: '🚀',
@@ -360,7 +402,7 @@ export default function LandingPage() {
               🔥 Démarrer l'Audit Gratuit
             </Link>
             <p className="text-light/50 mt-6 text-sm">
-              ✅ Aucune carte bancaire • 🤖 Analyse par IA • ⚡ Instantané
+              ✅ Aucune carte bancaire • 💻 Dashboard personnel • ⚡ Instantané
             </p>
           </motion.div>
         </div>
@@ -370,7 +412,7 @@ export default function LandingPage() {
       <footer className="relative z-10 py-12 px-4 text-center text-light/40 border-t border-light/10">
         <p>© 2025 AchZod Coaching - Audit Métabolique Complet</p>
         <p className="text-sm mt-2">
-          Propulsé par Claude Sonnet 4 • coaching@achzodcoaching.com
+          coaching@achzodcoaching.com
         </p>
       </footer>
     </div>
