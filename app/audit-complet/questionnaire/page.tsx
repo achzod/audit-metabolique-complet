@@ -6,112 +6,136 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3 } from 'lucide-react';
 
 // Zod validation schema
 const questionnaireSchema = z.object({
-  // Section 1: Profil Anthropométrique
+  // Section 1: Profil de Base (10Q)
   age: z.number().min(18).max(100),
   sexe: z.enum(['homme', 'femme', 'autre']),
   poidsActuel: z.number().min(30).max(300),
   taille: z.number().min(120).max(250),
   tourDeTaille: z.number().min(50).max(200),
   tourDeHanches: z.number().min(50).max(200),
-  tourDeCou: z.number().optional(),
-  objetifPoids: z.number().min(30).max(300),
-  dateDebutObjectif: z.string().optional(),
+  poidsObjectif: z.number().min(30).max(300),
+  timelineObjectif: z.enum(['1_3_mois', '3_6_mois', '6_12_mois', 'plus_12_mois']),
+  objectifPrincipal: z.enum(['perte_graisse', 'gain_muscle', 'recomposition', 'performance', 'sante', 'energie']),
   motivationPrincipale: z.string(),
 
-  // Section 2: Historique Pondéral
-  poidsMinimum: z.number().min(30).max(300),
-  agePoidsMinimum: z.number().min(10).max(100),
-  poidsMaximum: z.number().min(30).max(300),
-  agePoidsMaximum: z.number().min(10).max(100),
-  nombreRegimes: z.number().min(0).max(50),
-  typeRegimesPasses: z.array(z.string()),
-  effetYoyo: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  variationPoids6Mois: z.number(),
+  // Section 2: Composition Corporelle & Tracking (8Q)
+  balanceImpedancemetre: z.enum(['oui', 'non']),
+  massGrasseActuel: z.number().min(0).max(100).optional(),
+  masseMusculaireActuel: z.number().min(0).max(100).optional(),
+  graisseViscerale: z.number().min(0).max(30).optional(),
+  wearableTracker: z.enum(['whoop', 'oura', 'apple_watch', 'garmin', 'fitbit', 'aucun']),
+  wearableDepuis: z.string().optional(),
+  consultationDonnees: z.enum(['quotidien', 'hebdo', 'rarement', 'jamais']).optional(),
+  photosProgression: z.enum(['oui_regulier', 'parfois', 'jamais']),
 
-  // Section 3: Métabolisme & Énergie
+  // Section 3: Métabolisme & Énergie (10Q)
   energieMatin: z.number().min(1).max(10),
   energieMidi: z.number().min(1).max(10),
   energieApresMidi: z.number().min(1).max(10),
   energieSoir: z.number().min(1).max(10),
-  fatigueChronique: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  coupDePompe: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  faimConstante: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  cravingsSucre: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  cravingsSale: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
+  heureCoupBarre: z.string().optional(),
+  frequenceCoupsPompe: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
+  cravingsSucre: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'constant']),
+  cravingsSale: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'constant']),
   temperatureCorporelle: z.enum(['toujours_froid', 'souvent_froid', 'normal', 'souvent_chaud', 'toujours_chaud']),
-  transpirationAnormale: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  metabolismePercption: z.enum(['tres_lent', 'lent', 'normal', 'rapide', 'tres_rapide']),
+  perceptionMetabolisme: z.enum(['tres_lent', 'lent', 'normal', 'rapide', 'tres_rapide']),
 
-  // Section 4: Digestion & Microbiome
-  ballonnements: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  gazIntestinaux: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  transit: z.enum(['constipation', 'normal', 'diarrhee', 'alterne']),
-  frequenceSelles: z.enum(['moins_3_semaine', '3_6_semaine', '1_jour', '2_3_jour', 'plus_3_jour']),
-  douleurAbdominale: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  intolerancesAlimentaires: z.array(z.string()),
-  refluxGastrique: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  antibiotiquesAnnee: z.number().min(0).max(20),
-  probiotiquesPrise: z.enum(['jamais', 'passé', 'actuellement']),
+  // Section 4: Nutrition & Tracking Alimentaire (12Q)
+  suiviAlimentation: z.enum(['myfitnesspal', 'autre_app', 'carnet', 'non']),
+  suiviAlimentationDepuis: z.string().optional(),
+  connaisMacros: z.enum(['oui_precisement', 'approximativement', 'non']),
+  proteinesJour: z.number().min(0).max(500).optional(),
+  glucidesJour: z.number().min(0).max(1000).optional(),
+  lipidesJour: z.number().min(0).max(300).optional(),
+  caloriesMoyennesJour: z.number().min(0).max(10000).optional(),
+  nombreRepasJour: z.enum(['1', '2', '3', '4', '5_plus']),
+  jeuneIntermittent: z.enum(['oui', 'non', 'parfois']),
+  fenetreAlimentation: z.enum(['16_8', '18_6', '20_4', 'omad', 'autre', 'non_applicable']).optional(),
+  nutritionPreWorkout: z.enum(['glucides', 'proteines', 'rien', 'ne_entraine_pas']),
+  nutritionPostWorkout: z.enum(['proteines_glucides', 'proteines_seules', 'rien', 'ne_entraine_pas']),
+
+  // Section 5: Digestion & Microbiome (8Q)
+  ballonnements: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
+  transitIntestinal: z.enum(['constipation', 'normal', 'diarrhee', 'alterne']),
+  frequenceSelles: z.enum(['moins_3_sem', '3_6_sem', '1_jour', '2_3_jour', '3_plus_jour']),
+  douleursAbdominales: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
+  intolerances: z.array(z.string()),
+  refluxGastrique: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
+  priseProbiotiques: z.enum(['jamais', 'passe', 'actuellement']),
   qualiteDigestion: z.number().min(1).max(10),
 
-  // Section 5: Hormones & Signaux
+  // Section 6: Activité & Performance (12Q)
+  frequenceEntrainement: z.enum(['0', '1_2', '3_4', '5_6', '7_plus']),
+  repartitionCardio: z.number().min(0).max(100),
+  repartitionMusculation: z.number().min(0).max(100),
+  repartitionSport: z.number().min(0).max(100),
+  intensiteMoyenne: z.enum(['legere', 'moderee', 'intense', 'tres_intense']),
+  dureeSessionMoyenne: z.number().min(0).max(300),
+  vo2Max: z.number().min(0).max(100).optional(),
+  pbDeveloppe: z.number().min(0).max(500).optional(),
+  pbSquat: z.number().min(0).max(500).optional(),
+  pbDeadlift: z.number().min(0).max(500).optional(),
+  nombrePasJour: z.number().min(0).max(50000).optional(),
+  progressionPerformance: z.enum(['regresse', 'stagne', 'lente', 'bonne', 'excellente']),
+
+  // Section 7: Sommeil & Récupération (15Q)
+  heuresCoucher: z.string(),
+  heuresReveil: z.string(),
+  heuresSommeilNuit: z.number().min(3).max(14),
+  qualiteSommeil: z.number().min(1).max(10),
+  difficulteEndormissement: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
+  reveilsNocturnes: z.number().min(0).max(10),
+  reveilleMatin: z.enum(['tres_difficile', 'difficile', 'normal', 'facile', 'tres_facile']),
+  chronotype: z.enum(['matin', 'intermediaire', 'soir']),
+  wearableTrackSommeil: z.enum(['oui', 'non', 'pas_de_wearable']),
+  scoreSommeilMoyen: z.number().min(0).max(100).optional(),
+  sommeilProfond: z.string().optional(),
+  sommeilLeger: z.string().optional(),
+  sommeilREM: z.string().optional(),
+  frequenceCardiaqueNocturne: z.number().min(0).max(200).optional(),
+  hrvNocturne: z.number().min(0).max(300).optional(),
+
+  // Section 8: HRV & Récupération Cardiaque (8Q)
+  connaisHRV: z.enum(['oui_track', 'jai_mesure', 'non']),
+  hrvMoyenReveil: z.number().min(0).max(300).optional(),
+  hrvPlusBasRecent: z.number().min(0).max(300).optional(),
+  hrvPlusHautRecent: z.number().min(0).max(300).optional(),
+  frequenceCardiaqueRepos: z.number().min(30).max(150).optional(),
+  frequenceCardiaqueMax: z.number().min(100).max(250).optional(),
+  tempsRecuperationFC: z.enum(['moins_1min', '1_2min', '2_3min', '3plus_min', 'ne_sais_pas']).optional(),
+  readyRecoveryScore: z.number().min(0).max(100).optional(),
+
+  // Section 9: Analyses & Biomarqueurs (7Q)
+  analysesSanguines: z.enum(['moins_3mois', '3_6mois', '6_12mois', 'plus_12mois', 'jamais']),
+  vitamineD: z.number().min(0).max(200).optional(),
+  ferritine: z.number().min(0).max(1000).optional(),
+  tsh: z.number().min(0).max(20).optional(),
+  testosteroneTotale: z.number().min(0).max(2000).optional(),
+  glycemieJeun: z.number().min(0).max(300).optional(),
+  utiliseCGM: z.enum(['oui', 'non', 'jai_teste']),
+
+  // Section 10: Hormones & Stress (8Q)
   niveauStress: z.number().min(1).max(10),
   gestionStress: z.enum(['tres_mauvaise', 'mauvaise', 'moyenne', 'bonne', 'excellente']),
   symptomesThyroide: z.array(z.string()),
-  frissonsFrequents: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  chuteCheveuxAnormale: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  peauSeche: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  resistanceInsuline: z.enum(['non_diagnostique', 'soupcon', 'diagnostique']),
-  hypoglycemies: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
+  resistanceInsuline: z.enum(['non', 'soupconnee', 'diagnostiquee']),
+  hypoglycemiesFrequentes: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
   menstruationReguliere: z.enum(['oui', 'non', 'non_applicable']),
   symptomesSPM: z.array(z.string()),
   menopauseAndropause: z.enum(['non', 'pre', 'en_cours', 'post']),
-  libido: z.enum(['tres_faible', 'faible', 'moyenne', 'elevee', 'tres_elevee']),
 
-  // Section 6: Activité & Performance
-  frequenceEntrainement: z.enum(['sedentaire', '1_2_semaine', '3_4_semaine', '5_6_semaine', 'quotidien']),
-  typeActiviteCardio: z.number().min(0).max(100),
-  typeActiviteMuscu: z.number().min(0).max(100),
-  typeActiviteSport: z.number().min(0).max(100),
-  intensiteMoyenne: z.enum(['legere', 'moderee', 'intense', 'tres_intense']),
-  dureeSessionMoyenne: z.number().min(0).max(300),
-  progressionPerformance: z.enum(['regresse', 'stagne', 'lente', 'bonne', 'excellente']),
-  courbaturesRecuperation: z.enum(['rapide_24h', 'normale_48h', 'lente_72h', 'tres_lente_plus']),
-  motivationEntrainement: z.number().min(1).max(10),
-  objectifPerformance: z.array(z.string()),
-
-  // Section 7: Sommeil & Récupération
-  heuresCoucher: z.string(),
-  heuresReveil: z.string(),
-  heuresSommeilMoyenne: z.number().min(3).max(14),
-  qualiteSommeil: z.number().min(1).max(10),
-  difficulteEndormissement: z.enum(['jamais', 'rarement', 'parfois', 'souvent', 'toujours']),
-  reveilsNocturnes: z.number().min(0).max(10),
-  reveilleMatin: z.enum(['tres_difficile', 'difficile', 'normal', 'facile', 'tres_facile']),
-  chronotype: z.enum(['du_matin', 'intermediaire', 'du_soir']),
-
-  // Section 8: Lifestyle & Substances
-  consommationAlcool: z.enum(['jamais', 'occasionnel', '1_3_semaine', '4_7_semaine', 'quotidien_multiple']),
-  verresAlcoolSemaine: z.number().min(0).max(100),
-  consommationCafeine: z.enum(['jamais', '1_cafe', '2_3_cafes', '4_5_cafes', 'plus_5_cafes']),
+  // Section 11: Lifestyle & Substances (7Q)
+  consommationAlcool: z.enum(['aucune', 'occasionnel', '1_3_verres', '4_7_verres', '8_plus_verres']),
+  consommationCafeine: z.enum(['0', '1_cafe', '2_3_cafes', '4_5_cafes', '6_plus_cafes']),
   heureDernierCafe: z.string().optional(),
   tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']),
-  cigarettesJour: z.number().min(0).max(100).optional(),
   hydratationLitresJour: z.number().min(0).max(10),
   supplementsActuels: z.array(z.string()),
-
-  // Section 9: Objectifs & Motivation
-  objectifPrincipal: z.enum(['perte_poids', 'gain_muscle', 'recomposition', 'performance', 'sante', 'energie']),
-  objectifSecondaires: z.array(z.string()),
-  timelineObjectif: z.enum(['1_3_mois', '3_6_mois', '6_12_mois', 'plus_12_mois']),
-  obstaclesPrincipaux: z.array(z.string()),
-  tentativesPrecedentes: z.string(),
-  niveauMotivation: z.number().min(1).max(10),
-  soutiensEntourage: z.enum(['aucun', 'faible', 'moyen', 'fort', 'tres_fort']),
+  medicamentsReguliers: z.string().optional(),
 });
 
 type QuestionnaireFormData = z.infer<typeof questionnaireSchema>;
@@ -119,14 +143,14 @@ type QuestionnaireFormData = z.infer<typeof questionnaireSchema>;
 const sections = [
   {
     id: 1,
-    title: 'Profil Anthropométrique',
+    title: 'Profil de Base',
     icon: Activity,
     color: '#00F5D4',
   },
   {
     id: 2,
-    title: 'Historique Pondéral',
-    icon: TrendingUp,
+    title: 'Composition Corporelle & Tracking',
+    icon: Scale,
     color: '#A78BFA',
   },
   {
@@ -137,14 +161,14 @@ const sections = [
   },
   {
     id: 4,
-    title: 'Digestion & Microbiome',
-    icon: Heart,
+    title: 'Nutrition & Tracking Alimentaire',
+    icon: Utensils,
     color: '#F472B6',
   },
   {
     id: 5,
-    title: 'Hormones & Signaux',
-    icon: Activity,
+    title: 'Digestion & Microbiome',
+    icon: Heart,
     color: '#FB923C',
   },
   {
@@ -161,15 +185,27 @@ const sections = [
   },
   {
     id: 8,
-    title: 'Lifestyle & Substances',
-    icon: Coffee,
+    title: 'HRV & Récupération Cardiaque',
+    icon: Activity,
     color: '#C084FC',
   },
   {
     id: 9,
-    title: 'Objectifs & Motivation',
-    icon: Target,
+    title: 'Analyses & Biomarqueurs',
+    icon: BarChart3,
     color: '#FF6B9D',
+  },
+  {
+    id: 10,
+    title: 'Hormones & Stress',
+    icon: TrendingUp,
+    color: '#00F5D4',
+  },
+  {
+    id: 11,
+    title: 'Lifestyle & Substances',
+    icon: Coffee,
+    color: '#A78BFA',
   },
 ];
 
@@ -187,6 +223,16 @@ export default function QuestionnairePage() {
     resolver: zodResolver(questionnaireSchema),
     mode: 'onChange',
   });
+
+  // Watch conditional fields
+  const balanceImpedancemetre = watch('balanceImpedancemetre');
+  const wearableTracker = watch('wearableTracker');
+  const suiviAlimentation = watch('suiviAlimentation');
+  const connaisMacros = watch('connaisMacros');
+  const jeuneIntermittent = watch('jeuneIntermittent');
+  const wearableTrackSommeil = watch('wearableTrackSommeil');
+  const connaisHRV = watch('connaisHRV');
+  const analysesSanguines = watch('analysesSanguines');
 
   const onSubmit = (data: QuestionnaireFormData) => {
     // Save to localStorage
@@ -291,8 +337,8 @@ export default function QuestionnairePage() {
                 <div className="space-y-6">
                   {currentSection === 0 && (
                     <>
-                      {/* Section 1: Profil Anthropométrique */}
-                      <QuestionCard title="Quel est votre âge ?" error={errors.age?.message}>
+                      {/* Section 1: Profil de Base (10Q) */}
+                      <QuestionCard title="1. Quel est votre âge ?" error={errors.age?.message}>
                         <input
                           type="number"
                           {...register('age', { valueAsNumber: true })}
@@ -301,7 +347,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre sexe biologique ?" error={errors.sexe?.message}>
+                      <QuestionCard title="2. Quel est votre sexe biologique ?" error={errors.sexe?.message}>
                         <select {...register('sexe')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="homme">Homme</option>
@@ -310,7 +356,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre poids actuel ? (kg)" error={errors.poidsActuel?.message}>
+                      <QuestionCard title="3. Quel est votre poids actuel ? (kg)" error={errors.poidsActuel?.message}>
                         <input
                           type="number"
                           step="0.1"
@@ -320,7 +366,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quelle est votre taille ? (cm)" error={errors.taille?.message}>
+                      <QuestionCard title="4. Quelle est votre taille ? (cm)" error={errors.taille?.message}>
                         <input
                           type="number"
                           {...register('taille', { valueAsNumber: true })}
@@ -329,7 +375,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre tour de taille ? (cm)" error={errors.tourDeTaille?.message}>
+                      <QuestionCard title="5. Quel est votre tour de taille ? (cm)" error={errors.tourDeTaille?.message}>
                         <input
                           type="number"
                           {...register('tourDeTaille', { valueAsNumber: true })}
@@ -338,7 +384,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre tour de hanches ? (cm)" error={errors.tourDeHanches?.message}>
+                      <QuestionCard title="6. Quel est votre tour de hanches ? (cm)" error={errors.tourDeHanches?.message}>
                         <input
                           type="number"
                           {...register('tourDeHanches', { valueAsNumber: true })}
@@ -347,34 +393,39 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre tour de cou ? (cm) - Optionnel" error={errors.tourDeCou?.message}>
-                        <input
-                          type="number"
-                          {...register('tourDeCou', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 38"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Quel est votre poids objectif ? (kg)" error={errors.objetifPoids?.message}>
+                      <QuestionCard title="7. Quel est votre poids objectif ? (kg)" error={errors.poidsObjectif?.message}>
                         <input
                           type="number"
                           step="0.1"
-                          {...register('objetifPoids', { valueAsNumber: true })}
+                          {...register('poidsObjectif', { valueAsNumber: true })}
                           className="input-field"
                           placeholder="Ex: 70"
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quand souhaitez-vous atteindre cet objectif ?" error={errors.dateDebutObjectif?.message}>
-                        <input
-                          type="date"
-                          {...register('dateDebutObjectif')}
-                          className="input-field"
-                        />
+                      <QuestionCard title="8. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
+                        <select {...register('timelineObjectif')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="1_3_mois">1-3 mois</option>
+                          <option value="3_6_mois">3-6 mois</option>
+                          <option value="6_12_mois">6-12 mois</option>
+                          <option value="plus_12_mois">Plus de 12 mois</option>
+                        </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
+                      <QuestionCard title="9. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
+                        <select {...register('objectifPrincipal')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="perte_graisse">Perte de graisse</option>
+                          <option value="gain_muscle">Gain de masse musculaire</option>
+                          <option value="recomposition">Recomposition corporelle</option>
+                          <option value="performance">Amélioration performance</option>
+                          <option value="sante">Amélioration santé générale</option>
+                          <option value="energie">Augmentation énergie / vitalité</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="10. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
                         <textarea
                           {...register('motivationPrincipale')}
                           className="input-field"
@@ -387,98 +438,98 @@ export default function QuestionnairePage() {
 
                   {currentSection === 1 && (
                     <>
-                      {/* Section 2: Historique Pondéral */}
-                      <QuestionCard title="Quel est votre poids minimum à l'âge adulte ? (kg)" error={errors.poidsMinimum?.message}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          {...register('poidsMinimum', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 65"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="À quel âge aviez-vous ce poids minimum ?" error={errors.agePoidsMinimum?.message}>
-                        <input
-                          type="number"
-                          {...register('agePoidsMinimum', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 25"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Quel est votre poids maximum à l'âge adulte ? (kg)" error={errors.poidsMaximum?.message}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          {...register('poidsMaximum', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 90"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="À quel âge aviez-vous ce poids maximum ?" error={errors.agePoidsMaximum?.message}>
-                        <input
-                          type="number"
-                          {...register('agePoidsMaximum', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 40"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Combien de régimes avez-vous suivi dans votre vie ?" error={errors.nombreRegimes?.message}>
-                        <input
-                          type="number"
-                          {...register('nombreRegimes', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 5"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Quels types de régimes avez-vous essayés ? (sélection multiple)" error={errors.typeRegimesPasses?.message}>
-                        <div className="space-y-2">
-                          {['Hypocalorique', 'Low-carb', 'Keto', 'Jeûne intermittent', 'Paléo', 'Végétarien/Vegan', 'Weight Watchers', 'Protéiné', 'Autre'].map((regime) => (
-                            <label key={regime} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={regime}
-                                {...register('typeRegimesPasses')}
-                                className="checkbox-field"
-                              />
-                              <span>{regime}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous expérimenté l'effet yoyo (reprise de poids après régime) ?" error={errors.effetYoyo?.message}>
-                        <select {...register('effetYoyo')} className="input-field">
+                      {/* Section 2: Composition Corporelle & Tracking (8Q) */}
+                      <QuestionCard title="11. As-tu une balance impédancemètre ?" error={errors.balanceImpedancemetre?.message}>
+                        <select {...register('balanceImpedancemetre')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="oui">Oui</option>
+                          <option value="non">Non</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Quelle a été votre variation de poids sur les 6 derniers mois ? (kg)" error={errors.variationPoids6Mois?.message}>
-                        <input
-                          type="number"
-                          step="0.1"
-                          {...register('variationPoids6Mois', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: +3 ou -2"
-                        />
-                        <p className="text-xs text-gray-400 mt-1">Utilisez + pour gain, - pour perte</p>
+                      {balanceImpedancemetre === 'oui' && (
+                        <>
+                          <QuestionCard title="12. Si oui, quel est votre % de masse grasse actuel ?" error={errors.massGrasseActuel?.message}>
+                            <input
+                              type="number"
+                              step="0.1"
+                              {...register('massGrasseActuel', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 20.5"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="13. Si oui, quel est votre % de masse musculaire actuel ?" error={errors.masseMusculaireActuel?.message}>
+                            <input
+                              type="number"
+                              step="0.1"
+                              {...register('masseMusculaireActuel', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 35.2"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="14. Si oui, quel est votre niveau de graisse viscérale ?" error={errors.graisseViscerale?.message}>
+                            <input
+                              type="number"
+                              {...register('graisseViscerale', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 8"
+                            />
+                          </QuestionCard>
+                        </>
+                      )}
+
+                      <QuestionCard title="15. Utilises-tu un wearable/tracker ?" error={errors.wearableTracker?.message}>
+                        <select {...register('wearableTracker')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="whoop">Whoop</option>
+                          <option value="oura">Oura Ring</option>
+                          <option value="apple_watch">Apple Watch</option>
+                          <option value="garmin">Garmin</option>
+                          <option value="fitbit">Fitbit</option>
+                          <option value="aucun">Aucun</option>
+                        </select>
+                      </QuestionCard>
+
+                      {wearableTracker !== 'aucun' && wearableTracker && (
+                        <>
+                          <QuestionCard title="16. Si oui, depuis combien de temps ?" error={errors.wearableDepuis?.message}>
+                            <input
+                              type="text"
+                              {...register('wearableDepuis')}
+                              className="input-field"
+                              placeholder="Ex: 6 mois, 2 ans..."
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="17. Consultes-tu tes données régulièrement ?" error={errors.consultationDonnees?.message}>
+                            <select {...register('consultationDonnees')} className="input-field">
+                              <option value="">Sélectionner...</option>
+                              <option value="quotidien">Quotidien</option>
+                              <option value="hebdo">Hebdomadaire</option>
+                              <option value="rarement">Rarement</option>
+                              <option value="jamais">Jamais</option>
+                            </select>
+                          </QuestionCard>
+                        </>
+                      )}
+
+                      <QuestionCard title="18. Prends-tu des photos de progression ?" error={errors.photosProgression?.message}>
+                        <select {...register('photosProgression')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui_regulier">Oui régulièrement</option>
+                          <option value="parfois">Parfois</option>
+                          <option value="jamais">Jamais</option>
+                        </select>
                       </QuestionCard>
                     </>
                   )}
 
                   {currentSection === 2 && (
                     <>
-                      {/* Section 3: Métabolisme & Énergie */}
-                      <QuestionCard title="Quel est votre niveau d'énergie le MATIN ? (1-10)" error={errors.energieMatin?.message}>
+                      {/* Section 3: Métabolisme & Énergie (10Q) */}
+                      <QuestionCard title="19. Niveau d'énergie le MATIN (1-10)" error={errors.energieMatin?.message}>
                         <input
                           type="range"
                           min="1"
@@ -492,7 +543,7 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre niveau d'énergie à MIDI ? (1-10)" error={errors.energieMidi?.message}>
+                      <QuestionCard title="20. Niveau d'énergie à MIDI (1-10)" error={errors.energieMidi?.message}>
                         <input
                           type="range"
                           min="1"
@@ -506,7 +557,7 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre niveau d'énergie l'APRÈS-MIDI ? (1-10)" error={errors.energieApresMidi?.message}>
+                      <QuestionCard title="21. Niveau d'énergie l'APRÈS-MIDI (1-10)" error={errors.energieApresMidi?.message}>
                         <input
                           type="range"
                           min="1"
@@ -520,7 +571,7 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre niveau d'énergie le SOIR ? (1-10)" error={errors.energieSoir?.message}>
+                      <QuestionCard title="22. Niveau d'énergie le SOIR (1-10)" error={errors.energieSoir?.message}>
                         <input
                           type="range"
                           min="1"
@@ -534,62 +585,48 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Ressentez-vous une fatigue chronique ?" error={errors.fatigueChronique?.message}>
-                        <select {...register('fatigueChronique')} className="input-field">
+                      <QuestionCard title="23. Heure du 'coup de barre' principal (si applicable)" error={errors.heureCoupBarre?.message}>
+                        <input
+                          type="time"
+                          {...register('heureCoupBarre')}
+                          className="input-field"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="24. Fréquence des coups de pompe" error={errors.frequenceCoupsPompe?.message}>
+                        <select {...register('frequenceCoupsPompe')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="quotidien">Quotidien</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="À quelle fréquence avez-vous des coups de pompe ?" error={errors.coupDePompe?.message}>
-                        <select {...register('coupDePompe')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Ressentez-vous une faim constante ?" error={errors.faimConstante?.message}>
-                        <select {...register('faimConstante')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous des envies de sucre (cravings) ?" error={errors.cravingsSucre?.message}>
+                      <QuestionCard title="25. Cravings de sucre" error={errors.cravingsSucre?.message}>
                         <select {...register('cravingsSucre')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="constant">Constant</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Avez-vous des envies de salé ?" error={errors.cravingsSale?.message}>
+                      <QuestionCard title="26. Cravings de salé" error={errors.cravingsSale?.message}>
                         <select {...register('cravingsSale')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="constant">Constant</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Comment décririez-vous votre température corporelle ?" error={errors.temperatureCorporelle?.message}>
+                      <QuestionCard title="27. Température corporelle perçue" error={errors.temperatureCorporelle?.message}>
                         <select {...register('temperatureCorporelle')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="toujours_froid">Toujours froid</option>
@@ -600,19 +637,8 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Avez-vous une transpiration anormale ?" error={errors.transpirationAnormale?.message}>
-                        <select {...register('transpirationAnormale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Comment percevez-vous votre métabolisme ?" error={errors.metabolismePercption?.message}>
-                        <select {...register('metabolismePercption')} className="input-field">
+                      <QuestionCard title="28. Comment percevez-vous votre métabolisme ?" error={errors.perceptionMetabolisme?.message}>
+                        <select {...register('perceptionMetabolisme')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="tres_lent">Très lent</option>
                           <option value="lent">Lent</option>
@@ -626,69 +652,186 @@ export default function QuestionnairePage() {
 
                   {currentSection === 3 && (
                     <>
-                      {/* Section 4: Digestion & Microbiome */}
-                      <QuestionCard title="À quelle fréquence avez-vous des ballonnements ?" error={errors.ballonnements?.message}>
+                      {/* Section 4: Nutrition & Tracking Alimentaire (12Q) */}
+                      <QuestionCard title="29. Suis-tu ton alimentation ?" error={errors.suiviAlimentation?.message}>
+                        <select {...register('suiviAlimentation')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="myfitnesspal">MyFitnessPal</option>
+                          <option value="autre_app">Autre application</option>
+                          <option value="carnet">Carnet papier/notes</option>
+                          <option value="non">Non</option>
+                        </select>
+                      </QuestionCard>
+
+                      {suiviAlimentation !== 'non' && suiviAlimentation && (
+                        <QuestionCard title="30. Si oui, depuis combien de temps ?" error={errors.suiviAlimentationDepuis?.message}>
+                          <input
+                            type="text"
+                            {...register('suiviAlimentationDepuis')}
+                            className="input-field"
+                            placeholder="Ex: 3 mois, 1 an..."
+                          />
+                        </QuestionCard>
+                      )}
+
+                      <QuestionCard title="31. Connais-tu tes macros actuelles ?" error={errors.connaisMacros?.message}>
+                        <select {...register('connaisMacros')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui_precisement">Oui précisément</option>
+                          <option value="approximativement">Approximativement</option>
+                          <option value="non">Non</option>
+                        </select>
+                      </QuestionCard>
+
+                      {(connaisMacros === 'oui_precisement' || connaisMacros === 'approximativement') && (
+                        <>
+                          <QuestionCard title="32. Protéines par jour (g)" error={errors.proteinesJour?.message}>
+                            <input
+                              type="number"
+                              {...register('proteinesJour', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 150"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="33. Glucides par jour (g)" error={errors.glucidesJour?.message}>
+                            <input
+                              type="number"
+                              {...register('glucidesJour', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 200"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="34. Lipides par jour (g)" error={errors.lipidesJour?.message}>
+                            <input
+                              type="number"
+                              {...register('lipidesJour', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 70"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="35. Calories moyennes par jour" error={errors.caloriesMoyennesJour?.message}>
+                            <input
+                              type="number"
+                              {...register('caloriesMoyennesJour', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 2200"
+                            />
+                          </QuestionCard>
+                        </>
+                      )}
+
+                      <QuestionCard title="36. Nombre de repas par jour" error={errors.nombreRepasJour?.message}>
+                        <select {...register('nombreRepasJour')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="1">1 repas</option>
+                          <option value="2">2 repas</option>
+                          <option value="3">3 repas</option>
+                          <option value="4">4 repas</option>
+                          <option value="5_plus">5 repas ou plus</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="37. Pratiques-tu le jeûne intermittent ?" error={errors.jeuneIntermittent?.message}>
+                        <select {...register('jeuneIntermittent')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui">Oui</option>
+                          <option value="non">Non</option>
+                          <option value="parfois">Parfois</option>
+                        </select>
+                      </QuestionCard>
+
+                      {(jeuneIntermittent === 'oui' || jeuneIntermittent === 'parfois') && (
+                        <QuestionCard title="38. Si oui, quelle fenêtre d'alimentation ?" error={errors.fenetreAlimentation?.message}>
+                          <select {...register('fenetreAlimentation')} className="input-field">
+                            <option value="">Sélectionner...</option>
+                            <option value="16_8">16/8 (jeûne 16h, alimentation 8h)</option>
+                            <option value="18_6">18/6 (jeûne 18h, alimentation 6h)</option>
+                            <option value="20_4">20/4 (jeûne 20h, alimentation 4h)</option>
+                            <option value="omad">OMAD (1 repas par jour)</option>
+                            <option value="autre">Autre</option>
+                          </select>
+                        </QuestionCard>
+                      )}
+
+                      <QuestionCard title="39. Nutrition pré-workout" error={errors.nutritionPreWorkout?.message}>
+                        <select {...register('nutritionPreWorkout')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="glucides">Glucides</option>
+                          <option value="proteines">Protéines</option>
+                          <option value="rien">Rien</option>
+                          <option value="ne_entraine_pas">Ne m'entraîne pas</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="40. Nutrition post-workout" error={errors.nutritionPostWorkout?.message}>
+                        <select {...register('nutritionPostWorkout')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="proteines_glucides">Protéines + Glucides</option>
+                          <option value="proteines_seules">Protéines seules</option>
+                          <option value="rien">Rien</option>
+                          <option value="ne_entraine_pas">Ne m'entraîne pas</option>
+                        </select>
+                      </QuestionCard>
+                    </>
+                  )}
+
+                  {currentSection === 4 && (
+                    <>
+                      {/* Section 5: Digestion & Microbiome (8Q) */}
+                      <QuestionCard title="41. Ballonnements" error={errors.ballonnements?.message}>
                         <select {...register('ballonnements')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="quotidien">Quotidien</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Avez-vous des gaz intestinaux fréquents ?" error={errors.gazIntestinaux?.message}>
-                        <select {...register('gazIntestinaux')} className="input-field">
+                      <QuestionCard title="42. Transit intestinal" error={errors.transitIntestinal?.message}>
+                        <select {...register('transitIntestinal')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Comment décririez-vous votre transit intestinal ?" error={errors.transit?.message}>
-                        <select {...register('transit')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="constipation">Constipation régulière</option>
+                          <option value="constipation">Constipation</option>
                           <option value="normal">Normal</option>
-                          <option value="diarrhee">Diarrhée fréquente</option>
-                          <option value="alterne">Alterne entre les deux</option>
+                          <option value="diarrhee">Diarrhée</option>
+                          <option value="alterne">Alterne</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Quelle est votre fréquence de selles ?" error={errors.frequenceSelles?.message}>
+                      <QuestionCard title="43. Fréquence de selles par jour" error={errors.frequenceSelles?.message}>
                         <select {...register('frequenceSelles')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="moins_3_semaine">Moins de 3 fois par semaine</option>
-                          <option value="3_6_semaine">3 à 6 fois par semaine</option>
+                          <option value="moins_3_sem">Moins de 3 fois par semaine</option>
+                          <option value="3_6_sem">3-6 fois par semaine</option>
                           <option value="1_jour">1 fois par jour</option>
-                          <option value="2_3_jour">2 à 3 fois par jour</option>
-                          <option value="plus_3_jour">Plus de 3 fois par jour</option>
+                          <option value="2_3_jour">2-3 fois par jour</option>
+                          <option value="3_plus_jour">3+ fois par jour</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Ressentez-vous des douleurs abdominales ?" error={errors.douleurAbdominale?.message}>
-                        <select {...register('douleurAbdominale')} className="input-field">
+                      <QuestionCard title="44. Douleurs abdominales" error={errors.douleursAbdominales?.message}>
+                        <select {...register('douleursAbdominales')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="quotidien">Quotidien</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Avez-vous des intolérances alimentaires identifiées ?" error={errors.intolerancesAlimentaires?.message}>
+                      <QuestionCard title="45. Intolérances identifiées (sélection multiple)" error={errors.intolerances?.message}>
                         <div className="space-y-2">
-                          {['Lactose', 'Gluten', 'FODMAPs', 'Histamine', 'Fructose', 'Oeufs', 'Fruits à coque', 'Aucune'].map((intolerance) => (
+                          {['Lactose', 'Gluten', 'FODMAPs', 'Histamine', 'Autre', 'Aucune'].map((intolerance) => (
                             <label key={intolerance} className="flex items-center gap-2 text-sm">
                               <input
                                 type="checkbox"
                                 value={intolerance}
-                                {...register('intolerancesAlimentaires')}
+                                {...register('intolerances')}
                                 className="checkbox-field"
                               />
                               <span>{intolerance}</span>
@@ -697,36 +840,27 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Souffrez-vous de reflux gastrique ?" error={errors.refluxGastrique?.message}>
+                      <QuestionCard title="46. Reflux gastrique" error={errors.refluxGastrique?.message}>
                         <select {...register('refluxGastrique')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="quotidien">Quotidien</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Combien de cures d'antibiotiques avez-vous prises dans l'année ?" error={errors.antibiotiquesAnnee?.message}>
-                        <input
-                          type="number"
-                          {...register('antibiotiquesAnnee', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 2"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Prenez-vous ou avez-vous pris des probiotiques ?" error={errors.probiotiquesPrise?.message}>
-                        <select {...register('probiotiquesPrise')} className="input-field">
+                      <QuestionCard title="47. Prise de probiotiques" error={errors.priseProbiotiques?.message}>
+                        <select {...register('priseProbiotiques')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="passé">Oui, dans le passé</option>
-                          <option value="actuellement">Oui, actuellement</option>
+                          <option value="passe">Dans le passé</option>
+                          <option value="actuellement">Actuellement</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Comment évaluez-vous la qualité de votre digestion ? (1-10)" error={errors.qualiteDigestion?.message}>
+                      <QuestionCard title="48. Qualité de digestion globale (1-10)" error={errors.qualiteDigestion?.message}>
                         <input
                           type="range"
                           min="1"
@@ -742,200 +876,55 @@ export default function QuestionnairePage() {
                     </>
                   )}
 
-                  {currentSection === 4 && (
-                    <>
-                      {/* Section 5: Hormones & Signaux */}
-                      <QuestionCard title="Quel est votre niveau de stress au quotidien ? (1-10)" error={errors.niveauStress?.message}>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          {...register('niveauStress', { valueAsNumber: true })}
-                          className="range-field"
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-2">
-                          <span>Aucun stress</span>
-                          <span>Stress extrême</span>
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Comment gérez-vous votre stress ?" error={errors.gestionStress?.message}>
-                        <select {...register('gestionStress')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_mauvaise">Très mauvaise</option>
-                          <option value="mauvaise">Mauvaise</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Présentez-vous des symptômes liés à la thyroïde ?" error={errors.symptomesThyroide?.message}>
-                        <div className="space-y-2">
-                          {['Fatigue extrême', 'Prise de poids inexpliquée', 'Frilosité', 'Peau sèche', 'Chute de cheveux', 'Dépression', 'Constipation', 'Aucun symptôme'].map((symptome) => (
-                            <label key={symptome} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={symptome}
-                                {...register('symptomesThyroide')}
-                                className="checkbox-field"
-                              />
-                              <span>{symptome}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous souvent froid (frissons fréquents) ?" error={errors.frissonsFrequents?.message}>
-                        <select {...register('frissonsFrequents')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous une chute de cheveux anormale ?" error={errors.chuteCheveuxAnormale?.message}>
-                        <select {...register('chuteCheveuxAnormale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous la peau sèche ?" error={errors.peauSeche?.message}>
-                        <select {...register('peauSeche')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous une résistance à l'insuline diagnostiquée ?" error={errors.resistanceInsuline?.message}>
-                        <select {...register('resistanceInsuline')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="non_diagnostique">Non, pas diagnostiquée</option>
-                          <option value="soupcon">Soupçonnée mais non confirmée</option>
-                          <option value="diagnostique">Oui, diagnostiquée</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Faites-vous des hypoglycémies (malaises, tremblements) ?" error={errors.hypoglycemies?.message}>
-                        <select {...register('hypoglycemies')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Avez-vous des menstruations régulières ? (si applicable)" error={errors.menstruationReguliere?.message}>
-                        <select {...register('menstruationReguliere')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui, régulières</option>
-                          <option value="non">Non, irrégulières</option>
-                          <option value="non_applicable">Non applicable</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Présentez-vous des symptômes prémenstruels (SPM) ?" error={errors.symptomesSPM?.message}>
-                        <div className="space-y-2">
-                          {['Irritabilité', 'Ballonnements', 'Douleurs mammaires', 'Fatigue', 'Fringales', 'Maux de tête', 'Anxiété', 'Aucun'].map((symptome) => (
-                            <label key={symptome} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={symptome}
-                                {...register('symptomesSPM')}
-                                className="checkbox-field"
-                              />
-                              <span>{symptome}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Êtes-vous en ménopause/andropause ?" error={errors.menopauseAndropause?.message}>
-                        <select {...register('menopauseAndropause')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="non">Non</option>
-                          <option value="pre">Pré-ménopause/andropause</option>
-                          <option value="en_cours">En cours</option>
-                          <option value="post">Post-ménopause/andropause</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Comment évaluez-vous votre libido ?" error={errors.libido?.message}>
-                        <select {...register('libido')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_faible">Très faible</option>
-                          <option value="faible">Faible</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="elevee">Élevée</option>
-                          <option value="tres_elevee">Très élevée</option>
-                        </select>
-                      </QuestionCard>
-                    </>
-                  )}
-
                   {currentSection === 5 && (
                     <>
-                      {/* Section 6: Activité & Performance */}
-                      <QuestionCard title="Quelle est votre fréquence d'entraînement ?" error={errors.frequenceEntrainement?.message}>
+                      {/* Section 6: Activité & Performance (12Q) */}
+                      <QuestionCard title="49. Fréquence d'entraînement par semaine" error={errors.frequenceEntrainement?.message}>
                         <select {...register('frequenceEntrainement')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="sedentaire">Sédentaire (aucun)</option>
-                          <option value="1_2_semaine">1-2 fois par semaine</option>
-                          <option value="3_4_semaine">3-4 fois par semaine</option>
-                          <option value="5_6_semaine">5-6 fois par semaine</option>
-                          <option value="quotidien">Quotidien ou plus</option>
+                          <option value="0">0 (Sédentaire)</option>
+                          <option value="1_2">1-2 fois</option>
+                          <option value="3_4">3-4 fois</option>
+                          <option value="5_6">5-6 fois</option>
+                          <option value="7_plus">7+ fois</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Répartition cardio (%) - Ex: 40%" error={errors.typeActiviteCardio?.message}>
+                      <QuestionCard title="50. Répartition Cardio (%)" error={errors.repartitionCardio?.message}>
                         <input
                           type="number"
                           min="0"
                           max="100"
-                          {...register('typeActiviteCardio', { valueAsNumber: true })}
+                          {...register('repartitionCardio', { valueAsNumber: true })}
                           className="input-field"
                           placeholder="Ex: 40"
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Répartition musculation (%) - Ex: 50%" error={errors.typeActiviteMuscu?.message}>
+                      <QuestionCard title="51. Répartition Musculation (%)" error={errors.repartitionMusculation?.message}>
                         <input
                           type="number"
                           min="0"
                           max="100"
-                          {...register('typeActiviteMuscu', { valueAsNumber: true })}
+                          {...register('repartitionMusculation', { valueAsNumber: true })}
                           className="input-field"
                           placeholder="Ex: 50"
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Répartition sport/autre (%) - Ex: 10%" error={errors.typeActiviteSport?.message}>
+                      <QuestionCard title="52. Répartition Sport/Autre (%)" error={errors.repartitionSport?.message}>
                         <input
                           type="number"
                           min="0"
                           max="100"
-                          {...register('typeActiviteSport', { valueAsNumber: true })}
+                          {...register('repartitionSport', { valueAsNumber: true })}
                           className="input-field"
                           placeholder="Ex: 10"
                         />
                         <p className="text-xs text-gray-400 mt-1">Total doit égaler 100%</p>
                       </QuestionCard>
 
-                      <QuestionCard title="Quelle est l'intensité moyenne de vos séances ?" error={errors.intensiteMoyenne?.message}>
+                      <QuestionCard title="53. Intensité moyenne des séances" error={errors.intensiteMoyenne?.message}>
                         <select {...register('intensiteMoyenne')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="legere">Légère (conversation facile)</option>
@@ -945,7 +934,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Durée moyenne d'une séance (minutes)" error={errors.dureeSessionMoyenne?.message}>
+                      <QuestionCard title="54. Durée moyenne d'une séance (minutes)" error={errors.dureeSessionMoyenne?.message}>
                         <input
                           type="number"
                           {...register('dureeSessionMoyenne', { valueAsNumber: true })}
@@ -954,7 +943,53 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Comment évoluent vos performances ?" error={errors.progressionPerformance?.message}>
+                      <QuestionCard title="55. VO2 max si connu (ml/kg/min) - Optionnel" error={errors.vo2Max?.message}>
+                        <input
+                          type="number"
+                          step="0.1"
+                          {...register('vo2Max', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 45.5"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="56. PB Développé couché (kg) - Optionnel" error={errors.pbDeveloppe?.message}>
+                        <input
+                          type="number"
+                          {...register('pbDeveloppe', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 80"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="57. PB Squat (kg) - Optionnel" error={errors.pbSquat?.message}>
+                        <input
+                          type="number"
+                          {...register('pbSquat', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 100"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="58. PB Deadlift (kg) - Optionnel" error={errors.pbDeadlift?.message}>
+                        <input
+                          type="number"
+                          {...register('pbDeadlift', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 120"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="59. Nombre de pas moyen par jour (si tracké) - Optionnel" error={errors.nombrePasJour?.message}>
+                        <input
+                          type="number"
+                          {...register('nombrePasJour', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 10000"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="60. Progression de performance" error={errors.progressionPerformance?.message}>
                         <select {...register('progressionPerformance')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="regresse">Régression</option>
@@ -964,53 +999,13 @@ export default function QuestionnairePage() {
                           <option value="excellente">Excellente progression</option>
                         </select>
                       </QuestionCard>
-
-                      <QuestionCard title="Vitesse de récupération après effort ?" error={errors.courbaturesRecuperation?.message}>
-                        <select {...register('courbaturesRecuperation')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="rapide_24h">Rapide (moins de 24h)</option>
-                          <option value="normale_48h">Normale (24-48h)</option>
-                          <option value="lente_72h">Lente (48-72h)</option>
-                          <option value="tres_lente_plus">Très lente (plus de 72h)</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Quel est votre niveau de motivation pour l'entraînement ? (1-10)" error={errors.motivationEntrainement?.message}>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          {...register('motivationEntrainement', { valueAsNumber: true })}
-                          className="range-field"
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-2">
-                          <span>Aucune motivation</span>
-                          <span>Très motivé</span>
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Quels sont vos objectifs de performance ?" error={errors.objectifPerformance?.message}>
-                        <div className="space-y-2">
-                          {['Gagner en force', 'Gagner en endurance', 'Gagner en masse musculaire', 'Améliorer flexibilité', 'Améliorer vitesse', 'Compétition', 'Santé générale'].map((objectif) => (
-                            <label key={objectif} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={objectif}
-                                {...register('objectifPerformance')}
-                                className="checkbox-field"
-                              />
-                              <span>{objectif}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
                     </>
                   )}
 
                   {currentSection === 6 && (
                     <>
-                      {/* Section 7: Sommeil & Récupération */}
-                      <QuestionCard title="À quelle heure vous couchez-vous généralement ?" error={errors.heuresCoucher?.message}>
+                      {/* Section 7: Sommeil & Récupération (15Q) */}
+                      <QuestionCard title="61. Heures de coucher habituelles" error={errors.heuresCoucher?.message}>
                         <input
                           type="time"
                           {...register('heuresCoucher')}
@@ -1018,7 +1013,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="À quelle heure vous réveillez-vous généralement ?" error={errors.heuresReveil?.message}>
+                      <QuestionCard title="62. Heures de réveil habituelles" error={errors.heuresReveil?.message}>
                         <input
                           type="time"
                           {...register('heuresReveil')}
@@ -1026,17 +1021,17 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Combien d'heures dormez-vous en moyenne par nuit ?" error={errors.heuresSommeilMoyenne?.message}>
+                      <QuestionCard title="63. Heures de sommeil par nuit (moyenne)" error={errors.heuresSommeilNuit?.message}>
                         <input
                           type="number"
                           step="0.5"
-                          {...register('heuresSommeilMoyenne', { valueAsNumber: true })}
+                          {...register('heuresSommeilNuit', { valueAsNumber: true })}
                           className="input-field"
                           placeholder="Ex: 7.5"
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Comment évaluez-vous la qualité de votre sommeil ? (1-10)" error={errors.qualiteSommeil?.message}>
+                      <QuestionCard title="64. Qualité de sommeil perçue (1-10)" error={errors.qualiteSommeil?.message}>
                         <input
                           type="range"
                           min="1"
@@ -1050,18 +1045,18 @@ export default function QuestionnairePage() {
                         </div>
                       </QuestionCard>
 
-                      <QuestionCard title="Avez-vous des difficultés d'endormissement ?" error={errors.difficulteEndormissement?.message}>
+                      <QuestionCard title="65. Difficulté d'endormissement" error={errors.difficulteEndormissement?.message}>
                         <select {...register('difficulteEndormissement')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="jamais">Jamais</option>
-                          <option value="rarement">Rarement</option>
+                          <option value="rare">Rare</option>
                           <option value="parfois">Parfois</option>
                           <option value="souvent">Souvent</option>
-                          <option value="toujours">Toujours</option>
+                          <option value="quotidien">Quotidien</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Combien de fois vous réveillez-vous la nuit ?" error={errors.reveilsNocturnes?.message}>
+                      <QuestionCard title="66. Réveils nocturnes par nuit" error={errors.reveilsNocturnes?.message}>
                         <input
                           type="number"
                           {...register('reveilsNocturnes', { valueAsNumber: true })}
@@ -1070,63 +1065,382 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Comment vous sentez-vous au réveil ?" error={errors.reveilleMatin?.message}>
+                      <QuestionCard title="67. Comment vous sentez-vous au réveil ?" error={errors.reveilleMatin?.message}>
                         <select {...register('reveilleMatin')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="tres_difficile">Très difficile (je n'arrive pas à me lever)</option>
-                          <option value="difficile">Difficile (j'ai besoin d'alarmes multiples)</option>
-                          <option value="normal">Normal (je me lève avec l'alarme)</option>
-                          <option value="facile">Facile (je me réveille avant l'alarme)</option>
-                          <option value="tres_facile">Très facile (je me réveille naturellement, plein d'énergie)</option>
+                          <option value="tres_difficile">Très difficile</option>
+                          <option value="difficile">Difficile</option>
+                          <option value="normal">Normal</option>
+                          <option value="facile">Facile</option>
+                          <option value="tres_facile">Très facile</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Quel est votre chronotype ?" error={errors.chronotype?.message}>
+                      <QuestionCard title="68. Chronotype" error={errors.chronotype?.message}>
                         <select {...register('chronotype')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="du_matin">Du matin (je suis plus productif le matin)</option>
-                          <option value="intermediaire">Intermédiaire (aucune préférence marquée)</option>
-                          <option value="du_soir">Du soir (je suis plus productif le soir)</option>
+                          <option value="matin">Personne du matin</option>
+                          <option value="intermediaire">Intermédiaire</option>
+                          <option value="soir">Personne du soir</option>
                         </select>
                       </QuestionCard>
+
+                      <QuestionCard title="69. Ton wearable track ton sommeil ?" error={errors.wearableTrackSommeil?.message}>
+                        <select {...register('wearableTrackSommeil')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui">Oui</option>
+                          <option value="non">Non</option>
+                          <option value="pas_de_wearable">Pas de wearable</option>
+                        </select>
+                      </QuestionCard>
+
+                      {wearableTrackSommeil === 'oui' && (
+                        <>
+                          <QuestionCard title="70. Score de sommeil moyen (1-100)" error={errors.scoreSommeilMoyen?.message}>
+                            <input
+                              type="number"
+                              {...register('scoreSommeilMoyen', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 85"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="71. Sommeil profond moyen (heures ou %)" error={errors.sommeilProfond?.message}>
+                            <input
+                              type="text"
+                              {...register('sommeilProfond')}
+                              className="input-field"
+                              placeholder="Ex: 1.5h ou 20%"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="72. Sommeil léger moyen (heures ou %)" error={errors.sommeilLeger?.message}>
+                            <input
+                              type="text"
+                              {...register('sommeilLeger')}
+                              className="input-field"
+                              placeholder="Ex: 4h ou 55%"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="73. Sommeil REM moyen (heures ou %)" error={errors.sommeilREM?.message}>
+                            <input
+                              type="text"
+                              {...register('sommeilREM')}
+                              className="input-field"
+                              placeholder="Ex: 2h ou 25%"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="74. Fréquence cardiaque nocturne (bpm)" error={errors.frequenceCardiaqueNocturne?.message}>
+                            <input
+                              type="number"
+                              {...register('frequenceCardiaqueNocturne', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 55"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="75. Variabilité HRV nocturne (ms)" error={errors.hrvNocturne?.message}>
+                            <input
+                              type="number"
+                              {...register('hrvNocturne', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 65"
+                            />
+                          </QuestionCard>
+                        </>
+                      )}
                     </>
                   )}
 
                   {currentSection === 7 && (
                     <>
-                      {/* Section 8: Lifestyle & Substances */}
-                      <QuestionCard title="Quelle est votre consommation d'alcool ?" error={errors.consommationAlcool?.message}>
+                      {/* Section 8: HRV & Récupération Cardiaque (8Q) */}
+                      <QuestionCard title="76. Connais-tu ton HRV ?" error={errors.connaisHRV?.message}>
+                        <select {...register('connaisHRV')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui_track">Oui, je le track régulièrement</option>
+                          <option value="jai_mesure">J'ai mesuré une fois</option>
+                          <option value="non">Non</option>
+                        </select>
+                      </QuestionCard>
+
+                      {(connaisHRV === 'oui_track' || connaisHRV === 'jai_mesure') && (
+                        <>
+                          <QuestionCard title="77. HRV moyen au réveil (ms)" error={errors.hrvMoyenReveil?.message}>
+                            <input
+                              type="number"
+                              {...register('hrvMoyenReveil', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 65"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="78. HRV le plus bas récent (ms)" error={errors.hrvPlusBasRecent?.message}>
+                            <input
+                              type="number"
+                              {...register('hrvPlusBasRecent', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 40"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="79. HRV le plus haut récent (ms)" error={errors.hrvPlusHautRecent?.message}>
+                            <input
+                              type="number"
+                              {...register('hrvPlusHautRecent', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 90"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="80. Fréquence cardiaque au repos (bpm)" error={errors.frequenceCardiaqueRepos?.message}>
+                            <input
+                              type="number"
+                              {...register('frequenceCardiaqueRepos', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 60"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="81. Fréquence cardiaque max connue (bpm)" error={errors.frequenceCardiaqueMax?.message}>
+                            <input
+                              type="number"
+                              {...register('frequenceCardiaqueMax', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 190"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="82. Temps de récupération FC post-effort" error={errors.tempsRecuperationFC?.message}>
+                            <select {...register('tempsRecuperationFC')} className="input-field">
+                              <option value="">Sélectionner...</option>
+                              <option value="moins_1min">Moins de 1 minute</option>
+                              <option value="1_2min">1-2 minutes</option>
+                              <option value="2_3min">2-3 minutes</option>
+                              <option value="3plus_min">3+ minutes</option>
+                              <option value="ne_sais_pas">Ne sais pas</option>
+                            </select>
+                          </QuestionCard>
+
+                          <QuestionCard title="83. Ready/Recovery Score de ton wearable (1-100) - Optionnel" error={errors.readyRecoveryScore?.message}>
+                            <input
+                              type="number"
+                              {...register('readyRecoveryScore', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 75"
+                            />
+                          </QuestionCard>
+                        </>
+                      )}
+                    </>
+                  )}
+
+                  {currentSection === 8 && (
+                    <>
+                      {/* Section 9: Analyses & Biomarqueurs (7Q) */}
+                      <QuestionCard title="84. As-tu fait des analyses sanguines récentes ?" error={errors.analysesSanguines?.message}>
+                        <select {...register('analysesSanguines')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="moins_3mois">Moins de 3 mois</option>
+                          <option value="3_6mois">3-6 mois</option>
+                          <option value="6_12mois">6-12 mois</option>
+                          <option value="plus_12mois">Plus de 12 mois</option>
+                          <option value="jamais">Jamais</option>
+                        </select>
+                      </QuestionCard>
+
+                      {analysesSanguines !== 'jamais' && analysesSanguines && (
+                        <>
+                          <QuestionCard title="85. Vitamine D (ng/mL) - Optionnel" error={errors.vitamineD?.message}>
+                            <input
+                              type="number"
+                              step="0.1"
+                              {...register('vitamineD', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 35.5"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="86. Ferritine (ng/mL) - Optionnel" error={errors.ferritine?.message}>
+                            <input
+                              type="number"
+                              step="0.1"
+                              {...register('ferritine', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 75.2"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="87. TSH (mUI/L) - Optionnel" error={errors.tsh?.message}>
+                            <input
+                              type="number"
+                              step="0.01"
+                              {...register('tsh', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 2.5"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="88. Testostérone totale (ng/dL) - Si homme - Optionnel" error={errors.testosteroneTotale?.message}>
+                            <input
+                              type="number"
+                              {...register('testosteroneTotale', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 550"
+                            />
+                          </QuestionCard>
+
+                          <QuestionCard title="89. Glycémie à jeun (mg/dL) - Optionnel" error={errors.glycemieJeun?.message}>
+                            <input
+                              type="number"
+                              {...register('glycemieJeun', { valueAsNumber: true })}
+                              className="input-field"
+                              placeholder="Ex: 90"
+                            />
+                          </QuestionCard>
+                        </>
+                      )}
+
+                      <QuestionCard title="90. Utilises-tu un CGM (Continuous Glucose Monitor) ?" error={errors.utiliseCGM?.message}>
+                        <select {...register('utiliseCGM')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui">Oui, actuellement</option>
+                          <option value="non">Non</option>
+                          <option value="jai_teste">J'ai testé dans le passé</option>
+                        </select>
+                      </QuestionCard>
+                    </>
+                  )}
+
+                  {currentSection === 9 && (
+                    <>
+                      {/* Section 10: Hormones & Stress (8Q) */}
+                      <QuestionCard title="91. Niveau de stress quotidien (1-10)" error={errors.niveauStress?.message}>
+                        <input
+                          type="range"
+                          min="1"
+                          max="10"
+                          {...register('niveauStress', { valueAsNumber: true })}
+                          className="range-field"
+                        />
+                        <div className="flex justify-between text-xs text-gray-400 mt-2">
+                          <span>Aucun stress</span>
+                          <span>Stress extrême</span>
+                        </div>
+                      </QuestionCard>
+
+                      <QuestionCard title="92. Gestion du stress" error={errors.gestionStress?.message}>
+                        <select {...register('gestionStress')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="tres_mauvaise">Très mauvaise</option>
+                          <option value="mauvaise">Mauvaise</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="93. Symptômes thyroïde (sélection multiple)" error={errors.symptomesThyroide?.message}>
+                        <div className="space-y-2">
+                          {['Fatigue extrême', 'Prise de poids', 'Chute de cheveux', 'Peau sèche', 'Aucun'].map((symptome) => (
+                            <label key={symptome} className="flex items-center gap-2 text-sm">
+                              <input
+                                type="checkbox"
+                                value={symptome}
+                                {...register('symptomesThyroide')}
+                                className="checkbox-field"
+                              />
+                              <span>{symptome}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </QuestionCard>
+
+                      <QuestionCard title="94. Résistance à l'insuline diagnostiquée ?" error={errors.resistanceInsuline?.message}>
+                        <select {...register('resistanceInsuline')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="non">Non</option>
+                          <option value="soupconnee">Soupçonnée</option>
+                          <option value="diagnostiquee">Diagnostiquée</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="95. Hypoglycémies fréquentes ?" error={errors.hypoglycemiesFrequentes?.message}>
+                        <select {...register('hypoglycemiesFrequentes')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="jamais">Jamais</option>
+                          <option value="rare">Rare</option>
+                          <option value="parfois">Parfois</option>
+                          <option value="souvent">Souvent</option>
+                          <option value="quotidien">Quotidien</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="96. Menstruation régulière (si applicable)" error={errors.menstruationReguliere?.message}>
+                        <select {...register('menstruationReguliere')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="oui">Oui, régulière</option>
+                          <option value="non">Non, irrégulière</option>
+                          <option value="non_applicable">Non applicable</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="97. Symptômes SPM (sélection multiple)" error={errors.symptomesSPM?.message}>
+                        <div className="space-y-2">
+                          {['Irritabilité', 'Ballonnements', 'Fatigue', 'Fringales', 'Aucun'].map((symptome) => (
+                            <label key={symptome} className="flex items-center gap-2 text-sm">
+                              <input
+                                type="checkbox"
+                                value={symptome}
+                                {...register('symptomesSPM')}
+                                className="checkbox-field"
+                              />
+                              <span>{symptome}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </QuestionCard>
+
+                      <QuestionCard title="98. Ménopause/Andropause" error={errors.menopauseAndropause?.message}>
+                        <select {...register('menopauseAndropause')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="non">Non</option>
+                          <option value="pre">Pré-ménopause/andropause</option>
+                          <option value="en_cours">En cours</option>
+                          <option value="post">Post-ménopause/andropause</option>
+                        </select>
+                      </QuestionCard>
+                    </>
+                  )}
+
+                  {currentSection === 10 && (
+                    <>
+                      {/* Section 11: Lifestyle & Substances (7Q) */}
+                      <QuestionCard title="99. Consommation d'alcool par semaine" error={errors.consommationAlcool?.message}>
                         <select {...register('consommationAlcool')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
+                          <option value="aucune">Aucune</option>
                           <option value="occasionnel">Occasionnel (événements spéciaux)</option>
-                          <option value="1_3_semaine">1-3 fois par semaine</option>
-                          <option value="4_7_semaine">4-7 fois par semaine</option>
-                          <option value="quotidien_multiple">Quotidien, plusieurs verres</option>
+                          <option value="1_3_verres">1-3 verres</option>
+                          <option value="4_7_verres">4-7 verres</option>
+                          <option value="8_plus_verres">8+ verres</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Combien de verres d'alcool par semaine en moyenne ?" error={errors.verresAlcoolSemaine?.message}>
-                        <input
-                          type="number"
-                          {...register('verresAlcoolSemaine', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 3"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Quelle est votre consommation de caféine ?" error={errors.consommationCafeine?.message}>
+                      <QuestionCard title="100. Consommation de caféine par jour" error={errors.consommationCafeine?.message}>
                         <select {...register('consommationCafeine')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="1_cafe">1 café par jour</option>
-                          <option value="2_3_cafes">2-3 cafés par jour</option>
-                          <option value="4_5_cafes">4-5 cafés par jour</option>
-                          <option value="plus_5_cafes">Plus de 5 cafés par jour</option>
+                          <option value="0">0 (aucune caféine)</option>
+                          <option value="1_cafe">1 café</option>
+                          <option value="2_3_cafes">2-3 cafés</option>
+                          <option value="4_5_cafes">4-5 cafés</option>
+                          <option value="6_plus_cafes">6+ cafés</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="À quelle heure prenez-vous votre dernier café ?" error={errors.heureDernierCafe?.message}>
+                      <QuestionCard title="101. Heure du dernier café" error={errors.heureDernierCafe?.message}>
                         <input
                           type="time"
                           {...register('heureDernierCafe')}
@@ -1134,26 +1448,17 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Consommez-vous du tabac ?" error={errors.tabac?.message}>
+                      <QuestionCard title="102. Tabac" error={errors.tabac?.message}>
                         <select {...register('tabac')} className="input-field">
                           <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
+                          <option value="jamais">Jamais fumé</option>
                           <option value="ancien">Ancien fumeur</option>
                           <option value="occasionnel">Occasionnel</option>
                           <option value="regulier">Régulier</option>
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="Si fumeur, combien de cigarettes par jour ?" error={errors.cigarettesJour?.message}>
-                        <input
-                          type="number"
-                          {...register('cigarettesJour', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 10"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="Combien de litres d'eau buvez-vous par jour ?" error={errors.hydratationLitresJour?.message}>
+                      <QuestionCard title="103. Hydratation litres par jour" error={errors.hydratationLitresJour?.message}>
                         <input
                           type="number"
                           step="0.1"
@@ -1163,9 +1468,9 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="Quels suppléments prenez-vous actuellement ?" error={errors.supplementsActuels?.message}>
+                      <QuestionCard title="104. Suppléments actuels (sélection multiple)" error={errors.supplementsActuels?.message}>
                         <div className="space-y-2">
-                          {['Multivitamines', 'Vitamine D', 'Oméga-3', 'Magnésium', 'Probiotiques', 'Protéines en poudre', 'Créatine', 'Pré-workout', 'Aucun'].map((supplement) => (
+                          {['Multivitamines', 'Vitamine D', 'Oméga-3', 'Magnésium', 'Probiotiques', 'Protéines', 'Créatine', 'Pré-workout', 'Aucun'].map((supplement) => (
                             <label key={supplement} className="flex items-center gap-2 text-sm">
                               <input
                                 type="checkbox"
@@ -1178,98 +1483,14 @@ export default function QuestionnairePage() {
                           ))}
                         </div>
                       </QuestionCard>
-                    </>
-                  )}
 
-                  {currentSection === 8 && (
-                    <>
-                      {/* Section 9: Objectifs & Motivation */}
-                      <QuestionCard title="Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
-                        <select {...register('objectifPrincipal')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="perte_poids">Perte de poids / graisse</option>
-                          <option value="gain_muscle">Gain de masse musculaire</option>
-                          <option value="recomposition">Recomposition corporelle</option>
-                          <option value="performance">Amélioration performance</option>
-                          <option value="sante">Amélioration santé générale</option>
-                          <option value="energie">Augmentation énergie / vitalité</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Quels sont vos objectifs secondaires ?" error={errors.objectifSecondaires?.message}>
-                        <div className="space-y-2">
-                          {['Améliorer sommeil', 'Réduire stress', 'Optimiser digestion', 'Équilibre hormonal', 'Améliorer humeur', 'Augmenter libido', 'Meilleure peau'].map((objectif) => (
-                            <label key={objectif} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={objectif}
-                                {...register('objectifSecondaires')}
-                                className="checkbox-field"
-                              />
-                              <span>{objectif}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
-                        <select {...register('timelineObjectif')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="1_3_mois">1-3 mois</option>
-                          <option value="3_6_mois">3-6 mois</option>
-                          <option value="6_12_mois">6-12 mois</option>
-                          <option value="plus_12_mois">Plus de 12 mois</option>
-                        </select>
-                      </QuestionCard>
-
-                      <QuestionCard title="Quels sont vos principaux obstacles ?" error={errors.obstaclesPrincipaux?.message}>
-                        <div className="space-y-2">
-                          {['Manque de temps', 'Manque de motivation', 'Manque de connaissances', 'Budget limité', 'Environnement défavorable', 'Stress', 'Blessures/limitations', 'Manque de soutien'].map((obstacle) => (
-                            <label key={obstacle} className="flex items-center gap-2 text-sm">
-                              <input
-                                type="checkbox"
-                                value={obstacle}
-                                {...register('obstaclesPrincipaux')}
-                                className="checkbox-field"
-                              />
-                              <span>{obstacle}</span>
-                            </label>
-                          ))}
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Décrivez vos tentatives précédentes pour atteindre vos objectifs" error={errors.tentativesPrecedentes?.message}>
+                      <QuestionCard title="105. Médicaments réguliers (texte libre) - Optionnel" error={errors.medicamentsReguliers?.message}>
                         <textarea
-                          {...register('tentativesPrecedentes')}
+                          {...register('medicamentsReguliers')}
                           className="input-field"
-                          rows={4}
-                          placeholder="Qu'avez-vous essayé ? Qu'est-ce qui a fonctionné ou non ?"
+                          rows={3}
+                          placeholder="Liste des médicaments que vous prenez régulièrement..."
                         />
-                      </QuestionCard>
-
-                      <QuestionCard title="Quel est votre niveau de motivation actuel ? (1-10)" error={errors.niveauMotivation?.message}>
-                        <input
-                          type="range"
-                          min="1"
-                          max="10"
-                          {...register('niveauMotivation', { valueAsNumber: true })}
-                          className="range-field"
-                        />
-                        <div className="flex justify-between text-xs text-gray-400 mt-2">
-                          <span>Aucune motivation</span>
-                          <span>Extrêmement motivé</span>
-                        </div>
-                      </QuestionCard>
-
-                      <QuestionCard title="Quel niveau de soutien avez-vous de votre entourage ?" error={errors.soutiensEntourage?.message}>
-                        <select {...register('soutiensEntourage')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="aucun">Aucun soutien</option>
-                          <option value="faible">Faible soutien</option>
-                          <option value="moyen">Soutien moyen</option>
-                          <option value="fort">Fort soutien</option>
-                          <option value="tres_fort">Très fort soutien</option>
-                        </select>
                       </QuestionCard>
                     </>
                   )}
