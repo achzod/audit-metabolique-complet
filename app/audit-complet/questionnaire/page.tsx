@@ -127,11 +127,11 @@ const questionnaireSchema = z.object({
   menopauseAndropause: z.enum(['non', 'pre', 'en_cours', 'post']),
 
   // Section 11: Lifestyle & Substances (7Q)
-  consommationAlcool: z.enum(['aucune', 'occasionnel', '1_3_verres', '4_7_verres', '8_plus_verres']),
-  consommationCafeine: z.enum(['0', '1_cafe', '2_3_cafes', '4_5_cafes', '6_plus_cafes']),
+  consommationAlcool: z.enum(['aucune', 'occasionnel', '1_3_verres', '4_7_verres', '8_plus_verres']).optional(),
+  consommationCafeine: z.enum(['0', '1_cafe', '2_3_cafes', '4_5_cafes', '6_plus_cafes']).optional(),
   heureDernierCafe: z.string().optional(),
-  tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']),
-  hydratationLitresJour: z.number().min(0).max(10),
+  tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']).optional(),
+  hydratationLitresJour: z.number().min(0).max(10).optional(),
   supplementsActuels: z.array(z.string()).default([]),
   medicamentsReguliers: z.string().optional(),
 });
@@ -1506,7 +1506,7 @@ export default function QuestionnairePage() {
                   className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] hover:opacity-90 transition-all flex items-center justify-center gap-2 font-semibold text-black"
                 >
                   <Check className="w-5 h-5" />
-                  Terminer et Passer au Paiement
+                  Terminer et Voir Mes Options
                 </button>
               )}
             </div>
