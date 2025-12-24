@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-12-15.clover',
-})
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
-
 export async function POST(request: Request) {
+  // Initialize Stripe inside the function to avoid build-time errors
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+    apiVersion: '2025-12-15.clover',
+  })
+
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
+
   try {
     const body = await request.text()
     const signature = request.headers.get('stripe-signature')!
