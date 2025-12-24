@@ -8,14 +8,19 @@ ${JSON.stringify(responses, null, 2)}
 
 **INSTRUCTIONS**:
 
-1. Analyse les réponses du client (profil anthropométrique, historique pondéral, métabolisme, digestion)
+1. Analyse les réponses du client (profil anthropométrique, métabolisme, digestion, activité de base)
 2. Génère un document HTML complet avec ces 4 sections visibles:
    - Résumé Exécutif
    - Analyse Profil Anthropométrique
    - Diagnostic Métabolisme & Énergie
-   - Plan d'Action Rapide (30 jours)
+   - Recommandations Initiales
 
-3. Les 11 autres sections doivent être VERROUILLÉES avec un call-to-action pour passer en Premium (79€)
+3. Les 11 autres sections doivent être VERROUILLÉES avec un call-to-action pour passer en Premium (1€ TEST)
+
+**⚠️ IMPORTANT - POUR LA VERSION GRATUITE AUSSI**:
+- ❌ PAS de plan nutritionnel détaillé (macros, grammes, repas précis)
+- ❌ PAS de programme d'entraînement (exercices, séries, reps)
+- ✅ SEULEMENT: Analyse + Recommandations générales + Principes
 
 **DESIGN HTML** (obligatoire):
 - Fond: #0A0A0F
@@ -67,10 +72,10 @@ ${JSON.stringify(responses, null, 2)}
       <!-- Analyse énergétique -->
     </section>
 
-    <!-- Section 4: Plan d'Action -->
+    <!-- Section 4: Recommandations Initiales -->
     <section class="unlocked">
-      <h2>🎯 Plan d'Action Rapide (30 jours)</h2>
-      <!-- Actions concrètes -->
+      <h2>🎯 Recommandations Initiales</h2>
+      <!-- Recommandations générales - PAS de programmes détaillés -->
     </section>
 
     <!-- Sections 5-15: VERROUILLÉES -->
@@ -82,19 +87,24 @@ ${JSON.stringify(responses, null, 2)}
         <ul>
           <li>Digestion & Microbiome avancé</li>
           <li>Hormones & Signaux métaboliques</li>
-          <li>Performance & Activité</li>
-          <li>Sommeil & Récupération</li>
-          <li>Lifestyle & Substances</li>
-          <li>... et 6 autres analyses détaillées</li>
+          <li>HRV & Récupération cardiaque</li>
+          <li>Performance & Activité détaillée</li>
+          <li>Sommeil profond & Phases</li>
+          <li>Analyses sanguines interprétées</li>
+          <li>Synthèse métabolique globale</li>
+          <li>Points faibles prioritaires</li>
+          <li>Recommandations nutrition poussées</li>
+          <li>Recommandations entraînement avancées</li>
+          <li>Stratégies optimisation complètes</li>
         </ul>
-        <a href="https://achzod-audit-metabolique.onrender.com/upgrade" class="cta-button">
-          🚀 Passer en Premium - 79€
+        <a href="https://audit-metabolique-v2.onrender.com/upgrade" class="cta-button">
+          🚀 Passer en Premium - 1€ (TEST)
         </a>
       </div>
     </section>
 
     <footer>
-      <p>© 2025 AchZod Coaching - Audit généré par Claude AI</p>
+      <p>© 2025 AchZod Coaching</p>
     </footer>
   </div>
 </body>
@@ -103,7 +113,9 @@ ${JSON.stringify(responses, null, 2)}
 **IMPORTANT**:
 - Personnalise TOUS les contenus selon les données du client
 - Utilise des émojis pour rendre le contenu vivant
-- Sois précis, actionable et scientifique
+- Sois précis, scientifique mais accessible
+- Explique le POURQUOI des problèmes identifiés
+- Donne des recommandations = principes et stratégies (PAS de programmes détaillés)
 - Le HTML doit être complet et prêt à afficher
 - Maximum 4000 tokens
 `,

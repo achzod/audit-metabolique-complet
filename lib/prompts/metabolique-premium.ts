@@ -8,25 +8,39 @@ ${JSON.stringify(responses, null, 2)}
 
 **INSTRUCTIONS**:
 
-1. Analyse TOUTES les réponses du questionnaire (85 questions, 9 sections)
+1. Analyse TOUTES les réponses du questionnaire (103 questions, 11 sections)
 2. Génère un document HTML complet avec 15 sections d'analyse:
 
 **SECTIONS OBLIGATOIRES**:
-1. Résumé Exécutif (métriques clés, scores)
+1. Résumé Exécutif (métriques clés, scores, vue d'ensemble)
 2. Profil Anthropométrique (IMC, composition corporelle, objectifs)
-3. Historique Pondéral (analyse variations poids, yoyo)
-4. Métabolisme & Énergie (TEE, thermogenèse, fatigue)
-5. Digestion & Microbiome (santé digestive, intolérances)
-6. Hormones & Signaux (cortisol, thyroïde, insuline, sexuelles)
-7. Activité & Performance (volume, intensité, récupération)
-8. Sommeil & Récupération (qualité, durée, chronotype)
-9. Lifestyle & Substances (stress, alcool, stimulants)
-10. Objectifs & Motivation (psychologie, obstacles)
-11. Synthèse Métabolique Globale (profil métabolique unique)
-12. Plan Nutritionnel Personnalisé (macros, timing, aliments)
-13. Protocole Entraînement Sur-Mesure (split, volume, intensité)
-14. Stratégies Optimisation Hormonale (sommeil, stress, suppléments)
-15. Feuille de Route 90 Jours (semaine par semaine)
+3. Historique & Contexte (variations poids, historique yoyo si applicable)
+4. Métabolisme & Énergie (TEE estimé, thermogenèse, analyse fatigue)
+5. Digestion & Microbiome (santé digestive, intolérances, recommandations)
+6. Hormones & Signaux (cortisol, thyroïde, insuline, hormones sexuelles)
+7. HRV & Récupération Cardiaque (analyse données wearables si disponibles)
+8. Sommeil & Récupération (qualité, phases, chronotype, recommandations)
+9. Activité & Performance (volume, intensité, récupération, VO2 max)
+10. Analyses Sanguines (interprétation biomarqueurs si fournis)
+11. Lifestyle & Stress (gestion stress, substances, recommandations)
+12. Synthèse Métabolique Globale (profil métabolique unique du client)
+13. Points Faibles Prioritaires (3-5 axes d'amélioration majeurs avec WHY scientifique)
+14. Recommandations Nutrition (principes, stratégies, timing - PAS de programme/macros précis)
+15. Recommandations Entraînement & Optimisation (principes, approches - PAS de split/programme détaillé)
+
+**⚠️ IMPORTANT - CE QUI EST INTERDIT**:
+- ❌ PAS de plan nutritionnel détaillé (macros précises, grammes, repas)
+- ❌ PAS de programme d'entraînement (split, exercices, séries/reps)
+- ❌ PAS de "feuille de route semaine par semaine"
+- ✅ SEULEMENT: Analyse profonde + Recommandations + Principes + Stratégies
+
+**CE QUE TU DOIS FAIRE**:
+- Analyser et EXPLIQUER en profondeur tout ce qui ne va pas
+- Donner des recommandations poussées et scientifiques
+- Expliquer le POURQUOI de chaque problème
+- Donner des principes et stratégies (pas de programmes détaillés)
+- Exemple BON: "Tes niveaux d'énergie bas l'après-midi suggèrent une résistance à l'insuline. Recommandation: Privilégie les glucides à IG bas, augmente protéines/lipides, essaye le jeûne intermittent 16/8"
+- Exemple INTERDIT: "Petit-déj: 40g protéines, 50g glucides, 20g lipides. Déjeuner: poulet 200g, riz 150g..."
 
 **DESIGN HTML** (obligatoire):
 - Fond: #0A0A0F avec gradients subtils
@@ -155,9 +169,17 @@ ${JSON.stringify(responses, null, 2)}
       color: #00F5D4;
     }
 
-    .action-item {
+    .recommendation-item {
       background: rgba(167, 139, 250, 0.1);
       border-left: 4px solid #A78BFA;
+      padding: 15px 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+
+    .priority-item {
+      background: rgba(255, 107, 107, 0.1);
+      border-left: 4px solid #FF6B6B;
       padding: 15px 20px;
       margin: 10px 0;
       border-radius: 8px;
@@ -197,21 +219,26 @@ ${JSON.stringify(responses, null, 2)}
     <!-- Génère les 15 sections ici avec contenu détaillé et personnalisé -->
 
     <footer>
-      <p>© 2025 AchZod Coaching - Audit Premium généré par Claude Sonnet 4</p>
+      <p>© 2025 AchZod Coaching</p>
       <p>Questions? coaching@achzodcoaching.com</p>
     </footer>
   </div>
 </body>
 </html>
 
+**TON & STYLE**:
+- Scientifique mais accessible
+- Motivant et bienveillant
+- Émojis pour clarté visuelle
+- Explique le POURQUOI en profondeur
+- Focus sur l'analyse et la compréhension
+- Recommandations = principes et stratégies (PAS de programmes détaillés)
+
 **IMPORTANT**:
 - Personnalise TOUT selon les données uniques du client
-- Sois ultra-précis: calculs métaboliques, macros, timing, volumes
-- Analyse scientifique + ton friendly et motivant
-- Émojis pour clarté visuelle
-- Actionable: chaque section = actions concrètes
-- Graphiques ASCII pour visualisations (ex: progression, ratios macros)
+- Analyse scientifique profonde + ton friendly
 - Maximum 16000 tokens
 - HTML complet, autonome, prêt à afficher
+- RAPPEL: Pas de programmes nutrition/entraînement détaillés - seulement analyse + recommandations
 `,
 }
