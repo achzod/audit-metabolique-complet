@@ -61,7 +61,7 @@ const questionnaireSchema = z.object({
   transitIntestinal: z.enum(['constipation', 'normal', 'diarrhee', 'alterne']),
   frequenceSelles: z.enum(['moins_3_sem', '3_6_sem', '1_jour', '2_3_jour', '3_plus_jour']),
   douleursAbdominales: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
-  intolerances: z.array(z.string()),
+  intolerances: z.array(z.string()).default([]),
   refluxGastrique: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
   priseProbiotiques: z.enum(['jamais', 'passe', 'actuellement']),
   qualiteDigestion: z.number().min(1).max(10),
@@ -119,11 +119,11 @@ const questionnaireSchema = z.object({
   // Section 10: Hormones & Stress (8Q)
   niveauStress: z.number().min(1).max(10),
   gestionStress: z.enum(['tres_mauvaise', 'mauvaise', 'moyenne', 'bonne', 'excellente']),
-  symptomesThyroide: z.array(z.string()),
+  symptomesThyroide: z.array(z.string()).default([]),
   resistanceInsuline: z.enum(['non', 'soupconnee', 'diagnostiquee']),
   hypoglycemiesFrequentes: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
   menstruationReguliere: z.enum(['oui', 'non', 'non_applicable']),
-  symptomesSPM: z.array(z.string()),
+  symptomesSPM: z.array(z.string()).default([]),
   menopauseAndropause: z.enum(['non', 'pre', 'en_cours', 'post']),
 
   // Section 11: Lifestyle & Substances (7Q)
@@ -132,7 +132,7 @@ const questionnaireSchema = z.object({
   heureDernierCafe: z.string().optional(),
   tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']),
   hydratationLitresJour: z.number().min(0).max(10),
-  supplementsActuels: z.array(z.string()),
+  supplementsActuels: z.array(z.string()).default([]),
   medicamentsReguliers: z.string().optional(),
 });
 

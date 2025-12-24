@@ -28,7 +28,7 @@ export async function POST(request: Request) {
               name: 'Audit Métabolique Premium',
               description: '15 sections d\'analyse complète + Plan personnalisé 90 jours',
             },
-            unit_amount: 7900, // 79€ in cents
+            unit_amount: 100, // 1€ in cents (TEST)
           },
           quantity: 1,
         },

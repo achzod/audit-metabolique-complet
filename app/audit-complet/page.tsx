@@ -80,7 +80,7 @@ export default function LandingPage() {
                   <div>
                     <h3 className="font-bold text-lg mb-1">Tu choisis ta version</h3>
                     <p className="text-light/70 text-sm">
-                      <span className="text-cyan-400 font-semibold">Gratuit (4 sections)</span> ou <span className="text-purple-400 font-semibold">Premium (15 sections, 79€)</span>
+                      <span className="text-cyan-400 font-semibold">Gratuit (4 sections)</span> ou <span className="text-purple-400 font-semibold">Premium (15 sections, 1€ TEST)</span>
                     </p>
                   </div>
                 </div>
@@ -216,7 +216,7 @@ export default function LandingPage() {
                 </div>
 
                 <div className="text-center mb-8">
-                  <p className="text-5xl font-bold gradient-text mb-2">79€</p>
+                  <p className="text-5xl font-bold gradient-text mb-2">1€</p>
                   <p className="text-light/50 text-sm">Paiement unique</p>
                 </div>
 

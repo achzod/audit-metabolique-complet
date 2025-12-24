@@ -181,7 +181,7 @@ export default function CheckoutPage() {
             </div>
 
             <div className="text-center mb-8">
-              <p className="text-6xl font-bold gradient-text mb-2">79€</p>
+              <p className="text-6xl font-bold gradient-text mb-2">1€</p>
               <p className="text-light/50 text-sm">Paiement unique</p>
             </div>
 
@@ -280,7 +280,7 @@ export default function CheckoutPage() {
                   Redirection...
                 </div>
               ) : selectedPlan === 'PREMIUM' ? (
-                `Payer 79€ via ${paymentMethod === 'STRIPE' ? 'Carte' : 'PayPal'}`
+                `Payer 1€ via ${paymentMethod === 'STRIPE' ? 'Carte' : 'PayPal'}`
               ) : (
                 'Choisir Premium'
               )}
