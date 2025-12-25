@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section7Digestion({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={1} title="Fréquence ballonnements abdominaux">
         <RadioGroup
           name="ballonnements"
-          value={responses.ballonnements}
+          value={responses?.ballonnements}
           onChange={(value) => updateResponses({ ballonnements: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, ventre plat', good: true },
@@ -39,7 +39,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={2} title="Gaz / flatulences excessifs">
         <RadioGroup
           name="gazExcessifs"
-          value={responses.gazExcessifs}
+          value={responses?.gazExcessifs}
           onChange={(value) => updateResponses({ gazExcessifs: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais / rare', good: true },
@@ -54,7 +54,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={3} title="Reflux acide / brûlures d'estomac">
         <RadioGroup
           name="refluxAcide"
-          value={responses.refluxAcide}
+          value={responses?.refluxAcide}
           onChange={(value) => updateResponses({ refluxAcide: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais', good: true },
@@ -70,7 +70,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={4} title="Qualité selles (échelle Bristol)">
         <RadioGroup
           name="qualiteSelles"
-          value={responses.qualiteSelles}
+          value={responses?.qualiteSelles}
           onChange={(value) => updateResponses({ qualiteSelles: value as any })}
           options={[
             { value: 'TYPE_1_2', label: 'Type 1-2 (dures, séparées)', critical: true, tooltip: 'Constipation / transit lent' },
@@ -86,7 +86,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={5} title="Fréquence selles quotidienne">
         <RadioGroup
           name="frequenceSelles"
-          value={responses.frequenceSelles}
+          value={responses?.frequenceSelles}
           onChange={(value) => updateResponses({ frequenceSelles: value as any })}
           options={[
             { value: '<1', label: '<1x/jour (tous les 2-3 jours)', critical: true, tooltip: 'Transit lent' },
@@ -101,7 +101,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={6} title="Aliments non digérés visibles dans les selles">
         <RadioGroup
           name="alimentsNonDigeres"
-          value={responses.alimentsNonDigeres}
+          value={responses?.alimentsNonDigeres}
           onChange={(value) => updateResponses({ alimentsNonDigeres: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais', good: true },
@@ -132,9 +132,9 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
             >
               <input
                 type="checkbox"
-                checked={responses.intolerancesAlimentaires?.includes(option.value) || false}
+                checked={responses?.intolerancesAlimentaires?.includes(option.value) || false}
                 onChange={(e) => {
-                  const current = responses.intolerancesAlimentaires || [];
+                  const current = responses?.intolerancesAlimentaires || [];
                   const updated = e.target.checked
                     ? [...current, option.value]
                     : current.filter((v) => v !== option.value);
@@ -152,7 +152,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={8} title="Douleurs / crampes abdominales">
         <RadioGroup
           name="douleursAbdominales"
-          value={responses.douleursAbdominales}
+          value={responses?.douleursAbdominales}
           onChange={(value) => updateResponses({ douleursAbdominales: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais', good: true },
@@ -168,7 +168,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={9} title="Antibiotiques dans les 12 derniers mois">
         <RadioGroup
           name="antibiotiquesRecents"
-          value={responses.antibiotiquesRecents}
+          value={responses?.antibiotiquesRecents}
           onChange={(value) => updateResponses({ antibiotiquesRecents: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun', good: true },
@@ -183,7 +183,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={10} title="Diversité alimentaire (nombre aliments différents/semaine)">
         <RadioGroup
           name="diversiteAlimentaire"
-          value={responses.diversiteAlimentaire}
+          value={responses?.diversiteAlimentaire}
           onChange={(value) => updateResponses({ diversiteAlimentaire: value as any })}
           options={[
             { value: '<10', label: '<10 aliments (très faible)', critical: true, tooltip: 'Microbiome appauvri' },
@@ -199,7 +199,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={11} title="Consommation quotidienne de fibres (légumes, fruits)">
         <RadioGroup
           name="consommationFibres"
-          value={responses.consommationFibres}
+          value={responses?.consommationFibres}
           onChange={(value) => updateResponses({ consommationFibres: value as any })}
           options={[
             { value: 'TRES_FAIBLE', label: 'Très faible (<10g/jour)', critical: true },
@@ -215,7 +215,7 @@ export default function Section7Digestion({ responses, updateResponses }: Props)
       <QuestionCard number={12} title="Consommation régulière probiotiques / aliments fermentés">
         <RadioGroup
           name="probiotiques"
-          value={responses.probiotiques}
+          value={responses?.probiotiques}
           onChange={(value) => updateResponses({ probiotiques: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais' },

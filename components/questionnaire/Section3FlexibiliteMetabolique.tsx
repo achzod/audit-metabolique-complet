@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (data: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (data: any) => void;
 }
 
 export default function Section3FlexibiliteMetabolique({ responses, updateResponses }: Props) {
@@ -29,7 +29,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="tempsSansManger"
-          value={responses.tempsSansManger}
+          value={responses?.tempsSansManger}
           onChange={(value) => updateResponses({ tempsSansManger: value as any })}
           options={[
             { value: '<2H', label: 'Moins de 2h', critical: true, tooltip: 'Métabolisme 100% glucose-dépendant 🚨' },
@@ -51,7 +51,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="sauterPetitDej"
-          value={responses.sauterPetitDej}
+          value={responses?.sauterPetitDej}
           onChange={(value) => updateResponses({ sauterPetitDej: value as any })}
           options={[
             { value: 'HYPOGLYCEMIE_SEVERE', label: 'Hypoglycémie sévère (tremblements, sueurs, malaise)', critical: true },
@@ -72,7 +72,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="energieJeuneIntermittent"
-          value={responses.energieJeuneIntermittent}
+          value={responses?.energieJeuneIntermittent}
           onChange={(value) => updateResponses({ energieJeuneIntermittent: value as any })}
           options={[
             { value: 'JAMAIS_TESTE', label: 'Jamais testé' },
@@ -91,7 +91,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="tempsEntreeCetose"
-          value={responses.tempsEntreeCetose}
+          value={responses?.tempsEntreeCetose}
           onChange={(value) => updateResponses({ tempsEntreeCetose: value as any })}
           options={[
             { value: 'JAMAIS_KETO', label: 'Jamais fait keto' },
@@ -112,7 +112,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="energieLowCarb"
-          value={responses.energieLowCarb}
+          value={responses?.energieLowCarb}
           onChange={(value) => updateResponses({ energieLowCarb: value as any })}
           options={[
             { value: 'JAMAIS_TESTE', label: 'Jamais testé' },
@@ -132,7 +132,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="apresGlucidesRapides"
-          value={responses.apresGlucidesRapides}
+          value={responses?.apresGlucidesRapides}
           onChange={(value) => updateResponses({ apresGlucidesRapides: value as any })}
           options={[
             { value: 'CRASH_IMMEDIAT', label: 'Crash d\'énergie immédiat + brain fog (résistance insuline sévère)', critical: true },
@@ -152,7 +152,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="frequenceEnviesSucre"
-          value={responses.frequenceEnviesSucre}
+          value={responses?.frequenceEnviesSucre}
           onChange={(value) => updateResponses({ frequenceEnviesSucre: value as any })}
           options={[
             { value: '1-2H', label: 'Toutes les 1-2h (glucose-addict total)', critical: true },
@@ -172,7 +172,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="momentPicEnviesSucre"
-          value={responses.momentPicEnviesSucre}
+          value={responses?.momentPicEnviesSucre}
           onChange={(value) => updateResponses({ momentPicEnviesSucre: value as any })}
           options={[
             { value: 'REVEIL', label: 'Dès le réveil' },
@@ -194,7 +194,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="performanceCognitiveJeun"
-          value={responses.performanceCognitiveJeun}
+          value={responses?.performanceCognitiveJeun}
           onChange={(value) => updateResponses({ performanceCognitiveJeun: value as any })}
           options={[
             { value: 'INCAPACITE', label: 'Incapacité totale à réfléchir (cerveau 100% glucose)', critical: true },
@@ -214,7 +214,7 @@ export default function Section3FlexibiliteMetabolique({ responses, updateRespon
       >
         <RadioGroup
           name="niveauEnergieGras"
-          value={responses.niveauEnergieGras}
+          value={responses?.niveauEnergieGras}
           onChange={(value) => updateResponses({ niveauEnergieGras: value as any })}
           options={[
             { value: 'JAMAIS_TESTE', label: 'Jamais testé' },

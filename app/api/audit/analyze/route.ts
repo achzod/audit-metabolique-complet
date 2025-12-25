@@ -30,14 +30,14 @@ export async function POST(request: Request) {
       audit.type as 'GRATUIT' | 'PREMIUM'
     )
 
-    // Update audit with generated content
+    // Update audit with generated content based on type
+    const updateData = audit.type === 'PREMIUM'
+      ? { htmlPremium: htmlContent, status: 'COMPLETED', completedAt: new Date(), generatedAt: new Date() }
+      : { htmlFree: htmlContent, status: 'COMPLETED', completedAt: new Date(), generatedAt: new Date() }
+
     await prisma.audit.update({
       where: { id: auditId },
-      data: {
-        htmlContent,
-        status: 'COMPLETED',
-        completedAt: new Date(),
-      },
+      data: updateData,
     })
 
     return NextResponse.json({ success: true }, { status: 200 })

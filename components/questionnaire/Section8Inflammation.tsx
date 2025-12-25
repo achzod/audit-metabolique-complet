@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section8Inflammation({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={1} title="Douleurs articulaires / raideurs">
         <RadioGroup
           name="douleursArticulaires"
-          value={responses.douleursArticulaires}
+          value={responses?.douleursArticulaires}
           onChange={(value) => updateResponses({ douleursArticulaires: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune, articulations souples', good: true },
@@ -39,7 +39,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={2} title="Raideur articulaire au réveil">
         <RadioGroup
           name="raideurMatinale"
-          value={responses.raideurMatinale}
+          value={responses?.raideurMatinale}
           onChange={(value) => updateResponses({ raideurMatinale: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune, mobile immédiatement', good: true },
@@ -55,7 +55,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={3} title="Tendinites / blessures récurrentes">
         <RadioGroup
           name="tendinitesRecurrentes"
-          value={responses.tendinitesRecurrentes}
+          value={responses?.tendinitesRecurrentes}
           onChange={(value) => updateResponses({ tendinitesRecurrentes: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais', good: true },
@@ -71,7 +71,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={4} title="Temps de récupération blessures mineures">
         <RadioGroup
           name="recuperationBlessures"
-          value={responses.recuperationBlessures}
+          value={responses?.recuperationBlessures}
           onChange={(value) => updateResponses({ recuperationBlessures: value as any })}
           options={[
             { value: 'RAPIDE', label: 'Rapide (<1 semaine)', good: true },
@@ -87,7 +87,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={5} title="Allergies (saisonnières, alimentaires, environnementales)">
         <RadioGroup
           name="allergies"
-          value={responses.allergies}
+          value={responses?.allergies}
           onChange={(value) => updateResponses({ allergies: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune', good: true },
@@ -103,7 +103,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={6} title="Fréquence maladies (rhumes, infections)">
         <RadioGroup
           name="frequenceMaladies"
-          value={responses.frequenceMaladies}
+          value={responses?.frequenceMaladies}
           onChange={(value) => updateResponses({ frequenceMaladies: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais malade', good: true, tooltip: 'Système immunitaire fort' },
@@ -119,7 +119,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={7} title="Acné / problèmes de peau inflammatoires">
         <RadioGroup
           name="acneInflammatoire"
-          value={responses.acneInflammatoire}
+          value={responses?.acneInflammatoire}
           onChange={(value) => updateResponses({ acneInflammatoire: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun, peau claire', good: true },
@@ -135,7 +135,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={8} title="Eczéma / psoriasis / conditions auto-immunes cutanées">
         <RadioGroup
           name="eczema"
-          value={responses.eczema}
+          value={responses?.eczema}
           onChange={(value) => updateResponses({ eczema: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun', good: true },
@@ -150,7 +150,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={9} title="Inflammations gencives (saignements brossage)">
         <RadioGroup
           name="inflammationsGencives"
-          value={responses.inflammationsGencives}
+          value={responses?.inflammationsGencives}
           onChange={(value) => updateResponses({ inflammationsGencives: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, gencives saines', good: true },
@@ -166,7 +166,7 @@ export default function Section8Inflammation({ responses, updateResponses }: Pro
       <QuestionCard number={10} title="Fréquence prise anti-inflammatoires (ibuprofène, etc.)">
         <RadioGroup
           name="antiInflammatoiresFrequence"
-          value={responses.antiInflammatoiresFrequence}
+          value={responses?.antiInflammatoiresFrequence}
           onChange={(value) => updateResponses({ antiInflammatoiresFrequence: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais', good: true },

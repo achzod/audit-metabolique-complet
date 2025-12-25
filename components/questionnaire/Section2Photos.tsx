@@ -6,8 +6,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
   photos: { face?: File; back?: File; side?: File };
   setPhotos: (photos: { face?: File; back?: File; side?: File }) => void;
 }
@@ -101,7 +101,7 @@ export default function Section2Photos({ responses, updateResponses, photos, set
       <QuestionCard number={4} title="Comment décrirais-tu ton morphotype actuel ?">
         <RadioGroup
           name="morphotypePercu"
-          value={responses.morphotypePercu}
+          value={responses?.morphotypePercu}
           onChange={(value) => updateResponses({ morphotypePercu: value as any })}
           options={[
             {
@@ -137,7 +137,7 @@ export default function Section2Photos({ responses, updateResponses, photos, set
       <QuestionCard number={5} title="Bodyfat estimé actuellement (%) - approximatif">
         <RadioGroup
           name="bodyfatEstime"
-          value={responses.bodyfatEstime}
+          value={responses?.bodyfatEstime}
           onChange={(value) => updateResponses({ bodyfatEstime: value as any })}
           options={[
             { value: '5-8%', label: '5-8% (vascularisation extrême, abdos hyper définis)', good: true },
@@ -155,7 +155,7 @@ export default function Section2Photos({ responses, updateResponses, photos, set
       <QuestionCard number={6} title="Où stockes-tu le plus de gras ?">
         <RadioGroup
           name="distributionGras"
-          value={responses.distributionGras}
+          value={responses?.distributionGras}
           onChange={(value) => updateResponses({ distributionGras: value as any })}
           options={[
             { value: 'ABDOMEN_VISCERAL', label: 'Abdomen viscéral (ventre dur, gonflé)', critical: true, tooltip: 'Signe d\'insulino-résistance / cortisol élevé' },
@@ -172,7 +172,7 @@ export default function Section2Photos({ responses, updateResponses, photos, set
       <QuestionCard number={7} title="Rétention d'eau visible ?">
         <RadioGroup
           name="retentionEau"
-          value={responses.retentionEau}
+          value={responses?.retentionEau}
           onChange={(value) => updateResponses({ retentionEau: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune, peau fine', good: true },

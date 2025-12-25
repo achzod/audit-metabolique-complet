@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section5Neurotransmetteurs({ responses, updateResponses }: Props) {
@@ -25,13 +25,13 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
           type="range"
           min="1"
           max="10"
-          value={responses.motivationQuotidienne || 5}
+          value={responses?.motivationQuotidienne || 5}
           onChange={(e) => updateResponses({ motivationQuotidienne: parseInt(e.target.value) })}
           className="w-full accent-cyan-500"
         />
         <div className="flex justify-between text-sm text-gray-400 mt-2">
           <span>1 (zéro drive)</span>
-          <span className="text-white font-bold">{responses.motivationQuotidienne || 5}</span>
+          <span className="text-white font-bold">{responses?.motivationQuotidienne || 5}</span>
           <span>10 (ultra motivé)</span>
         </div>
       </QuestionCard>
@@ -40,7 +40,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={2} title="Niveau de procrastination">
         <RadioGroup
           name="procrastination"
-          value={responses.procrastination}
+          value={responses?.procrastination}
           onChange={(value) => updateResponses({ procrastination: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, exécution immédiate', good: true, tooltip: 'Dopamine saine' },
@@ -72,9 +72,9 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
             >
               <input
                 type="checkbox"
-                checked={responses.addictions?.includes(option.value) || false}
+                checked={responses?.addictions?.includes(option.value) || false}
                 onChange={(e) => {
-                  const current = responses.addictions || [];
+                  const current = responses?.addictions || [];
                   const updated = e.target.checked
                     ? [...current, option.value]
                     : current.filter((v) => v !== option.value);
@@ -92,7 +92,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={4} title="Capacité de focus / concentration soutenue">
         <RadioGroup
           name="capaciteFocus"
-          value={responses.capaciteFocus}
+          value={responses?.capaciteFocus}
           onChange={(value) => updateResponses({ capaciteFocus: value as any })}
           options={[
             { value: 'IMPOSSIBLE', label: 'Impossible (<15min)', critical: true, tooltip: 'ADHD-like, dopamine effondrée' },
@@ -108,7 +108,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={5} title="Humeur baseline (sans événement particulier)">
         <RadioGroup
           name="humeurBaseline"
-          value={responses.humeurBaseline}
+          value={responses?.humeurBaseline}
           onChange={(value) => updateResponses({ humeurBaseline: value as any })}
           options={[
             { value: 'DEPRESSIVE', label: 'Dépressive / sombre', critical: true, tooltip: 'Sérotonine basse' },
@@ -124,7 +124,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={6} title="Niveau d'anxiété général">
         <RadioGroup
           name="anxiete"
-          value={responses.anxiete}
+          value={responses?.anxiete}
           onChange={(value) => updateResponses({ anxiete: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune, calme naturel', good: true, tooltip: 'GABA optimal' },
@@ -140,7 +140,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={7} title="Plaisir dans les activités habituellement plaisantes">
         <RadioGroup
           name="plaisirActivites"
-          value={responses.plaisirActivites}
+          value={responses?.plaisirActivites}
           onChange={(value) => updateResponses({ plaisirActivites: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun, anhedonie totale', critical: true, tooltip: '🚨 Dopamine effondrée' },
@@ -157,7 +157,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={8} title="Sensibilité aux récompenses (besoin de stimulation intense ?)">
         <RadioGroup
           name="rewardSensitivity"
-          value={responses.rewardSensitivity}
+          value={responses?.rewardSensitivity}
           onChange={(value) => updateResponses({ rewardSensitivity: value as any })}
           options={[
             { value: 'TRES_BASSE', label: 'Très basse (rien ne satisfait)', critical: true, tooltip: 'Récepteurs dopamine désensibilisés' },
@@ -172,7 +172,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={9} title="Impulsivité / acting without thinking">
         <RadioGroup
           name="impulsivite"
-          value={responses.impulsivite}
+          value={responses?.impulsivite}
           onChange={(value) => updateResponses({ impulsivite: value as any })}
           options={[
             { value: 'TRES_BASSE', label: 'Très basse (réfléchi à l\'excès)', tooltip: 'Peut indiquer sérotonine élevée' },
@@ -188,7 +188,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={10} title="Sociabilité / besoin d'interaction sociale">
         <RadioGroup
           name="sociabilite"
-          value={responses.sociabilite}
+          value={responses?.sociabilite}
           onChange={(value) => updateResponses({ sociabilite: value as any })}
           options={[
             { value: 'ISOLATION', label: 'Évite activement (anxiété sociale)', critical: true, tooltip: 'Peut indiquer oxytocine/sérotonine basses' },
@@ -205,7 +205,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={11} title="Libido / sex drive">
         <RadioGroup
           name="libido"
-          value={responses.libido}
+          value={responses?.libido}
           onChange={(value) => updateResponses({ libido: value as any })}
           options={[
             { value: 'INEXISTANTE', label: 'Inexistante', critical: true, tooltip: 'Dopamine + testostérone basses' },
@@ -222,7 +222,7 @@ export default function Section5Neurotransmetteurs({ responses, updateResponses 
       <QuestionCard number={12} title="Clarté mentale / brain fog">
         <RadioGroup
           name="mentalClarity"
-          value={responses.mentalClarity}
+          value={responses?.mentalClarity}
           onChange={(value) => updateResponses({ mentalClarity: value as any })}
           options={[
             { value: 'FOG_CONSTANT', label: 'Brain fog constant', critical: true, tooltip: '🚨 Inflammation + neurotransmetteurs dysfonctionnels' },

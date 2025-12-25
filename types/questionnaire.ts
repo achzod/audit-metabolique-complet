@@ -118,10 +118,16 @@ export interface QuestionnaireResponses {
   trackerSommeil: "OURA" | "WHOOP" | "APPLE_WATCH" | "AUTRE" | "AUCUN";
 
   // SECTION 10: TRAINING & PERFORMANCE (4Q)
-  frequenceTraining: "0" | "1-2" | "3-4" | "5-6" | "7+";
+  frequenceTraining: "0" | "1-2" | "3-4" | "5-6" | "7+" | "AUCUN" | "1-2X" | "3-4X" | "5-6X" | "7+";
   typeTraining: "MUSCU_HYPERTROPHIE" | "MUSCU_FORCE" | "CROSSFIT" | "CARDIO" | "SPORTS" | "MIXTE";
-  progressionPerformance: "EXCELLENTE" | "BONNE" | "STAGNATION" | "REGRESSION";
-  pumpMusculaire: "EXCELLENT" | "BON" | "MOYEN" | "FAIBLE" | "ABSENT";
+  typeTrainingDominant: "MUSCU_HYPERTROPHIE" | "MUSCU_FORCE" | "CROSSFIT" | "CARDIO" | "SPORTS" | "MIXTE" | "AUCUN";
+  intensiteMoyenne: string;
+  recuperationEntreSeances: string;
+  progressionPerformance: "EXCELLENTE" | "BONNE" | "STAGNATION" | "REGRESSION" | "REGULIERE" | "PLATEAU" | "REGRESSION";
+  pumpMusculaire: "EXCELLENT" | "BON" | "MOYEN" | "FAIBLE" | "ABSENT" | "TRES_BON" | "MAUVAIS";
+  forceFatigue: string;
+  dernierePerf: string;
+  comparaison1An: string;
 }
 
 // ============================================================================

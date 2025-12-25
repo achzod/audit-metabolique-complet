@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section6Hormones({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={1} title="Facilité à prendre du muscle (progression hypertrophie)">
         <RadioGroup
           name="facilitePriseMuscle"
-          value={responses.facilitePriseMuscle}
+          value={responses?.facilitePriseMuscle}
           onChange={(value) => updateResponses({ facilitePriseMuscle: value as any })}
           options={[
             { value: 'IMPOSSIBLE', label: 'Impossible / stagnation totale', critical: true, tooltip: 'Testostérone ou hormones anaboliques basses' },
@@ -40,7 +40,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={2} title="Facilité à perdre du gras (en déficit calorique)">
         <RadioGroup
           name="facilitePerteGras"
-          value={responses.facilitePerteGras}
+          value={responses?.facilitePerteGras}
           onChange={(value) => updateResponses({ facilitePerteGras: value as any })}
           options={[
             { value: 'IMPOSSIBLE', label: 'Impossible même en déficit sévère', critical: true, tooltip: 'Métabolisme endommagé / thyroïde' },
@@ -57,7 +57,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={3} title="Rétention musculaire en déficit calorique">
         <RadioGroup
           name="retentionMuscleCut"
-          value={responses.retentionMuscleCut}
+          value={responses?.retentionMuscleCut}
           onChange={(value) => updateResponses({ retentionMuscleCut: value as any })}
           options={[
             { value: 'PERTE_MASSIVE', label: 'Perte massive (muscle fond)', critical: true, tooltip: 'Testostérone basse ou cortisol élevé' },
@@ -70,10 +70,10 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       </QuestionCard>
 
       {/* Q4: Gynécomastie homme / rétention eau seins femme */}
-      <QuestionCard number={4} title={responses.sexe === 'HOMME' ? 'Gynécomastie (développement tissu mammaire homme)' : 'Rétention d\'eau / gonflement seins'}>
+      <QuestionCard number={4} title={responses?.sexe === 'HOMME' ? 'Gynécomastie (développement tissu mammaire homme)' : 'Rétention d\'eau / gonflement seins'}>
         <RadioGroup
           name="gynecomastieMasculine"
-          value={responses.gynecomastieMasculine}
+          value={responses?.gynecomastieMasculine}
           onChange={(value) => updateResponses({ gynecomastieMasculine: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune', good: true },
@@ -87,12 +87,12 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       {/* Q5: Qualité érections HOMME / libido cycles FEMME */}
       <QuestionCard
         number={5}
-        title={responses.sexe === 'HOMME' ? 'Qualité érections matinales' : 'Libido selon cycle menstruel'}
+        title={responses?.sexe === 'HOMME' ? 'Qualité érections matinales' : 'Libido selon cycle menstruel'}
       >
-        {responses.sexe === 'HOMME' ? (
+        {responses?.sexe === 'HOMME' ? (
           <RadioGroup
             name="qualiteErectionsMatin"
-            value={responses.qualiteErectionsMatin}
+            value={responses?.qualiteErectionsMatin}
             onChange={(value) => updateResponses({ qualiteErectionsMatin: value as any })}
             options={[
               { value: 'AUCUNE', label: 'Aucune depuis longtemps', critical: true, tooltip: '🚨 Testostérone très basse' },
@@ -105,7 +105,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
         ) : (
           <RadioGroup
             name="libidoCycleFeminin"
-            value={responses.libidoCycleFeminin}
+            value={responses?.libidoCycleFeminin}
             onChange={(value) => updateResponses({ libidoCycleFeminin: value as any })}
             options={[
               { value: 'INEXISTANTE', label: 'Inexistante tout le cycle', critical: true },
@@ -120,12 +120,12 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       {/* Q6: Pilosité faciale HOMME / acné hormonale FEMME */}
       <QuestionCard
         number={6}
-        title={responses.sexe === 'HOMME' ? 'Croissance pilosité faciale (barbe)' : 'Acné hormonale (mâchoire, cou)'}
+        title={responses?.sexe === 'HOMME' ? 'Croissance pilosité faciale (barbe)' : 'Acné hormonale (mâchoire, cou)'}
       >
-        {responses.sexe === 'HOMME' ? (
+        {responses?.sexe === 'HOMME' ? (
           <RadioGroup
             name="croissancePilosite"
-            value={responses.croissancePilosite}
+            value={responses?.croissancePilosite}
             onChange={(value) => updateResponses({ croissancePilosite: value as any })}
             options={[
               { value: 'INEXISTANTE', label: 'Inexistante / très faible', tooltip: 'Testostérone ou DHT bas' },
@@ -138,7 +138,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
         ) : (
           <RadioGroup
             name="acneHormonale"
-            value={responses.acneHormonale}
+            value={responses?.acneHormonale}
             onChange={(value) => updateResponses({ acneHormonale: value as any })}
             options={[
               { value: 'AUCUNE', label: 'Aucune', good: true },
@@ -154,7 +154,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={7} title="Testostérone TOTALE (dernière prise de sang)">
         <RadioGroup
           name="testosteroneDerniereAnalyse"
-          value={responses.testosteroneDerniereAnalyse}
+          value={responses?.testosteroneDerniereAnalyse}
           onChange={(value) => updateResponses({ testosteroneDerniereAnalyse: value as any })}
           options={[
             { value: 'JAMAIS_TESTE', label: 'Jamais testé' },
@@ -171,7 +171,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={8} title="Sensibilité au froid (mains/pieds glacés)">
         <RadioGroup
           name="sensibiliteFroid"
-          value={responses.sensibiliteFroid}
+          value={responses?.sensibiliteFroid}
           onChange={(value) => updateResponses({ sensibiliteFroid: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, toujours chaud', good: true },
@@ -187,7 +187,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={9} title="Température corporelle au réveil (si mesurée)">
         <RadioGroup
           name="temperatureCorporelleMatin"
-          value={responses.temperatureCorporelleMatin}
+          value={responses?.temperatureCorporelleMatin}
           onChange={(value) => updateResponses({ temperatureCorporelleMatin: value as any })}
           options={[
             { value: 'JAMAIS_MESURE', label: 'Jamais mesuré' },
@@ -204,7 +204,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={10} title="Chute de cheveux / calvitie">
         <RadioGroup
           name="chuteCheveux"
-          value={responses.chuteCheveux}
+          value={responses?.chuteCheveux}
           onChange={(value) => updateResponses({ chuteCheveux: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune', good: true },
@@ -219,7 +219,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={11} title="Peau sèche / épaisse (surtout coudes, genoux)">
         <RadioGroup
           name="peauSeche"
-          value={responses.peauSeche}
+          value={responses?.peauSeche}
           onChange={(value) => updateResponses({ peauSeche: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, peau normale', good: true },
@@ -234,7 +234,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={12} title="Fréquence constipation">
         <RadioGroup
           name="constipation"
-          value={responses.constipation}
+          value={responses?.constipation}
           onChange={(value) => updateResponses({ constipation: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais (transit régulier)', good: true },
@@ -250,7 +250,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={13} title="Facilité à prendre du poids (gras) en surplus léger">
         <RadioGroup
           name="prisePoidsGrasFacile"
-          value={responses.prisePoidsGrasFacile}
+          value={responses?.prisePoidsGrasFacile}
           onChange={(value) => updateResponses({ prisePoidsGrasFacile: value as any })}
           options={[
             { value: 'IMPOSSIBLE', label: 'Impossible (ectomorphe extrême)', tooltip: 'Métabolisme très rapide' },
@@ -267,7 +267,7 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       <QuestionCard number={14} title="Sensation de chaleur après repas (thermogenèse)">
         <RadioGroup
           name="chaleurApresRepas"
-          value={responses.chaleurApresRepas}
+          value={responses?.chaleurApresRepas}
           onChange={(value) => updateResponses({ chaleurApresRepas: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais (froid après repas)', critical: true, tooltip: 'Métabolisme très lent' },
@@ -280,11 +280,11 @@ export default function Section6Hormones({ responses, updateResponses }: Props) 
       </QuestionCard>
 
       {/* Q15: Cycles menstruels FEMME */}
-      {responses.sexe === 'FEMME' && (
+      {responses?.sexe === 'FEMME' && (
         <QuestionCard number={15} title="Régularité cycles menstruels">
           <RadioGroup
             name="regulariteCycles"
-            value={responses.regulariteCycles}
+            value={responses?.regulariteCycles}
             onChange={(value) => updateResponses({ regulariteCycles: value as any })}
             options={[
               { value: 'REGULIERS', label: 'Réguliers (25-32 jours)', good: true },

@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section9Sommeil({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={1} title="Heures de sommeil par nuit (moyenne)">
         <RadioGroup
           name="heuresSommeilNuit"
-          value={responses.heuresSommeilNuit}
+          value={responses?.heuresSommeilNuit}
           onChange={(value) => updateResponses({ heuresSommeilNuit: value as any })}
           options={[
             { value: '<5H', label: '<5h (privation sévère)', critical: true, tooltip: '🚨 Métabolisme détruit' },
@@ -42,13 +42,13 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
           type="range"
           min="1"
           max="10"
-          value={responses.qualiteSommeilPercue || 5}
+          value={responses?.qualiteSommeilPercue || 5}
           onChange={(e) => updateResponses({ qualiteSommeilPercue: parseInt(e.target.value) })}
           className="w-full accent-cyan-500"
         />
         <div className="flex justify-between text-sm text-gray-400 mt-2">
           <span>1 (atroce)</span>
-          <span className="text-white font-bold">{responses.qualiteSommeilPercue || 5}</span>
+          <span className="text-white font-bold">{responses?.qualiteSommeilPercue || 5}</span>
           <span>10 (parfait)</span>
         </div>
       </QuestionCard>
@@ -57,7 +57,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={3} title="Sensation au réveil">
         <RadioGroup
           name="sensationReveil"
-          value={responses.sensationReveil}
+          value={responses?.sensationReveil}
           onChange={(value) => updateResponses({ sensationReveil: value as any })}
           options={[
             { value: 'EPUISE', label: 'Épuisé, non récupéré', critical: true, tooltip: 'Sommeil non réparateur' },
@@ -73,7 +73,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={4} title="Fréquence rêves / cauchemars intenses">
         <RadioGroup
           name="revesIntenses"
-          value={responses.revesIntenses}
+          value={responses?.revesIntenses}
           onChange={(value) => updateResponses({ revesIntenses: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, sommeil profond', good: true },
@@ -89,7 +89,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={5} title="Ronflements / apnées du sommeil">
         <RadioGroup
           name="ronflements"
-          value={responses.ronflements}
+          value={responses?.ronflements}
           onChange={(value) => updateResponses({ ronflements: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun', good: true },
@@ -105,7 +105,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={6} title="Besoin de sieste journalière">
         <RadioGroup
           name="besoinSieste"
-          value={responses.besoinSieste}
+          value={responses?.besoinSieste}
           onChange={(value) => updateResponses({ besoinSieste: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, énergie stable', good: true },
@@ -121,7 +121,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={7} title="Exposition écrans (lumière bleue) avant coucher">
         <RadioGroup
           name="expositionLumiereBleueSoir"
-          value={responses.expositionLumiereBleueSoir}
+          value={responses?.expositionLumiereBleueSoir}
           onChange={(value) => updateResponses({ expositionLumiereBleueSoir: value as any })}
           options={[
             { value: 'AUCUNE', label: 'Aucune (coupure 2h avant)', good: true, tooltip: 'Optimal pour mélatonine' },
@@ -137,7 +137,7 @@ export default function Section9Sommeil({ responses, updateResponses }: Props) {
       <QuestionCard number={8} title="Vitesse récupération musculaire post-training">
         <RadioGroup
           name="recuperationMusculaire"
-          value={responses.recuperationMusculaire}
+          value={responses?.recuperationMusculaire}
           onChange={(value) => updateResponses({ recuperationMusculaire: value as any })}
           options={[
             { value: 'TRES_LENTE', label: 'Très lente (5-7 jours)', critical: true, tooltip: 'Sommeil ou hormones' },

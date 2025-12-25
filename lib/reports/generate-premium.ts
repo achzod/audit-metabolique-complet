@@ -7,7 +7,7 @@ const anthropic = new Anthropic({
 
 interface GeneratePremiumReportParams {
   userName: string;
-  responses: QuestionnaireResponses;
+  responses: any;
   scores: MetabolicScores;
   aiAnalysis: AIAnalysis;
 }
@@ -197,7 +197,7 @@ Réponds UNIQUEMENT avec les paragraphes.`;
 
 async function generateMetabolicProfileAnalysis(
   metabolicProfile: AIAnalysis['metabolicProfile'],
-  responses: QuestionnaireResponses
+  responses: any
 ): Promise<string> {
   const prompt = `Tu es AchZod. Analyse le profil métabolique DÉTAILLÉ.
 
@@ -251,7 +251,7 @@ Réponds UNIQUEMENT avec les paragraphes.`;
 
 async function generateAllAxesAnalysis(
   scores: MetabolicScores,
-  responses: QuestionnaireResponses
+  responses: any
 ): Promise<Record<string, string>> {
   const axesEntries = Object.entries(scores.axes);
 
@@ -371,7 +371,7 @@ Réponds UNIQUEMENT avec le protocole.`;
 // ============================================================================
 
 async function generateNutritionProtocol(
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores,
   metabolicProfile: AIAnalysis['metabolicProfile']
 ): Promise<string> {
@@ -438,7 +438,7 @@ Réponds UNIQUEMENT avec le protocole.`;
 // ============================================================================
 
 async function generateTrainingProtocol(
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores,
   aiAnalysis: AIAnalysis
 ): Promise<string> {

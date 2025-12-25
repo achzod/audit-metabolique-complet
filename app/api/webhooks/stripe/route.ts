@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 export async function POST(request: Request) {
   // Initialize Stripe inside the function to avoid build-time errors
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-    apiVersion: '2025-02-24.acacia',
+    apiVersion: '2025-12-15.clover',
   })
 
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || ''
@@ -31,14 +31,15 @@ export async function POST(request: Request) {
           where: { auditId },
           data: {
             status: 'COMPLETED',
-            stripePaymentId: session.payment_intent as string,
+            providerPaymentId: session.payment_intent as string,
+            paidAt: new Date(),
           },
         })
 
-        // Update audit version to premium
+        // Update audit type to PREMIUM
         await prisma.audit.update({
           where: { id: auditId },
-          data: { version: 'PREMIUM' },
+          data: { type: 'PREMIUM' },
         })
       }
     }

@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section10Training({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section10Training({ responses, updateResponses }: Props)
       <QuestionCard number={1} title="Fréquence entraînement hebdomadaire">
         <RadioGroup
           name="frequenceTraining"
-          value={responses.frequenceTraining}
+          value={responses?.frequenceTraining}
           onChange={(value) => updateResponses({ frequenceTraining: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun (sédentaire)', critical: true },
@@ -39,7 +39,7 @@ export default function Section10Training({ responses, updateResponses }: Props)
       <QuestionCard number={2} title="Type d'entraînement dominant">
         <RadioGroup
           name="typeTrainingDominant"
-          value={responses.typeTrainingDominant}
+          value={responses?.typeTrainingDominant}
           onChange={(value) => updateResponses({ typeTrainingDominant: value as any })}
           options={[
             { value: 'MUSCU_HYPERTROPHIE', label: 'Musculation hypertrophie' },
@@ -57,7 +57,7 @@ export default function Section10Training({ responses, updateResponses }: Props)
       <QuestionCard number={3} title="Énergie / performance pendant le training">
         <RadioGroup
           name="energiePendantTraining"
-          value={responses.energiePendantTraining}
+          value={responses?.energiePendantTraining}
           onChange={(value) => updateResponses({ energiePendantTraining: value as any })}
           options={[
             { value: 'EPUISE', label: 'Épuisé, performances effondrées', critical: true, tooltip: 'Métabolisme ou hormones cassés' },
@@ -73,7 +73,7 @@ export default function Section10Training({ responses, updateResponses }: Props)
       <QuestionCard number={4} title="Qualité pump / congestion musculaire (si musculation)">
         <RadioGroup
           name="qualitePump"
-          value={responses.qualitePump}
+          value={responses?.qualitePump}
           onChange={(value) => updateResponses({ qualitePump: value as any })}
           options={[
             { value: 'INEXISTANT', label: 'Inexistant (muscles plats)', critical: true, tooltip: 'Glycogène vide ou circulation mauvaise' },

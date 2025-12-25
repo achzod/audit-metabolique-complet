@@ -6,7 +6,7 @@ const anthropic = new Anthropic({
 });
 
 export async function analyzeWithClaude(
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores,
   photos?: {
     photoFace?: string;
@@ -83,8 +83,8 @@ Réponds en JSON structuré.`,
     ];
 
     // Add photos as base64 images
-    if (photos.photoFace) {
-      messages[0].content.push({
+    if (photos.photoFace && Array.isArray(messages[0].content)) {
+      (messages[0].content as any[]).push({
         type: 'image',
         source: {
           type: 'base64',
@@ -133,7 +133,7 @@ Réponds en JSON structuré.`,
 }
 
 function determineMetabolicProfile(
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores
 ) {
   const flexScore = scores.axes.flexibiliteMetabolique;
@@ -182,7 +182,7 @@ function determineMetabolicProfile(
 }
 
 function identifyTopBlockages(
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores
 ): AIAnalysis['topBlockages'] {
   // Convert axes object to array with names
@@ -213,7 +213,7 @@ function identifyTopStrengths(scores: MetabolicScores): AIAnalysis['topStrengths
   return axesArray.sort((a, b) => b.score - a.score).slice(0, 3);
 }
 
-function extractObservations(responses: QuestionnaireResponses): string[] {
+function extractObservations(responses: any): string[] {
   const observations: string[] = [];
 
   // Flexibilité métabolique
@@ -246,7 +246,7 @@ function extractObservations(responses: QuestionnaireResponses): string[] {
   return observations;
 }
 
-function getDetectedSignalsForAxis(axeName: string, responses: QuestionnaireResponses): string[] {
+function getDetectedSignalsForAxis(axeName: string, responses: any): string[] {
   // Map signals based on axis name
   // Exemple pour dopamine:
   if (axeName === 'dopamine') {
@@ -262,7 +262,7 @@ function getDetectedSignalsForAxis(axeName: string, responses: QuestionnaireResp
   return [];
 }
 
-function getImpactsForAxis(axeName: string, responses: QuestionnaireResponses): string[] {
+function getImpactsForAxis(axeName: string, responses: any): string[] {
   // Map impacts based on axis
   if (axeName === 'dopamine') {
     return [

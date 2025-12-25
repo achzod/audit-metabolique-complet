@@ -55,9 +55,9 @@ export async function POST(request: Request) {
     // STEP 2: Analyze with Claude (morphotype, profile, blockages)
     console.log('🤖 Analyzing with Claude AI...');
     const aiAnalysis = await analyzeWithClaude(responses, scores, {
-      photoFace: photoFaceBase64,
-      photoBack: photoBackBase64,
-      photoSide: photoSideBase64,
+      photoFace: photoFaceBase64 ?? undefined,
+      photoBack: photoBackBase64 ?? undefined,
+      photoSide: photoSideBase64 ?? undefined,
     });
 
     // STEP 3: Generate FREE report
@@ -73,8 +73,8 @@ export async function POST(request: Request) {
     await prisma.audit.update({
       where: { id: audit.id },
       data: {
-        scores,
-        aiAnalysis,
+        scores: JSON.parse(JSON.stringify(scores)),
+        aiAnalysis: JSON.parse(JSON.stringify(aiAnalysis)),
         htmlFree: freeReportHtml,
         status: 'COMPLETED',
         completedAt: new Date(),

@@ -3,14 +3,13 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: Request) {
   try {
-    const { userId, type, responses, version = 'GRATUIT' } = await request.json()
+    const { userId, type = 'GRATUIT', responses } = await request.json()
 
-    // Create audit
+    // Create audit - type is used for GRATUIT/PREMIUM
     const audit = await prisma.audit.create({
       data: {
         userId,
         type,
-        version,
         responses,
         status: 'PENDING',
       },

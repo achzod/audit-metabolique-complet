@@ -7,7 +7,7 @@ const anthropic = new Anthropic({
 
 interface GenerateFreeReportParams {
   userName: string;
-  responses: QuestionnaireResponses;
+  responses: any;
   scores: MetabolicScores;
   aiAnalysis: AIAnalysis;
 }
@@ -171,7 +171,7 @@ async function generateBlockageAnalysis(
   userName: string,
   blockage: AIAnalysis['topBlockages'][0],
   blockageNumber: number,
-  responses: QuestionnaireResponses,
+  responses: any,
   scores: MetabolicScores
 ): Promise<{ title: string; content: string }> {
   const relevantResponses = getRelevantResponses(blockage.axeName, responses);
@@ -557,7 +557,7 @@ function getBlockageCategoryColor(category: string): string {
   return '#10B981';
 }
 
-function getRelevantResponses(axeName: string, responses: QuestionnaireResponses): Partial<QuestionnaireResponses> {
+function getRelevantResponses(axeName: string, responses: any): Partial<QuestionnaireResponses> {
   // Map relevant responses based on axis
   const mapping: Record<string, (keyof QuestionnaireResponses)[]> = {
     dopamine: ['motivationQuotidienne', 'procrastination', 'addictions', 'capaciteFocus'],

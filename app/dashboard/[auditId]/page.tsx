@@ -106,12 +106,12 @@ export default async function AuditDetailPage({
           </Link>
           <span
             className={`text-sm font-bold px-4 py-2 rounded-full ${
-              audit.version === 'PREMIUM'
+              audit.type === 'PREMIUM'
                 ? 'bg-gradient-to-r from-cyan-400 to-purple-400 text-dark'
                 : 'bg-light/10 text-light'
             }`}
           >
-            {audit.version === 'PREMIUM' ? '💎 Premium' : '🎁 Gratuit'}
+            {audit.type === 'PREMIUM' ? '💎 Premium' : '🎁 Gratuit'}
           </span>
         </div>
 
@@ -119,12 +119,12 @@ export default async function AuditDetailPage({
         <div className="glass gradient-border rounded-3xl overflow-hidden">
           <div
             className="audit-content p-8"
-            dangerouslySetInnerHTML={{ __html: audit.htmlContent || '' }}
+            dangerouslySetInnerHTML={{ __html: (audit.type === 'PREMIUM' ? audit.htmlPremium : audit.htmlFree) || '' }}
           />
         </div>
 
         {/* Upgrade CTA for free users */}
-        {audit.version === 'GRATUIT' && (
+        {audit.type === 'GRATUIT' && (
           <div className="mt-12 glass gradient-border rounded-3xl p-8 text-center">
             <h2 className="text-3xl font-bold gradient-text mb-4">
               Débloquer l'analyse complète

@@ -12,7 +12,7 @@ import { QuestionnaireResponses, MetabolicScores } from '@/types/questionnaire';
  */
 
 export async function calculateMetabolicScores(
-  responses: QuestionnaireResponses
+  responses: any
 ): Promise<MetabolicScores> {
   // ============================================================================
   // CATÉGORIE: MÉTABOLISME & ÉNERGIE
@@ -282,7 +282,7 @@ export async function calculateMetabolicScores(
 // FONCTIONS DE CALCUL PAR AXE
 // ============================================================================
 
-function calculateFlexibiliteMetabolique(responses: QuestionnaireResponses): number {
+function calculateFlexibiliteMetabolique(responses: any): number {
   let score = 50; // Base
 
   // Temps sans manger
@@ -312,12 +312,12 @@ function calculateFlexibiliteMetabolique(responses: QuestionnaireResponses): num
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSwitchingCarburant(responses: QuestionnaireResponses): number {
+function calculateSwitchingCarburant(responses: any): number {
   // Similaire à flexibilité métabolique mais focus différent
   return calculateFlexibiliteMetabolique(responses);
 }
 
-function calculateSanteMitochondriale(responses: QuestionnaireResponses): number {
+function calculateSanteMitochondriale(responses: any): number {
   let score = 50;
 
   // Énergie en low-carb
@@ -345,7 +345,7 @@ function calculateSanteMitochondriale(responses: QuestionnaireResponses): number
 // À COMPLÉTER: Toutes les autres fonctions de scoring (37 restantes)
 // Même logique: analyser les réponses, appliquer des modifieurs, clamp 0-100
 
-function calculateDopamine(responses: QuestionnaireResponses): number {
+function calculateDopamine(responses: any): number {
   let score = 50;
 
   // Motivation
@@ -372,7 +372,7 @@ function calculateDopamine(responses: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateUtilisationGlucose(r: QuestionnaireResponses): number {
+function calculateUtilisationGlucose(r: any): number {
   let score = 50;
 
   // Résistance insuline
@@ -392,7 +392,7 @@ function calculateUtilisationGlucose(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateUtilisationLipides(r: QuestionnaireResponses): number {
+function calculateUtilisationLipides(r: any): number {
   let score = 50;
 
   // Énergie avec gras
@@ -413,7 +413,7 @@ function calculateUtilisationLipides(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateTestosterone(r: QuestionnaireResponses): number {
+function calculateTestosterone(r: any): number {
   let score = 50;
 
   // Libido
@@ -441,7 +441,7 @@ function calculateTestosterone(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateOestrogenes(r: QuestionnaireResponses): number {
+function calculateOestrogenes(r: any): number {
   let score = 50;
 
   // Gynécomastie (excès E2 chez homme)
@@ -461,7 +461,7 @@ function calculateOestrogenes(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateCortisol(r: QuestionnaireResponses): number {
+function calculateCortisol(r: any): number {
   let score = 50;
 
   // Niveau stress chronique
@@ -484,7 +484,7 @@ function calculateCortisol(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculatePatternCortisol(r: QuestionnaireResponses): number {
+function calculatePatternCortisol(r: any): number {
   let score = 50;
 
   // Énergie réveil (cortisol doit être élevé le matin)
@@ -512,7 +512,7 @@ function calculatePatternCortisol(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSensibiliteInsuline(r: QuestionnaireResponses): number {
+function calculateSensibiliteInsuline(r: any): number {
   let score = 50;
 
   // Crash après glucides
@@ -544,7 +544,7 @@ function calculateSensibiliteInsuline(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateFonctionThyroidienne(r: QuestionnaireResponses): number {
+function calculateFonctionThyroidienne(r: any): number {
   let score = 50;
 
   // Température corporelle
@@ -571,7 +571,7 @@ function calculateFonctionThyroidienne(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSensibiliteRecepteursD2(r: QuestionnaireResponses): number {
+function calculateSensibiliteRecepteursD2(r: any): number {
   // Basé sur dopamine mais focus sur downregulation récepteurs
   let score = calculateDopamine(r);
 
@@ -586,7 +586,7 @@ function calculateSensibiliteRecepteursD2(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSerotonine(r: QuestionnaireResponses): number {
+function calculateSerotonine(r: any): number {
   let score = 50;
 
   // Humeur globale
@@ -612,7 +612,7 @@ function calculateSerotonine(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateGABA(r: QuestionnaireResponses): number {
+function calculateGABA(r: any): number {
   let score = 50;
 
   // Niveau anxiété (inverse)
@@ -638,7 +638,7 @@ function calculateGABA(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateNoradrenaline(r: QuestionnaireResponses): number {
+function calculateNoradrenaline(r: any): number {
   let score = 50;
 
   // Énergie mentale & vigilance
@@ -656,7 +656,7 @@ function calculateNoradrenaline(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSanteDigestive(r: QuestionnaireResponses): number {
+function calculateSanteDigestive(r: any): number {
   let score = 50;
 
   // Ballonnements
@@ -685,7 +685,7 @@ function calculateSanteDigestive(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateDiversiteMicrobiome(r: QuestionnaireResponses): number {
+function calculateDiversiteMicrobiome(r: any): number {
   let score = 50;
 
   // Cures antibiotiques (détruisent microbiome)
@@ -706,7 +706,7 @@ function calculateDiversiteMicrobiome(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateIntegriteIntestinale(r: QuestionnaireResponses): number {
+function calculateIntegriteIntestinale(r: any): number {
   let score = 50;
 
   // Intolérances multiples (leaky gut)
@@ -727,7 +727,7 @@ function calculateIntegriteIntestinale(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateProductionEnzymes(r: QuestionnaireResponses): number {
+function calculateProductionEnzymes(r: any): number {
   let score = 50;
 
   // Réaction gras (déficit enzymes/bile)
@@ -750,7 +750,7 @@ function calculateProductionEnzymes(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateInflammationSystemique(r: QuestionnaireResponses): number {
+function calculateInflammationSystemique(r: any): number {
   let score = 50;
 
   // Douleurs articulaires
@@ -777,7 +777,7 @@ function calculateInflammationSystemique(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateStressOxydatif(r: QuestionnaireResponses): number {
+function calculateStressOxydatif(r: any): number {
   let score = 50;
 
   // Qualité peau (collagène dégradé par stress oxydatif)
@@ -801,7 +801,7 @@ function calculateStressOxydatif(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateFonctionImmunitaire(r: QuestionnaireResponses): number {
+function calculateFonctionImmunitaire(r: any): number {
   let score = 50;
 
   // Maladies auto-immunes (système immunitaire déréglé)
@@ -820,7 +820,7 @@ function calculateFonctionImmunitaire(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSanteCardiovasculaire(r: QuestionnaireResponses): number {
+function calculateSanteCardiovasculaire(r: any): number {
   let score = 50;
 
   // Gras viscéral (risque cardio)
@@ -839,7 +839,7 @@ function calculateSanteCardiovasculaire(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateProfilLipidique(r: QuestionnaireResponses): number {
+function calculateProfilLipidique(r: any): number {
   let score = 50;
 
   // Sensibilité insuline (impact profil lipidique)
@@ -856,7 +856,7 @@ function calculateProfilLipidique(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateFonctionHepatique(r: QuestionnaireResponses): number {
+function calculateFonctionHepatique(r: any): number {
   let score = 50;
 
   // Gras viscéral (foie gras)
@@ -874,7 +874,7 @@ function calculateFonctionHepatique(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSanteArticulaire(r: QuestionnaireResponses): number {
+function calculateSanteArticulaire(r: any): number {
   let score = 50;
 
   // Douleurs articulaires
@@ -898,7 +898,7 @@ function calculateSanteArticulaire(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateQualiteCollagene(r: QuestionnaireResponses): number {
+function calculateQualiteCollagene(r: any): number {
   let score = 50;
 
   // Qualité peau
@@ -921,7 +921,7 @@ function calculateQualiteCollagene(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateQualiteSommeil(r: QuestionnaireResponses): number {
+function calculateQualiteSommeil(r: any): number {
   let score = 50;
 
   // Heures sommeil
@@ -958,7 +958,7 @@ function calculateQualiteSommeil(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateSommeilREM(r: QuestionnaireResponses): number {
+function calculateSommeilREM(r: any): number {
   let score = 50;
 
   // Fréquence rêves (marqueur REM)
@@ -978,7 +978,7 @@ function calculateSommeilREM(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculateRecuperation(r: QuestionnaireResponses): number {
+function calculateRecuperation(r: any): number {
   let score = 50;
 
   // Récupération musculaire
@@ -1004,7 +1004,7 @@ function calculateRecuperation(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculatePerformanceAnaerobie(r: QuestionnaireResponses): number {
+function calculatePerformanceAnaerobie(r: any): number {
   let score = 50;
 
   // Pump musculaire (marqueur sensibilité insuline + vascularisation)
@@ -1027,7 +1027,7 @@ function calculatePerformanceAnaerobie(r: QuestionnaireResponses): number {
   return Math.max(0, Math.min(100, score));
 }
 
-function calculatePerformanceAerobie(r: QuestionnaireResponses): number {
+function calculatePerformanceAerobie(r: any): number {
   let score = 50;
 
   // Flexibilité métabolique (critique pour aérobie)

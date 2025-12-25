@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section4EnergieCortisol({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={1} title="Énergie au réveil (avant caféine)">
         <RadioGroup
           name="energieReveil"
-          value={responses.energieReveil}
+          value={responses?.energieReveil}
           onChange={(value) => updateResponses({ energieReveil: value as any })}
           options={[
             { value: 'ZOMBIE', label: 'Zombie total (impossible de fonctionner)', critical: true, tooltip: 'Cortisol trop bas le matin' },
@@ -40,7 +40,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={2} title="À quelle heure est ton pic d'énergie naturel ?">
         <RadioGroup
           name="picEnergie"
-          value={responses.picEnergie}
+          value={responses?.picEnergie}
           onChange={(value) => updateResponses({ picEnergie: value as any })}
           options={[
             { value: 'MATIN', label: 'Matin (6h-10h)', good: true, tooltip: 'Pattern cortisol normal' },
@@ -58,7 +58,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={3} title="Crash énergétique 14h-16h ?">
         <RadioGroup
           name="crashApresMidi"
-          value={responses.crashApresMidi}
+          value={responses?.crashApresMidi}
           onChange={(value) => updateResponses({ crashApresMidi: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, énergie stable', good: true },
@@ -75,7 +75,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={4} title="Deuxième souffle en soirée (regain énergie 21h-minuit) ?">
         <RadioGroup
           name="deuxiemeSouffleNocturne"
-          value={responses.deuxiemeSouffleNocturne}
+          value={responses?.deuxiemeSouffleNocturne}
           onChange={(value) => updateResponses({ deuxiemeSouffleNocturne: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, fatigue naturelle le soir', good: true, tooltip: 'Cortisol normal' },
@@ -91,7 +91,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={5} title="Difficulté à t'endormir ?">
         <RadioGroup
           name="difficulteEndormissement"
-          value={responses.difficulteEndormissement}
+          value={responses?.difficulteEndormissement}
           onChange={(value) => updateResponses({ difficulteEndormissement: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, endormi en <15min', good: true },
@@ -108,7 +108,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={6} title="À quelle heure t'endors-tu naturellement ?">
         <RadioGroup
           name="heureEndormissement"
-          value={responses.heureEndormissement}
+          value={responses?.heureEndormissement}
           onChange={(value) => updateResponses({ heureEndormissement: value as any })}
           options={[
             { value: '21H-22H', label: '21h-22h (très tôt)', good: true },
@@ -125,7 +125,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={7} title="Réveils nocturnes fréquents ?">
         <RadioGroup
           name="reveilsNocturnes"
-          value={responses.reveilsNocturnes}
+          value={responses?.reveilsNocturnes}
           onChange={(value) => updateResponses({ reveilsNocturnes: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, sommeil continu', good: true },
@@ -141,7 +141,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={8} title="Si pas de réveil, à quelle heure te réveilles-tu naturellement ?">
         <RadioGroup
           name="heureReveilSpontane"
-          value={responses.heureReveilSpontane}
+          value={responses?.heureReveilSpontane}
           onChange={(value) => updateResponses({ heureReveilSpontane: value as any })}
           options={[
             { value: 'AVANT_6H', label: 'Avant 6h (très tôt)', tooltip: 'Peut indiquer cortisol élevé tôt' },
@@ -160,13 +160,13 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
           type="range"
           min="1"
           max="10"
-          value={responses.stressChronique || 5}
+          value={responses?.stressChronique || 5}
           onChange={(e) => updateResponses({ stressChronique: parseInt(e.target.value) })}
           className="w-full accent-cyan-500"
         />
         <div className="flex justify-between text-sm text-gray-400 mt-2">
           <span>1 (zen total)</span>
-          <span className="text-white font-bold">{responses.stressChronique || 5}</span>
+          <span className="text-white font-bold">{responses?.stressChronique || 5}</span>
           <span>10 (burnout)</span>
         </div>
       </QuestionCard>
@@ -175,7 +175,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={10} title="Résistance au stress / résilience">
         <RadioGroup
           name="resistanceStress"
-          value={responses.resistanceStress}
+          value={responses?.resistanceStress}
           onChange={(value) => updateResponses({ resistanceStress: value as any })}
           options={[
             { value: 'TRES_BASSE', label: 'Très basse (stressé par tout)', critical: true, tooltip: 'Adrenals fatigués' },
@@ -191,7 +191,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={11} title="Irritabilité / anger si tu sautes un repas ?">
         <RadioGroup
           name="irritabiliteSiRepasManque"
-          value={responses.irritabiliteSiRepasManque}
+          value={responses?.irritabiliteSiRepasManque}
           onChange={(value) => updateResponses({ irritabiliteSiRepasManque: value as any })}
           options={[
             { value: 'JAMAIS', label: 'Jamais, mood stable', good: true, tooltip: 'Métabolisme flexible' },
@@ -207,7 +207,7 @@ export default function Section4EnergieCortisol({ responses, updateResponses }: 
       <QuestionCard number={12} title="Besoin de stimulants pour fonctionner ?">
         <RadioGroup
           name="besoinStimulants"
-          value={responses.besoinStimulants}
+          value={responses?.besoinStimulants}
           onChange={(value) => updateResponses({ besoinStimulants: value as any })}
           options={[
             { value: 'AUCUN', label: 'Aucun, énergie naturelle', good: true },

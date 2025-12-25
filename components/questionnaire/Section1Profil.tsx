@@ -5,8 +5,8 @@ import QuestionCard from './QuestionCard';
 import RadioGroup from './RadioGroup';
 
 interface Props {
-  responses: Partial<QuestionnaireResponses>;
-  updateResponses: (updates: Partial<QuestionnaireResponses>) => void;
+  responses: any;
+  updateResponses: (updates: any) => void;
 }
 
 export default function Section1Profil({ responses, updateResponses }: Props) {
@@ -23,7 +23,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
           type="number"
           min="18"
           max="80"
-          value={responses.age || ''}
+          value={responses?.age || ''}
           onChange={(e) => updateResponses({ age: parseInt(e.target.value) })}
           className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
           placeholder="Ex: 32"
@@ -34,7 +34,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
       <QuestionCard number={2} title="Sexe biologique">
         <RadioGroup
           name="sexe"
-          value={responses.sexe}
+          value={responses?.sexe}
           onChange={(value) => updateResponses({ sexe: value as any })}
           options={[
             { value: 'HOMME', label: 'Homme' },
@@ -50,7 +50,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
           min="40"
           max="200"
           step="0.5"
-          value={responses.poids || ''}
+          value={responses?.poids || ''}
           onChange={(e) => updateResponses({ poids: parseFloat(e.target.value) })}
           className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
           placeholder="Ex: 82.5"
@@ -63,7 +63,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
           type="number"
           min="140"
           max="220"
-          value={responses.taille || ''}
+          value={responses?.taille || ''}
           onChange={(e) => updateResponses({ taille: parseInt(e.target.value) })}
           className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
           placeholder="Ex: 178"
@@ -74,7 +74,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
       <QuestionCard number={5} title="Objectif principal">
         <RadioGroup
           name="objectifPrincipal"
-          value={responses.objectifPrincipal}
+          value={responses?.objectifPrincipal}
           onChange={(value) => updateResponses({ objectifPrincipal: value as any })}
           options={[
             { value: 'PERTE_GRAS', label: 'Perte de gras', tooltip: 'Réduire le bodyfat tout en gardant le muscle' },
@@ -93,7 +93,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
           type="number"
           min="0"
           max="50"
-          value={responses.anneesEntrainement || ''}
+          value={responses?.anneesEntrainement || ''}
           onChange={(e) => updateResponses({ anneesEntrainement: parseInt(e.target.value) })}
           className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500"
           placeholder="Ex: 5"
@@ -120,9 +120,9 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
             >
               <input
                 type="checkbox"
-                checked={responses.regimesEssayes?.includes(option.value) || false}
+                checked={responses?.regimesEssayes?.includes(option.value) || false}
                 onChange={(e) => {
-                  const current = responses.regimesEssayes || [];
+                  const current = responses?.regimesEssayes || [];
                   const updated = e.target.checked
                     ? [...current, option.value]
                     : current.filter((v) => v !== option.value);
@@ -139,7 +139,7 @@ export default function Section1Profil({ responses, updateResponses }: Props) {
       {/* Q8: Problème principal (texte libre) */}
       <QuestionCard number={8} title="Quel est ton problème / blocage principal actuellement ?">
         <textarea
-          value={responses.problemePrincipal || ''}
+          value={responses?.problemePrincipal || ''}
           onChange={(e) => updateResponses({ problemePrincipal: e.target.value })}
           rows={4}
           className="w-full px-4 py-3 bg-gray-800/50 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-cyan-500 resize-none"

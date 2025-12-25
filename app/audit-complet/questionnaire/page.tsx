@@ -272,7 +272,7 @@ export default function QuestionnairePage() {
 
   // List of fields per section for validation
   const sectionFields: (keyof QuestionnaireFormData)[][] = [
-    ['age', 'sexe', 'poidsActuel', 'taille', 'tourDeTaille', 'tourDeHanches', 'poidsObjectif', 'timelineObjectif', 'objectifPrincipal', 'motivationPrincipale'],
+    ['age', 'sexe', 'poidsActuel', 'taille', 'poidsObjectif', 'timelineObjectif', 'objectifPrincipal', 'motivationPrincipale'],
     ['balanceImpedancemetre', 'massGrasseActuel', 'masseMusculaireActuel', 'graisseViscerale', 'wearableTracker', 'wearableDepuis', 'consultationDonnees', 'photosProgression'],
     ['energieMatin', 'energieMidi', 'energieApresMidi', 'energieSoir', 'heureCoupBarre', 'frequenceCoupsPompe', 'cravingsSucre', 'cravingsSale', 'temperatureCorporelle', 'perceptionMetabolisme'],
     ['suiviAlimentation', 'suiviAlimentationDepuis', 'connaisMacros', 'proteinesJour', 'glucidesJour', 'lipidesJour', 'caloriesMoyennesJour', 'nombreRepasJour', 'jeuneIntermittent', 'fenetreAlimentation', 'nutritionPreWorkout', 'nutritionPostWorkout'],
