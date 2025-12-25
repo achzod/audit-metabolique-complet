@@ -101,7 +101,7 @@ export default function CheckoutPage() {
             Choisis ton niveau d'analyse
           </h1>
           <p className="text-xl text-gray-400">
-            126 questions analysées • 13 domaines métaboliques
+            126 questions analysées • 13 domaines • Rapport 20+ pages
           </p>
         </motion.div>
 
@@ -244,7 +244,7 @@ export default function CheckoutPage() {
             onClick={() => handleSelectPlan('ELITE')}
           >
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF6B9D] to-[#9990EA] text-white px-4 py-1 rounded-full text-xs font-bold">
-              ULTIMATE
+              BEST VALUE
             </div>
 
             <div className="text-center mb-6">
@@ -252,12 +252,12 @@ export default function CheckoutPage() {
               <h2 className="text-2xl font-bold bg-gradient-to-r from-[#FF6B9D] to-[#9990EA] bg-clip-text text-transparent mb-2">
                 Elite
               </h2>
-              <p className="text-gray-400 text-sm">L'excellence absolue</p>
+              <p className="text-gray-400 text-sm">Suivi complet annuel</p>
             </div>
 
             <div className="text-center mb-8">
               <p className="text-5xl font-bold bg-gradient-to-r from-[#FF6B9D] to-[#9990EA] bg-clip-text text-transparent mb-2">129€</p>
-              <p className="text-gray-500 text-sm">Par an • Accès illimité</p>
+              <p className="text-gray-500 text-sm">Par an • 4 analyses complètes</p>
             </div>
 
             <ul className="space-y-3 mb-8 text-sm">
@@ -267,27 +267,27 @@ export default function CheckoutPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Neurotransmetteurs & Cognition</span>
+                <span>4 analyses complètes par an</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Analyse Photos Posturales</span>
+                <span>Suivi de progression trimestriel</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Optimisation Hormonale Avancée</span>
+                <span>Compare tes résultats dans le temps</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Feuille de Route 90 Jours</span>
+                <span>Ajuste tes protocoles</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[#FF6B9D]">★</span>
-                <span>Mises à jour illimitées pendant 1 an</span>
+                <span>Analyse photos posturales</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-[#FF6B9D]">★</span>
-                <span>Rapport PDF complet (20 000+ mots)</span>
+                <span>Rapport PDF 20+ pages</span>
               </li>
             </ul>
 
