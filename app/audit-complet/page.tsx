@@ -188,17 +188,26 @@ function HumanBodyVisualization() {
 // ============================================
 // FLOATING PARTICLES
 // ============================================
+// Pre-generate particle positions to avoid Math.random() during render
+const particleData = Array.from({ length: 50 }).map((_, i) => ({
+  left: ((i * 17) % 100), // Deterministic pseudo-random distribution
+  top: ((i * 23) % 100),
+  duration: 3 + (i % 3),
+  delay: (i % 5) * 0.4,
+  color: ['#5EECC5', '#9990EA', '#FF6B9D'][i % 3],
+}))
+
 function FloatingParticles() {
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {Array.from({ length: 50 }).map((_, i) => (
+      {particleData.map((particle, i) => (
         <motion.div
           key={i}
           className="absolute w-1 h-1 rounded-full"
           style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            background: ['#5EECC5', '#9990EA', '#FF6B9D'][i % 3],
+            left: `${particle.left}%`,
+            top: `${particle.top}%`,
+            background: particle.color,
           }}
           animate={{
             y: [0, -30, 0],
@@ -206,9 +215,9 @@ function FloatingParticles() {
             scale: [1, 1.5, 1],
           }}
           transition={{
-            duration: 3 + Math.random() * 2,
+            duration: particle.duration,
             repeat: Infinity,
-            delay: Math.random() * 2,
+            delay: particle.delay,
           }}
         />
       ))}

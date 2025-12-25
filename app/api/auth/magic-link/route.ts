@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const token = crypto.randomBytes(32).toString('hex')
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
 
-    // Find or create user
+    // Find or create user (without plan field - it's stored in Audit)
     let user = await prisma.user.findUnique({
       where: { email },
     })
@@ -27,38 +27,35 @@ export async function POST(request: Request) {
         data: {
           email,
           name: email.split('@')[0],
-          plan: plan || 'GRATUIT',
         },
       })
     }
 
-    // Store token in verification table
-    await prisma.verificationToken.create({
+    // Create magic token
+    await prisma.magicToken.create({
       data: {
-        identifier: email,
         token,
-        expires: expiresAt,
+        userId: user.id,
+        expiresAt,
       },
     })
 
-    // Save questionnaire responses if provided
+    // If responses provided, create an audit with the responses
     if (responses) {
-      await prisma.questionnaireResponse.upsert({
-        where: { userId: user.id },
-        create: {
+      await prisma.audit.create({
+        data: {
           userId: user.id,
-          responses: responses,
-        },
-        update: {
+          type: plan || 'GRATUIT',
+          status: 'PENDING',
           responses: responses,
         },
       })
     }
 
     // Generate magic link URL
-    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/verify?token=${token}&email=${encodeURIComponent(email)}`
+    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/verify?token=${token}`
 
-    // Send email (for now, just log it - replace with actual email service)
+    // Log the magic link (in production, send via email)
     console.log('Magic Link for', email, ':', magicLink)
 
     // TODO: Send email with SendGrid/Resend/etc
@@ -71,7 +68,7 @@ export async function POST(request: Request) {
     return NextResponse.json({
       success: true,
       message: 'Magic link envoyé',
-      // Remove in production:
+      // Remove in production - only for debugging:
       debugLink: process.env.NODE_ENV === 'development' ? magicLink : undefined
     })
   } catch (error) {

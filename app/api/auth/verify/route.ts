@@ -6,47 +6,38 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const token = searchParams.get('token')
-    const email = searchParams.get('email')
 
-    if (!token || !email) {
+    if (!token) {
       return NextResponse.redirect(new URL('/auth/error?error=invalid_link', request.url))
     }
 
-    // Find and validate token
-    const verificationToken = await prisma.verificationToken.findFirst({
+    // Find and validate magic token
+    const magicToken = await prisma.magicToken.findFirst({
       where: {
         token,
-        identifier: email,
-        expires: {
+        expiresAt: {
           gt: new Date(),
         },
+        usedAt: null, // Not already used
+      },
+      include: {
+        user: true,
       },
     })
 
-    if (!verificationToken) {
+    if (!magicToken) {
       return NextResponse.redirect(new URL('/auth/error?error=expired_link', request.url))
     }
 
-    // Delete used token
-    await prisma.verificationToken.delete({
-      where: {
-        identifier_token: {
-          identifier: email,
-          token,
-        },
-      },
+    // Mark token as used
+    await prisma.magicToken.update({
+      where: { id: magicToken.id },
+      data: { usedAt: new Date() },
     })
 
-    // Find user
-    const user = await prisma.user.findUnique({
-      where: { email },
-    })
+    const user = magicToken.user
 
-    if (!user) {
-      return NextResponse.redirect(new URL('/auth/error?error=user_not_found', request.url))
-    }
-
-    // Create session cookie (simple approach)
+    // Create session cookie
     const cookieStore = await cookies()
     cookieStore.set('user_id', user.id, {
       httpOnly: true,
