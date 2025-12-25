@@ -2,6 +2,7 @@ import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { redirect, notFound } from 'next/navigation'
 import Link from 'next/link'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 export default async function AuditDetailPage({
   params,
@@ -31,6 +32,7 @@ export default async function AuditDetailPage({
   if (audit.status === 'PROCESSING') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
+        <BackToHomeButton />
         <div className="glass gradient-border rounded-3xl p-12 text-center max-w-md">
           <div className="spinner w-16 h-16 mx-auto mb-6" />
           <h1 className="text-3xl font-bold gradient-text mb-4">
@@ -51,6 +53,7 @@ export default async function AuditDetailPage({
   if (audit.status === 'FAILED') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
+        <BackToHomeButton />
         <div className="glass gradient-border rounded-3xl p-12 text-center max-w-md">
           <div className="text-6xl mb-6">❌</div>
           <h1 className="text-3xl font-bold text-red-400 mb-4">
@@ -71,6 +74,7 @@ export default async function AuditDetailPage({
   if (audit.status === 'PENDING') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
+        <BackToHomeButton />
         <div className="glass gradient-border rounded-3xl p-12 text-center max-w-md">
           <div className="text-6xl mb-6">⏸️</div>
           <h1 className="text-3xl font-bold gradient-text mb-4">
@@ -90,6 +94,7 @@ export default async function AuditDetailPage({
   // Display completed audit
   return (
     <div className="min-h-screen py-12 px-4">
+      <BackToHomeButton />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex justify-between items-center mb-8">

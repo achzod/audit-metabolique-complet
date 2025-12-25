@@ -7,16 +7,15 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3 } from 'lucide-react';
+import BackToHomeButton from '@/components/BackToHomeButton';
 
 // Zod validation schema
 const questionnaireSchema = z.object({
-  // Section 1: Profil de Base (10Q)
+  // Section 1: Profil de Base (8Q)
   age: z.number().min(18).max(100),
   sexe: z.enum(['homme', 'femme', 'autre']),
   poidsActuel: z.number().min(30).max(300),
   taille: z.number().min(120).max(250),
-  tourDeTaille: z.number().min(50).max(200),
-  tourDeHanches: z.number().min(50).max(200),
   poidsObjectif: z.number().min(30).max(300),
   timelineObjectif: z.enum(['1_3_mois', '3_6_mois', '6_12_mois', 'plus_12_mois']),
   objectifPrincipal: z.enum(['perte_graisse', 'gain_muscle', 'recomposition', 'performance', 'sante', 'energie']),
@@ -63,7 +62,7 @@ const questionnaireSchema = z.object({
   transitIntestinal: z.enum(['constipation', 'normal', 'diarrhee', 'alterne']),
   frequenceSelles: z.enum(['moins_3_sem', '3_6_sem', '1_jour', '2_3_jour', '3_plus_jour']),
   douleursAbdominales: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
-  intolerances: z.array(z.string()),
+  intolerances: z.array(z.string()).default([]),
   refluxGastrique: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
   priseProbiotiques: z.enum(['jamais', 'passe', 'actuellement']),
   qualiteDigestion: z.number().min(1).max(10),
@@ -121,20 +120,20 @@ const questionnaireSchema = z.object({
   // Section 10: Hormones & Stress (8Q)
   niveauStress: z.number().min(1).max(10),
   gestionStress: z.enum(['tres_mauvaise', 'mauvaise', 'moyenne', 'bonne', 'excellente']),
-  symptomesThyroide: z.array(z.string()),
+  symptomesThyroide: z.array(z.string()).default([]),
   resistanceInsuline: z.enum(['non', 'soupconnee', 'diagnostiquee']),
   hypoglycemiesFrequentes: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'quotidien']),
   menstruationReguliere: z.enum(['oui', 'non', 'non_applicable']),
-  symptomesSPM: z.array(z.string()),
+  symptomesSPM: z.array(z.string()).default([]),
   menopauseAndropause: z.enum(['non', 'pre', 'en_cours', 'post']),
 
   // Section 11: Lifestyle & Substances (7Q)
-  consommationAlcool: z.enum(['aucune', 'occasionnel', '1_3_verres', '4_7_verres', '8_plus_verres']),
-  consommationCafeine: z.enum(['0', '1_cafe', '2_3_cafes', '4_5_cafes', '6_plus_cafes']),
+  consommationAlcool: z.enum(['aucune', 'occasionnel', '1_3_verres', '4_7_verres', '8_plus_verres']).optional(),
+  consommationCafeine: z.enum(['0', '1_cafe', '2_3_cafes', '4_5_cafes', '6_plus_cafes']).optional(),
   heureDernierCafe: z.string().optional(),
-  tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']),
-  hydratationLitresJour: z.number().min(0).max(10),
-  supplementsActuels: z.array(z.string()),
+  tabac: z.enum(['jamais', 'ancien', 'occasionnel', 'regulier']).optional(),
+  hydratationLitresJour: z.number().min(0).max(10).optional(),
+  supplementsActuels: z.array(z.string()).default([]),
   medicamentsReguliers: z.string().optional(),
 });
 
@@ -311,6 +310,7 @@ export default function QuestionnairePage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white">
+      <BackToHomeButton />
       {/* Header with Progress */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-white/5">
         <AnimatePresence>
@@ -395,7 +395,7 @@ export default function QuestionnairePage() {
                 <div className="space-y-6">
                   {currentSection === 0 && (
                     <>
-                      {/* Section 1: Profil de Base (10Q) */}
+                      {/* Section 1: Profil de Base (8Q) */}
                       <QuestionCard title="1. Quel est votre âge ?" error={errors.age?.message}>
                         <input
                           type="number"
@@ -433,25 +433,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="5. Quel est votre tour de taille ? (cm)" error={errors.tourDeTaille?.message}>
-                        <input
-                          type="number"
-                          {...register('tourDeTaille', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 85"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="6. Quel est votre tour de hanches ? (cm)" error={errors.tourDeHanches?.message}>
-                        <input
-                          type="number"
-                          {...register('tourDeHanches', { valueAsNumber: true })}
-                          className="input-field"
-                          placeholder="Ex: 95"
-                        />
-                      </QuestionCard>
-
-                      <QuestionCard title="7. Quel est votre poids objectif ? (kg)" error={errors.poidsObjectif?.message}>
+                      <QuestionCard title="5. Quel est votre poids objectif ? (kg)" error={errors.poidsObjectif?.message}>
                         <input
                           type="number"
                           step="0.1"
@@ -461,7 +443,7 @@ export default function QuestionnairePage() {
                         />
                       </QuestionCard>
 
-                      <QuestionCard title="8. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
+                      <QuestionCard title="6. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
                         <select {...register('timelineObjectif')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="1_3_mois">1-3 mois</option>
@@ -471,7 +453,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="9. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
+                      <QuestionCard title="7. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
                         <select {...register('objectifPrincipal')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="perte_graisse">Perte de graisse</option>
@@ -483,7 +465,7 @@ export default function QuestionnairePage() {
                         </select>
                       </QuestionCard>
 
-                      <QuestionCard title="10. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
+                      <QuestionCard title="8. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
                         <textarea
                           {...register('motivationPrincipale')}
                           className="input-field"
@@ -1584,7 +1566,7 @@ export default function QuestionnairePage() {
                   className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] hover:opacity-90 transition-all flex items-center justify-center gap-2 font-semibold text-black"
                 >
                   <Check className="w-5 h-5" />
-                  Terminer et Passer au Paiement
+                  Terminer et Voir Mes Options
                 </button>
               )}
             </div>

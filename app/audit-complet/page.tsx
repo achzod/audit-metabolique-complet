@@ -1,480 +1,421 @@
 'use client'
 
 import Link from 'next/link'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef, useState, useEffect } from 'react'
-import { ArrowRight, Zap, Brain, Heart, Activity, Moon, Dumbbell, Target, ChevronDown, Check, X, Crown, Sparkles, RefreshCw } from 'lucide-react'
-
-// Animated counter hook
-function useCounter(end: number, duration: number = 2000) {
-  const [count, setCount] = useState(0)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    if (!isVisible) return
-
-    let startTime: number
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp
-      const progress = Math.min((timestamp - startTime) / duration, 1)
-      setCount(Math.floor(progress * end))
-      if (progress < 1) requestAnimationFrame(step)
-    }
-    requestAnimationFrame(step)
-  }, [end, duration, isVisible])
-
-  return { count, setIsVisible }
-}
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 export default function LandingPage() {
-  const heroRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"]
-  })
+  const [mounted, setMounted] = useState(false)
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
-  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 0.95])
-
-  const questionsCounter = useCounter(105)
-  const sectionsCounter = useCounter(15)
-  const clientsCounter = useCounter(2847)
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
-    <div className="min-h-screen bg-cream">
-      {/* Hero Section */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated background blobs */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div
-            className="hero-blob hero-blob-aqua absolute"
-            style={{ top: '10%', right: '10%' }}
-            animate={{
-              x: [0, 30, -20, 0],
-              y: [0, -30, 20, 0],
-              scale: [1, 1.1, 0.9, 1],
-            }}
-            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="hero-blob hero-blob-purple absolute"
-            style={{ bottom: '20%', left: '5%' }}
-            animate={{
-              x: [0, -20, 30, 0],
-              y: [0, 20, -30, 0],
-              scale: [1, 0.9, 1.1, 1],
-            }}
-            transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          />
+    <div className="min-h-screen relative overflow-hidden">
+      <BackToHomeButton />
+      {/* Animated particles background */}
+      {mounted && (
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="particle"
+              style={{
+                width: Math.random() * 100 + 50 + 'px',
+                height: Math.random() * 100 + 50 + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                animationDelay: Math.random() * 6 + 's',
+                animationDuration: Math.random() * 10 + 10 + 's',
+              }}
+            />
+          ))}
         </div>
+      )}
 
-        <motion.div
-          style={{ opacity: heroOpacity, scale: heroScale }}
-          className="relative z-10 max-w-6xl mx-auto px-4 py-20 text-center"
-        >
-          {/* Badge */}
+      {/* Hero Section */}
+      <section className="relative z-10 min-h-screen flex items-center justify-center px-4 py-20">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 mb-8 rounded-full bg-[#101010] text-white text-sm font-medium"
-          >
-            <Zap className="w-4 h-4 text-[#8DFFE0]" />
-            Analyse IA avancée par Claude Sonnet
-          </motion.div>
-
-          {/* Main heading */}
-          <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="mb-6"
+            transition={{ duration: 0.8 }}
           >
-            <span className="block text-[#101010]">Audit Métabolique</span>
-            <span className="gradient-text">Complet</span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="text-xl md:text-2xl text-[#4A4A4A] max-w-3xl mx-auto mb-12"
-          >
-            Lanalyse métabolique la plus complète du marché.
-            <br className="hidden md:block" />
-            <span className="text-[#101010] font-semibold">105 questions</span> • <span className="text-[#101010] font-semibold">15 sections</span> • <span className="text-[#101010] font-semibold">IA Claude Sonnet</span>
-          </motion.p>
-
-          {/* CTA Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16"
-          >
-            <Link href="/audit-complet/questionnaire" className="btn-aqua text-lg px-10 py-5 w-full sm:w-auto">
-              <span>Commencer gratuitement</span>
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-            <a href="#pricing" className="btn-secondary w-full sm:w-auto">
-              Voir les offres
-            </a>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9 }}
-            className="grid grid-cols-3 gap-8 max-w-2xl mx-auto"
-            onViewportEnter={() => {
-              questionsCounter.setIsVisible(true)
-              sectionsCounter.setIsVisible(true)
-              clientsCounter.setIsVisible(true)
-            }}
-          >
-            <div>
-              <div className="text-4xl md:text-5xl font-bold text-[#101010]">{questionsCounter.count}</div>
-              <div className="text-sm text-[#7A7A7A] mt-1">Questions</div>
-            </div>
-            <div>
-              <div className="text-4xl md:text-5xl font-bold text-[#101010]">{sectionsCounter.count}</div>
-              <div className="text-sm text-[#7A7A7A] mt-1">Sections</div>
-            </div>
-            <div>
-              <div className="text-4xl md:text-5xl font-bold text-[#101010]">{clientsCounter.count}+</div>
-              <div className="text-sm text-[#7A7A7A] mt-1">Audits générés</div>
-            </div>
-          </motion.div>
-
-          {/* Scroll indicator */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2"
-          >
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              <ChevronDown className="w-6 h-6 text-[#7A7A7A]" />
-            </motion.div>
-          </motion.div>
-        </motion.div>
-      </section>
-
-      {/* Domains Section */}
-      <section className="py-24 px-4 bg-beige">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="mb-4">15 sections danalyse</h2>
-            <p className="text-xl text-[#4A4A4A] max-w-2xl mx-auto">
-              Une vision complète de ta physiologie pour des recommandations ultra-personnalisées
+            <h1 className="text-5xl md:text-7xl font-bold gradient-text mb-6">
+              🔥 Audit Métabolique Complet
+            </h1>
+            <p className="text-xl md:text-2xl text-light/80 mb-4">
+              L'analyse métabolique la plus complète du marché
             </p>
-          </motion.div>
+            <p className="text-lg md:text-xl text-light/60 mb-12 max-w-3xl mx-auto">
+              105 questions scientifiques • Diagnostic personnalisé • Plan d'action sur-mesure
+            </p>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {[
-              { icon: Target, label: 'Profil de Base' },
-              { icon: Activity, label: 'Composition Corporelle' },
-              { icon: Zap, label: 'Métabolisme & Énergie' },
-              { icon: Brain, label: 'Nutrition & Tracking' },
-              { icon: Heart, label: 'Digestion & Microbiome' },
-              { icon: Dumbbell, label: 'Activité & Performance' },
-              { icon: Moon, label: 'Sommeil & Récupération' },
-              { icon: Activity, label: 'HRV & Cardiaque' },
-              { icon: Brain, label: 'Analyses Sanguines' },
-              { icon: Heart, label: 'Hormones & Stress' },
-              { icon: Zap, label: 'Lifestyle' },
-              { icon: Target, label: 'Plan Nutritionnel' },
-              { icon: Dumbbell, label: 'Plan Entraînement' },
-              { icon: Brain, label: 'Suppléments' },
-              { icon: Activity, label: 'Feuille de Route' },
-            ].map((domain, i) => (
-              <motion.div
-                key={domain.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.03 }}
-                viewport={{ once: true }}
-                className="card-light p-4 hover-lift cursor-default text-center"
+            {/* CTA Principal */}
+            <div className="glass gradient-border rounded-3xl p-8 md:p-12 mb-8 max-w-2xl mx-auto">
+              <div className="mb-6">
+                <div className="inline-block bg-gradient-to-r from-cyan-400 to-purple-400 text-dark px-4 py-2 rounded-full text-sm font-bold mb-4">
+                  ⚡ COMMENCE GRATUITEMENT
+                </div>
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">
+                  Comment ça marche ?
+                </h2>
+              </div>
+
+              <div className="space-y-4 text-left mb-8">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center text-cyan-400 font-bold">
+                    1
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Tu réponds au questionnaire</h3>
+                    <p className="text-light/70 text-sm">105 questions sur ton métabolisme, nutrition, sommeil, HRV, tracking... (10-15 min)</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-400/20 flex items-center justify-center text-purple-400 font-bold">
+                    2
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Tu choisis ta version</h3>
+                    <p className="text-light/70 text-sm">
+                      <span className="text-cyan-400 font-semibold">Gratuit (4 sections)</span> ou <span className="text-purple-400 font-semibold">Premium (15 sections, 1€ TEST)</span>
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-cyan-400/20 flex items-center justify-center text-cyan-400 font-bold">
+                    3
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Ton audit est généré automatiquement</h3>
+                    <p className="text-light/70 text-sm">Analyse approfondie de tes réponses • Diagnostic métabolique • Identification des points faibles</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-purple-400/20 flex items-center justify-center text-purple-400 font-bold">
+                    4
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-lg mb-1">Tu accèdes à ton dashboard personnel</h3>
+                    <p className="text-light/70 text-sm">Audit complet consultable en ligne • Format HTML optimisé • Accès illimité depuis ton compte</p>
+                  </div>
+                </div>
+              </div>
+
+              <Link
+                href="/audit-complet/questionnaire"
+                className="btn-primary text-xl px-12 py-5 inline-block w-full text-center"
               >
-                <domain.icon className="w-6 h-6 mx-auto mb-2 text-[#5EECC5]" />
-                <div className="font-medium text-sm text-[#101010]">{domain.label}</div>
-              </motion.div>
-            ))}
-          </div>
+                🚀 Commencer Maintenant (Gratuit)
+              </Link>
+              <p className="text-light/50 mt-4 text-sm">
+                ⏱️ 10-15 minutes • 💳 Tu payes SEULEMENT si tu veux la version premium
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
-      {/* How it Works */}
-      <section id="how-it-works" className="py-24 px-4 bg-cream">
+      {/* Comparaison Gratuit vs Premium */}
+      <section id="pricing" className="relative z-10 py-20 px-4 bg-gradient-to-b from-transparent to-dark">
         <div className="max-w-6xl mx-auto">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
           >
-            <h2 className="mb-4">Comment ça marche ?</h2>
-            <p className="text-xl text-[#4A4A4A]">3 étapes simples vers ton audit personnalisé</p>
+            <h2 className="text-4xl md:text-5xl font-bold text-center gradient-text mb-4">
+              Gratuit ou Premium ?
+            </h2>
+            <p className="text-center text-light/70 mb-16 text-lg">
+              Tu choisis APRÈS avoir répondu au questionnaire
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {/* Free Version */}
+              <div className="glass gradient-border rounded-2xl p-8">
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl font-bold text-cyan-400 mb-2">
+                    🎁 Version Gratuite
+                  </h3>
+                  <p className="text-light/60">Parfait pour commencer</p>
+                </div>
+
+                <div className="text-center mb-8">
+                  <p className="text-5xl font-bold text-light mb-2">0€</p>
+                  <p className="text-light/50 text-sm">Pour toujours</p>
+                </div>
+
+                <div className="mb-6 p-4 bg-cyan-400/10 rounded-xl border border-cyan-400/30">
+                  <p className="text-sm font-semibold text-cyan-400 mb-2">✅ Ce que tu reçois :</p>
+                  <p className="text-sm text-light/80">Audit HTML consultable sur ton <strong>dashboard personnel</strong> sur le site</p>
+                </div>
+
+                <div className="mb-8">
+                  <p className="font-bold mb-3 text-light">📊 Contenu de l'audit (4 sections) :</p>
+                  <ul className="space-y-3">
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">1. Résumé Exécutif</p>
+                        <p className="text-sm text-light/60">Vue d'ensemble, métriques clés (IMC, rapport taille/hanches)</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">2. Profil Anthropométrique</p>
+                        <p className="text-sm text-light/60">Analyse de ta composition corporelle actuelle</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">3. Métabolisme & Énergie</p>
+                        <p className="text-sm text-light/60">Diagnostic de tes niveaux d'énergie et métabolisme</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-green-400 text-xl">✅</span>
+                      <div>
+                        <p className="font-semibold">4. Plan d'Action 30 Jours</p>
+                        <p className="text-sm text-light/60">Actions concrètes pour améliorer ton métabolisme</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <span className="text-purple-400 text-xl">🔒</span>
+                      <span className="text-light/40">11 sections premium verrouillées</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <Link
+                  href="/audit-complet/questionnaire"
+                  className="btn-secondary w-full block text-center"
+                >
+                  Commencer Gratuitement
+                </Link>
+              </div>
+
+              {/* Premium Version */}
+              <div className="glass gradient-border rounded-2xl p-8 relative">
+                <div className="absolute -top-4 right-8 bg-gradient-to-r from-cyan-400 to-purple-400 text-dark px-4 py-1 rounded-full text-sm font-bold">
+                  🔥 RECOMMANDÉ
+                </div>
+
+                <div className="text-center mb-6">
+                  <h3 className="text-3xl font-bold gradient-text mb-2">
+                    💎 Version Premium
+                  </h3>
+                  <p className="text-light/60">Analyse complète sur-mesure</p>
+                </div>
+
+                <div className="text-center mb-8">
+                  <p className="text-5xl font-bold gradient-text mb-2">1€</p>
+                  <p className="text-light/50 text-sm">Paiement unique</p>
+                </div>
+
+                <div className="mb-6 p-4 bg-purple-400/10 rounded-xl border border-purple-400/30">
+                  <p className="text-sm font-semibold text-purple-400 mb-2">✅ Ce que tu reçois :</p>
+                  <p className="text-sm text-light/80">Audit HTML ultra-complet sur ton <strong>dashboard personnel</strong> sur le site</p>
+                </div>
+
+                <div className="mb-8">
+                  <p className="font-bold mb-3 gradient-text">📊 Contenu de l'audit (15 sections) :</p>
+                  <ul className="space-y-2">
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Tout le contenu gratuit</strong> (4 sections)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Digestion & Microbiome</strong> approfondi</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Hormones & Signaux</strong> métaboliques</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>HRV & Récupération</strong> cardiaque</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Performance & Activité</strong> personnalisée</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Sommeil Détaillé</strong> (phases, scores)</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Analyses Sanguines</strong> interprétation</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Plan Nutritionnel</strong> avec macros détaillées</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Protocole Entraînement</strong> sur-mesure</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Protocole Suppléments</strong> personnalisé</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Optimisation Hormonale</strong> stratégies</span>
+                    </li>
+                    <li className="flex items-start gap-2">
+                      <span className="text-green-400">✅</span>
+                      <span className="text-sm"><strong>Feuille de Route 90 Jours</strong> étape par étape</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <Link
+                  href="/audit-complet/questionnaire"
+                  className="btn-primary w-full block text-center"
+                >
+                  Démarrer l'Audit Premium
+                </Link>
+              </div>
+            </div>
+
+            {/* Clarification importante */}
+            <div className="mt-16 text-center glass gradient-border rounded-2xl p-8 max-w-3xl mx-auto">
+              <h3 className="text-2xl font-bold mb-4 gradient-text">📌 Important à savoir</h3>
+              <div className="space-y-3 text-left text-light/80">
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>Le <strong>questionnaire est 100% gratuit</strong> - aucune carte bancaire demandée</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>Tu <strong>choisis ta version APRÈS</strong> avoir répondu aux questions</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>Ton audit est <strong>consultable sur ton dashboard personnel</strong> sur le site (pas d'email, pas de PDF)</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>La version gratuite te donne déjà <strong>un vrai diagnostic + plan d'action 30 jours</strong></span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span>Tu peux <strong>commencer gratuit</strong> et upgrader plus tard si tu veux les 11 sections supplémentaires</span>
+                </p>
+                <p className="flex items-start gap-3">
+                  <span className="text-cyan-400 text-xl">•</span>
+                  <span><strong>Accès illimité</strong> à ton audit depuis ton compte • Tu peux le consulter quand tu veux</span>
+                </p>
+              </div>
+            </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Ce que tu vas découvrir */}
+      <section className="relative z-10 py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-bold text-center gradient-text mb-16">
+            Ce que tu vas découvrir
+          </h2>
 
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
-                step: '01',
-                title: 'Réponds au questionnaire',
-                desc: '105 questions couvrant métabolisme, nutrition, sommeil, HRV, analyses sanguines...',
-                badge: '15 min'
+                icon: '🔬',
+                title: 'Analyse Scientifique',
+                desc: '105 questions couvrant métabolisme, hormones, HRV, sommeil profond, nutrition trackée, analyses sanguines...',
               },
               {
-                step: '02',
-                title: 'Choisis ton offre',
-                desc: 'Gratuit, Premium (39€) ou Elite (79€) avec analyses illimitées',
-                badge: '3 options'
+                icon: '📊',
+                title: 'Diagnostic Précis',
+                desc: 'Identification de tes points faibles métaboliques, déséquilibres hormonaux, carences potentielles',
               },
               {
-                step: '03',
-                title: 'Reçois ton audit',
-                desc: 'Claude Sonnet analyse tes réponses et génère un rapport ultra-personnalisé',
-                badge: 'Instantané'
+                icon: '🎯',
+                title: 'Plan Personnalisé',
+                desc: 'Protocoles nutrition, entraînement, suppléments adaptés À TOI (pas du générique)',
+              },
+              {
+                icon: '📈',
+                title: 'Données Quantifiables',
+                desc: 'Integration wearables (Whoop, Oura, Apple Watch), tracking, analyses sanguines, biomarqueurs',
+              },
+              {
+                icon: '💻',
+                title: 'Dashboard Personnel',
+                desc: 'Ton audit consultable en ligne depuis ton compte • Format HTML optimisé • Accès illimité',
+              },
+              {
+                icon: '🚀',
+                title: 'Feuille de Route',
+                desc: 'Plan d\'action concret sur 30 jours (gratuit) ou 90 jours (premium) avec étapes précises',
               },
             ].map((item, i) => (
               <motion.div
-                key={item.step}
+                key={i}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.15 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
                 viewport={{ once: true }}
-                className="card-dark p-8"
+                className="glass glass-hover rounded-2xl p-6 text-center"
               >
-                <div className="text-5xl font-bold text-[#8DFFE0] opacity-30 mb-4">{item.step}</div>
-                <h3 className="text-xl font-bold text-white mb-3">{item.title}</h3>
-                <p className="text-white/60 mb-4">{item.desc}</p>
-                <div className="tag-aqua">{item.badge}</div>
+                <div className="text-5xl mb-4">{item.icon}</div>
+                <h3 className="text-xl font-bold mb-2">{item.title}</h3>
+                <p className="text-light/60 text-sm">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Pricing Section - 3 OFFERS */}
-      <section id="pricing" className="py-24 px-4 bg-sand">
-        <div className="max-w-6xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="mb-4">Choisis ton niveau danalyse</h2>
-            <p className="text-xl text-[#4A4A4A]">Tu décides après avoir rempli le questionnaire</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {/* FREE Plan */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              viewport={{ once: true }}
-              className="card-light p-6 relative"
-            >
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#101010]/5 flex items-center justify-center mx-auto mb-4">
-                  <Sparkles className="w-6 h-6 text-[#7A7A7A]" />
-                </div>
-                <div className="text-sm font-semibold text-[#7A7A7A] uppercase tracking-wider mb-2">Découverte</div>
-                <div className="text-4xl font-bold text-[#101010] mb-1">Gratuit</div>
-                <div className="text-sm text-[#7A7A7A]">Pour tester</div>
-              </div>
-
-              <ul className="space-y-3 mb-6">
-                {[
-                  { included: true, text: 'Résumé Exécutif' },
-                  { included: true, text: 'Analyse Anthropométrique' },
-                  { included: true, text: 'Profil Métabolique' },
-                  { included: true, text: 'Plan dAction 30 Jours' },
-                  { included: false, text: '11 sections supplémentaires' },
-                  { included: false, text: 'Protocoles personnalisés' },
-                  { included: false, text: 'Analyses illimitées' },
-                ].map((feature, i) => (
-                  <li key={i} className={`flex items-start gap-3 ${!feature.included ? 'opacity-40' : ''}`}>
-                    {feature.included ? (
-                      <Check className="w-5 h-5 text-[#5EECC5] mt-0.5 flex-shrink-0" />
-                    ) : (
-                      <X className="w-5 h-5 text-[#7A7A7A] mt-0.5 flex-shrink-0" />
-                    )}
-                    <span className="text-sm text-[#4A4A4A]">{feature.text}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link href="/audit-complet/questionnaire" className="btn-secondary w-full justify-center text-sm">
-                Commencer gratuitement
-              </Link>
-            </motion.div>
-
-            {/* PREMIUM Plan - RECOMMENDED */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              viewport={{ once: true }}
-              className="card-dark p-6 relative md:-mt-4 md:mb-[-16px] md:scale-105 z-10"
-            >
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge">Le + populaire</div>
-
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#8DFFE0]/20 flex items-center justify-center mx-auto mb-4">
-                  <Crown className="w-6 h-6 text-[#8DFFE0]" />
-                </div>
-                <div className="text-sm font-semibold text-[#8DFFE0] uppercase tracking-wider mb-2">Premium</div>
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <span className="text-lg text-white/40 line-through">79€</span>
-                  <span className="text-4xl font-bold text-white">39€</span>
-                </div>
-                <div className="text-sm text-white/60">Paiement unique</div>
-              </div>
-
-              <ul className="space-y-3 mb-6">
-                {[
-                  '15 sections danalyse complètes',
-                  'Digestion & Microbiome avancé',
-                  'Analyse HRV & Récupération',
-                  'Profil Hormonal complet',
-                  'Protocole Nutrition détaillé',
-                  'Protocole Suppléments',
-                  'Feuille de Route 90 Jours',
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#8DFFE0] mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-white/80">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link href="/audit-complet/questionnaire" className="btn-aqua w-full justify-center text-sm">
-                <span>Choisir Premium</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-
-            {/* ELITE Plan */}
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              viewport={{ once: true }}
-              className="card-light p-6 relative border-2 border-[#9990EA]/30"
-            >
-              <div className="absolute -top-3 right-6 bg-[#9990EA] text-white text-xs font-bold px-3 py-1 rounded-full">
-                Best Value
-              </div>
-
-              <div className="text-center mb-6">
-                <div className="w-12 h-12 rounded-full bg-[#9990EA]/10 flex items-center justify-center mx-auto mb-4">
-                  <RefreshCw className="w-6 h-6 text-[#9990EA]" />
-                </div>
-                <div className="text-sm font-semibold text-[#9990EA] uppercase tracking-wider mb-2">Elite</div>
-                <div className="flex items-center justify-center gap-2 mb-1">
-                  <span className="text-lg text-[#7A7A7A] line-through">156€</span>
-                  <span className="text-4xl font-bold text-[#101010]">79€</span>
-                </div>
-                <div className="text-sm text-[#7A7A7A]">4 analyses / an</div>
-              </div>
-
-              <ul className="space-y-3 mb-6">
-                {[
-                  'Tout le Premium inclus',
-                  '4 analyses par an (1/trimestre)',
-                  'Suivi de ta progression',
-                  'Compare tes résultats',
-                  'Ajuste tes protocoles',
-                  'Support prioritaire',
-                  'Économise 77€/an',
-                ].map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Check className="w-5 h-5 text-[#9990EA] mt-0.5 flex-shrink-0" />
-                    <span className="text-sm text-[#4A4A4A]">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <Link href="/audit-complet/questionnaire" className="w-full justify-center text-sm inline-flex items-center gap-2 px-6 py-3 bg-[#9990EA] text-white font-semibold rounded-xl hover:bg-[#7B70D9] transition-all">
-                <span>Choisir Elite</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
-          </div>
-
-          {/* Trust badges */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="mt-12 text-center"
-          >
-            <div className="inline-flex flex-wrap items-center justify-center gap-6 px-8 py-4 rounded-2xl bg-white/50">
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-[#5EECC5]" />
-                <span className="text-sm text-[#4A4A4A]">Aucune carte requise pour le gratuit</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-[#5EECC5]" />
-                <span className="text-sm text-[#4A4A4A]">Données sécurisées</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Check className="w-5 h-5 text-[#5EECC5]" />
-                <span className="text-sm text-[#4A4A4A]">Résultats instantanés</span>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-24 px-4 bg-dark">
+      {/* CTA Final */}
+      <section className="relative z-10 py-20 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
+            className="glass gradient-border rounded-3xl p-12"
           >
-            <h2 className="text-white mb-6">
-              Prêt à optimiser ton métabolisme ?
+            <h2 className="text-4xl md:text-5xl font-bold gradient-text mb-6">
+              Prêt à hacker ton métabolisme ?
             </h2>
-            <p className="text-xl text-white/60 mb-10 max-w-2xl mx-auto">
-              Rejoins les milliers de personnes qui ont déjà transformé leur santé grâce à notre audit métabolique.
+            <p className="text-xl text-light/80 mb-8">
+              Commence gratuitement maintenant • Résultats en 15 minutes
             </p>
-            <Link href="/audit-complet/questionnaire" className="btn-aqua text-lg px-12 py-5">
-              <span>Commencer maintenant</span>
-              <ArrowRight className="w-5 h-5" />
+            <Link
+              href="/audit-complet/questionnaire"
+              className="btn-primary text-xl px-12 py-5 inline-block"
+            >
+              🔥 Démarrer l'Audit Gratuit
             </Link>
-            <p className="text-white/40 mt-6 text-sm">
-              15 minutes • 100% gratuit pour commencer
+            <p className="text-light/50 mt-6 text-sm">
+              ✅ Aucune carte bancaire • 💻 Dashboard personnel • ⚡ Instantané
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 bg-[#101010] border-t border-white/5">
-        <div className="max-w-6xl mx-auto text-center">
-          <div className="text-white/40 text-sm">
-            © 2025 AchZod Coaching • Audit Métabolique Complet
-          </div>
-          <div className="text-white/30 text-xs mt-2">
-            Propulsé par Claude Sonnet • coaching@achzodcoaching.com
-          </div>
-        </div>
+      <footer className="relative z-10 py-12 px-4 text-center text-light/40 border-t border-light/10">
+        <p>© 2025 AchZod Coaching - Audit Métabolique Complet</p>
+        <p className="text-sm mt-2">
+          coaching@achzodcoaching.com
+        </p>
       </footer>
     </div>
   )
