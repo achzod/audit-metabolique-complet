@@ -1,9 +1,7 @@
 import NextAuth from "next-auth"
-import Credentials from "next-auth/providers/credentials"
 import Email from "next-auth/providers/nodemailer"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "./prisma"
-import bcrypt from "bcryptjs"
 import { sendMagicLink } from "./email"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -12,7 +10,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   providers: [
-    // Magic Link Login (prioritaire)
+    // Magic Link Login UNIQUEMENT
     Email({
       server: {
         host: 'smtp.gmail.com',
@@ -23,50 +21,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
       },
       from: `AchZod Coaching <${process.env.MAIL_USER}>`,
-      async sendVerificationRequest({ identifier: email, url, provider }) {
+      async sendVerificationRequest({ identifier: email, url }) {
         // Extraire le token de l'URL
         const urlObj = new URL(url);
         const token = urlObj.searchParams.get('token') || '';
 
         // Envoyer notre email personnalisé
         await sendMagicLink({ email, token });
-      },
-    }),
-    // Login/Password (backup)
-    Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          return null
-        }
-
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email as string,
-          },
-        })
-
-        if (!user || !user.password) {
-          return null
-        }
-
-        const isPasswordValid = await bcrypt.compare(
-          credentials.password as string,
-          user.password
-        )
-
-        if (!isPasswordValid) {
-          return null
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-        }
       },
     }),
   ],
