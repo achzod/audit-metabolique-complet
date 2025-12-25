@@ -276,8 +276,9 @@ export default function QuestionnairePage() {
     trigger,
     formState: { errors },
   } = useForm<QuestionnaireFormData>({
-    resolver: zodResolver(questionnaireSchema),
-    mode: 'onChange',
+    // Remove strict validation to allow partial submissions
+    // resolver: zodResolver(questionnaireSchema),
+    mode: 'onSubmit', // Only validate on submit, not onChange
   });
 
   // Auto-save every 5 seconds
@@ -307,6 +308,13 @@ export default function QuestionnairePage() {
     localStorage.setItem('questionnaire_responses', JSON.stringify(data));
 
     // Redirect to checkout
+    router.push('/audit-complet/checkout');
+  };
+
+  // Direct submit without strict validation
+  const handleDirectSubmit = () => {
+    const currentValues = watch();
+    localStorage.setItem('questionnaire_responses', JSON.stringify(currentValues));
     router.push('/audit-complet/checkout');
   };
 
@@ -1589,82 +1597,7 @@ export default function QuestionnairePage() {
                           composition corporelle, déséquilibres et points forts/faibles.
                         </p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="relative">
-                            <label className="block text-sm font-medium mb-2 text-white">Photo Face</label>
-                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                      const result = reader.result as string;
-                                      localStorage.setItem('photo_face', result);
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                              />
-                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
-                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
-                              <p className="text-xs text-gray-500 mt-1">Vue de face, bras le long du corps</p>
-                            </div>
-                          </div>
-
-                          <div className="relative">
-                            <label className="block text-sm font-medium mb-2 text-white">Photo Dos</label>
-                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                      const result = reader.result as string;
-                                      localStorage.setItem('photo_dos', result);
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                              />
-                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
-                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
-                              <p className="text-xs text-gray-500 mt-1">Vue de dos, même posture</p>
-                            </div>
-                          </div>
-
-                          <div className="relative">
-                            <label className="block text-sm font-medium mb-2 text-white">Photo Profil</label>
-                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
-                              <input
-                                type="file"
-                                accept="image/*"
-                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                                onChange={(e) => {
-                                  const file = e.target.files?.[0];
-                                  if (file) {
-                                    const reader = new FileReader();
-                                    reader.onloadend = () => {
-                                      const result = reader.result as string;
-                                      localStorage.setItem('photo_profil', result);
-                                    };
-                                    reader.readAsDataURL(file);
-                                  }
-                                }}
-                              />
-                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
-                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
-                              <p className="text-xs text-gray-500 mt-1">Vue de profil (gauche ou droite)</p>
-                            </div>
-                          </div>
-                        </div>
+                        <PhotoUploadGrid />
                       </div>
 
                       <QuestionCard title="106. Douleurs articulaires (sélection multiple)" error={errors.douleursArticulaires?.message}>
@@ -1933,7 +1866,8 @@ export default function QuestionnairePage() {
                 </button>
               ) : (
                 <button
-                  type="submit"
+                  type="button"
+                  onClick={handleDirectSubmit}
                   className="flex-1 px-6 py-4 rounded-xl bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] hover:opacity-90 transition-all flex items-center justify-center gap-2 font-semibold text-black"
                 >
                   <Check className="w-5 h-5" />
@@ -1945,7 +1879,7 @@ export default function QuestionnairePage() {
         </div>
       </div>
 
-      <style jsx>{`
+      <style jsx global>{`
         .input-field {
           width: 100%;
           padding: 0.75rem 1rem;
@@ -1969,23 +1903,34 @@ export default function QuestionnairePage() {
           appearance: none;
           -webkit-appearance: none;
           -moz-appearance: none;
+          background-color: #1a1a1f !important;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235EECC5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
           background-repeat: no-repeat;
           background-position: right 0.75rem center;
           background-size: 1.25rem;
           padding-right: 2.5rem;
           cursor: pointer;
+          color-scheme: dark;
         }
 
         select.input-field option {
-          background: #1a1a1f;
-          color: white;
-          padding: 0.75rem;
+          background-color: #1a1a1f !important;
+          color: white !important;
+          padding: 12px 16px;
         }
 
+        select.input-field option:hover,
+        select.input-field option:focus,
         select.input-field option:checked {
-          background: #5EECC5;
-          color: black;
+          background-color: #5EECC5 !important;
+          color: #000 !important;
+        }
+
+        /* Force dark mode for select on all platforms */
+        @supports (-webkit-appearance: none) {
+          select.input-field {
+            color-scheme: dark;
+          }
         }
 
         .checkbox-field {
@@ -2031,6 +1976,98 @@ export default function QuestionnairePage() {
           scrollbar-width: none;
         }
       `}</style>
+    </div>
+  );
+}
+
+function PhotoUploadGrid() {
+  const [photos, setPhotos] = useState<{ face: string | null; dos: string | null; profil: string | null }>({
+    face: null,
+    dos: null,
+    profil: null
+  });
+  const [uploading, setUploading] = useState<{ face: boolean; dos: boolean; profil: boolean }>({
+    face: false,
+    dos: false,
+    profil: false
+  });
+
+  useEffect(() => {
+    // Load existing photos from localStorage
+    const savedFace = localStorage.getItem('photo_face');
+    const savedDos = localStorage.getItem('photo_dos');
+    const savedProfil = localStorage.getItem('photo_profil');
+    setPhotos({
+      face: savedFace,
+      dos: savedDos,
+      profil: savedProfil
+    });
+  }, []);
+
+  const handleUpload = (type: 'face' | 'dos' | 'profil', file: File) => {
+    setUploading(prev => ({ ...prev, [type]: true }));
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      localStorage.setItem(`photo_${type}`, result);
+      setPhotos(prev => ({ ...prev, [type]: result }));
+      setUploading(prev => ({ ...prev, [type]: false }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removePhoto = (type: 'face' | 'dos' | 'profil') => {
+    localStorage.removeItem(`photo_${type}`);
+    setPhotos(prev => ({ ...prev, [type]: null }));
+  };
+
+  const PhotoBox = ({ type, label, hint }: { type: 'face' | 'dos' | 'profil'; label: string; hint: string }) => (
+    <div className="relative">
+      <label className="block text-sm font-medium mb-2 text-white">{label}</label>
+      {photos[type] ? (
+        <div className="relative rounded-xl overflow-hidden border-2 border-[#34D399]">
+          <img src={photos[type]!} alt={label} className="w-full h-48 object-cover" />
+          <div className="absolute top-2 right-2 flex gap-2">
+            <span className="px-2 py-1 bg-[#34D399] text-black text-xs font-bold rounded-full flex items-center gap-1">
+              <Check className="w-3 h-3" /> Uploaded
+            </span>
+            <button
+              type="button"
+              onClick={() => removePhoto(type)}
+              className="w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center text-xs hover:bg-red-600 transition-colors"
+            >
+              X
+            </button>
+          </div>
+        </div>
+      ) : (
+        <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5 h-48 flex flex-col items-center justify-center">
+          <input
+            type="file"
+            accept="image/*"
+            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleUpload(type, file);
+            }}
+          />
+          {uploading[type] ? (
+            <div className="w-10 h-10 border-4 border-[#34D399] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+          ) : (
+            <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
+          )}
+          <p className="text-sm text-gray-400">{uploading[type] ? 'Upload en cours...' : 'Cliquez pour uploader'}</p>
+          <p className="text-xs text-gray-500 mt-1">{hint}</p>
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <PhotoBox type="face" label="Photo Face" hint="Vue de face, bras le long du corps" />
+      <PhotoBox type="dos" label="Photo Dos" hint="Vue de dos, même posture" />
+      <PhotoBox type="profil" label="Photo Profil" hint="Vue de profil (gauche ou droite)" />
     </div>
   );
 }
