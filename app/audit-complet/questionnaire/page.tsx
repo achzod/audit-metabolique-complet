@@ -328,10 +328,9 @@ export default function QuestionnairePage() {
   ];
 
   const nextSection = async () => {
-    const fieldsToValidate = sectionFields[currentSection];
-    const result = await trigger(fieldsToValidate as any);
-
-    if (result && currentSection < sections.length - 1) {
+    // Skip validation for now - allow navigation between sections freely
+    // Validation will happen on final submit
+    if (currentSection < sections.length - 1) {
       if (!completedSections.includes(currentSection)) {
         setCompletedSections([...completedSections, currentSection]);
       }
@@ -1950,8 +1949,8 @@ export default function QuestionnairePage() {
         .input-field {
           width: 100%;
           padding: 0.75rem 1rem;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.1);
+          background: #1a1a1f;
+          border: 1px solid rgba(255, 255, 255, 0.15);
           border-radius: 0.75rem;
           color: white;
           font-size: 1rem;
@@ -1960,8 +1959,33 @@ export default function QuestionnairePage() {
 
         .input-field:focus {
           outline: none;
-          border-color: #00F5D4;
-          background: rgba(255, 255, 255, 0.08);
+          border-color: #5EECC5;
+          background: #1f1f25;
+          box-shadow: 0 0 0 3px rgba(94, 236, 197, 0.1);
+        }
+
+        /* Select dropdown styling */
+        select.input-field {
+          appearance: none;
+          -webkit-appearance: none;
+          -moz-appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%235EECC5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 0.75rem center;
+          background-size: 1.25rem;
+          padding-right: 2.5rem;
+          cursor: pointer;
+        }
+
+        select.input-field option {
+          background: #1a1a1f;
+          color: white;
+          padding: 0.75rem;
+        }
+
+        select.input-field option:checked {
+          background: #5EECC5;
+          color: black;
         }
 
         .checkbox-field {
