@@ -13,7 +13,7 @@ datasource db {
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  password      String
+  password      String?   // Nullable for passwordless magic link auth
   name          String?
   emailVerified DateTime?
   createdAt     DateTime  @default(now())
@@ -21,6 +21,7 @@ model User {
 
   audits        Audit[]
   payments      Payment[]
+  magicTokens   MagicToken[]
 
   @@map("users")
 }
@@ -35,6 +36,11 @@ model Audit {
 
   // Données du questionnaire (JSON)
   responses      Json
+
+  // Photos téléchargées (URLs ou base64)
+  photoFace      String?  @db.Text
+  photoBack      String?  @db.Text
+  photoSide      String?  @db.Text
 
   // Résultats de l'audit (HTML généré par Claude)
   htmlContent    String?  @db.Text
@@ -70,4 +76,19 @@ model Payment {
   paidAt          DateTime?
 
   @@map("payments")
+}
+
+model MagicToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([expiresAt])
+  @@map("magic_tokens")
 }

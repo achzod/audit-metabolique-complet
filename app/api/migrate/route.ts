@@ -4,6 +4,8 @@ import { promisify } from 'util'
 
 const execAsync = promisify(exec)
 
+export const maxDuration = 300 // 5 minutes max
+
 export async function POST(request: Request) {
   try {
     // Simple auth check
@@ -13,8 +15,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    // Run prisma db push
-    const { stdout, stderr } = await execAsync('npx prisma db push --accept-data-loss')
+    // Run prisma db push with longer timeout
+    const { stdout, stderr } = await execAsync(
+      'npx prisma db push --accept-data-loss --skip-generate',
+      { timeout: 60000 } // 60 seconds timeout
+    )
 
     return NextResponse.json({
       success: true,
