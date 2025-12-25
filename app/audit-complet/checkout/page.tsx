@@ -106,7 +106,7 @@ export default function CheckoutPage() {
         </motion.div>
 
         {/* Plans */}
-        <div className="grid md:grid-cols-3 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 gap-6 mb-12 pt-8">
           {/* Free Plan */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
