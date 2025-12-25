@@ -97,11 +97,11 @@ export default function CheckoutPage() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-[#5EECC5] to-[#9990EA] bg-clip-text text-transparent mb-4">
-            Choisis ton niveau d'analyse
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-[#5EECC5] to-[#9990EA] bg-clip-text text-transparent">NEUROCORE 360°</span>
           </h1>
           <p className="text-xl text-gray-400">
-            126 questions analysées • 13 domaines • Rapport 20+ pages
+            Choisis ton niveau d'analyse • 126 questions • 13 domaines
           </p>
         </motion.div>
 

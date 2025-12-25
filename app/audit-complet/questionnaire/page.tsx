@@ -369,8 +369,8 @@ export default function QuestionnairePage() {
         </AnimatePresence>
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
-            <h1 className="text-xl font-bold bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] bg-clip-text text-transparent">
-              Audit Métabolique Complet
+            <h1 className="text-xl font-bold bg-gradient-to-r from-[#5EECC5] to-[#9990EA] bg-clip-text text-transparent">
+              NEUROCORE 360°
             </h1>
             <div className="text-sm text-gray-400">
               Section {currentSection + 1} / {sections.length}

@@ -97,9 +97,10 @@ function HumanBodyVisualization() {
   const systems = [
     { name: 'Métabolisme', color: '#5EECC5', points: [[100, 120], [100, 180], [85, 150], [115, 150]] },
     { name: 'Hormones', color: '#9990EA', points: [[100, 60], [100, 100], [80, 80], [120, 80]] },
-    { name: 'Muscles', color: '#FF6B9D', points: [[70, 140], [130, 140], [60, 200], [140, 200]] },
+    { name: 'Biomécanique', color: '#FF6B9D', points: [[70, 120], [130, 120], [60, 200], [140, 200], [100, 180], [70, 280], [130, 280]] },
     { name: 'Cerveau', color: '#5EECC5', points: [[100, 35]] },
-    { name: 'Digestion', color: '#FF6B9D', points: [[100, 160], [90, 180], [110, 180]] },
+    { name: 'Digestion', color: '#9990EA', points: [[100, 160], [90, 180], [110, 180]] },
+    { name: 'Neurotransmetteurs', color: '#FF6B9D', points: [[100, 45], [85, 40], [115, 40]] },
   ]
 
   useEffect(() => {
@@ -406,7 +407,7 @@ export default function LandingPage() {
               <Zap className="w-4 h-4 text-[#5EECC5]" />
             </motion.div>
             <span className="text-sm font-medium bg-gradient-to-r from-[#5EECC5] to-[#9990EA] bg-clip-text text-transparent">
-              Analyse métabolique de niveau médical
+              Diagnostic Biohacking Complet
             </span>
           </motion.div>
 
@@ -417,14 +418,14 @@ export default function LandingPage() {
             transition={{ delay: 0.3, duration: 0.8 }}
             className="text-5xl md:text-7xl lg:text-8xl font-black mb-6 leading-tight"
           >
-            <span className="block text-white">Audit Métabolique</span>
             <motion.span
               className="block bg-gradient-to-r from-[#5EECC5] via-[#9990EA] to-[#FF6B9D] bg-clip-text text-transparent bg-[length:200%_auto]"
               animate={{ backgroundPosition: ['0% center', '200% center'] }}
               transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
             >
-              Complet
+              NEUROCORE
             </motion.span>
+            <span className="block text-white">360°</span>
           </motion.h1>
 
           {/* Subtitle */}
@@ -434,7 +435,7 @@ export default function LandingPage() {
             transition={{ delay: 0.5 }}
             className="text-xl md:text-2xl text-gray-400 max-w-3xl mx-auto mb-12"
           >
-            Un médecin serait choqué par la précision de cette analyse.
+            Hormones · Métabolisme · Biohacking · Biomécanique · Neurotransmetteurs
             <br />
             <span className="text-white font-semibold">126 questions</span> · <span className="text-white font-semibold">13 domaines</span> · <span className="text-white font-semibold">Rapport 20+ pages</span>
           </motion.p>
