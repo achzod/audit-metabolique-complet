@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3, Camera, Brain, Move } from 'lucide-react';
 import BackToHomeButton from '@/components/BackToHomeButton';
 
 // Zod validation schema
@@ -135,6 +135,34 @@ const questionnaireSchema = z.object({
   hydratationLitresJour: z.number().min(0).max(10).optional(),
   supplementsActuels: z.array(z.string()).default([]),
   medicamentsReguliers: z.string().optional(),
+
+  // Section 12: Biomécanique & Mobilité (10Q)
+  photoFace: z.string().optional(),
+  photoDos: z.string().optional(),
+  photoProfil: z.string().optional(),
+  douleursArticulaires: z.array(z.string()).default([]),
+  douleurDos: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'chronique']).optional(),
+  postureTravail: z.enum(['assis_bureau', 'debout', 'mixte', 'actif_physique']).optional(),
+  heuresAssisJour: z.number().min(0).max(24).optional(),
+  flexibiliteGenerale: z.enum(['tres_raide', 'raide', 'moyenne', 'souple', 'tres_souple']).optional(),
+  mobiliteEpaules: z.enum(['limitee', 'moyenne', 'bonne', 'excellente']).optional(),
+  mobiliteHanches: z.enum(['limitee', 'moyenne', 'bonne', 'excellente']).optional(),
+  equilibreUnipodal: z.enum(['moins_10s', '10_30s', '30_60s', 'plus_60s']).optional(),
+  pratiqueMobilite: z.enum(['jamais', 'rare', 'hebdo', 'quotidien']).optional(),
+
+  // Section 13: Neurotransmetteurs & Cognition (12Q)
+  clartesMentales: z.enum(['brouillard', 'parfois_clair', 'generalement_clair', 'tres_clair']).optional(),
+  concentration: z.enum(['tres_difficile', 'difficile', 'normale', 'bonne', 'excellente']).optional(),
+  memoire: z.enum(['tres_mauvaise', 'mauvaise', 'moyenne', 'bonne', 'excellente']).optional(),
+  motivationGenerale: z.enum(['aucune', 'faible', 'moyenne', 'bonne', 'tres_forte']).optional(),
+  anxiete: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'constant']).optional(),
+  humeurGenerale: z.enum(['deprime', 'basse', 'neutre', 'positive', 'tres_positive']).optional(),
+  irritabilite: z.enum(['jamais', 'rare', 'parfois', 'souvent', 'constant']).optional(),
+  addictionsComportementales: z.array(z.string()).default([]),
+  sensibiliteLumiere: z.enum(['non', 'legere', 'moderee', 'forte']).optional(),
+  qualiteAttention: z.enum(['tres_dispersee', 'dispersee', 'normale', 'focusee', 'hyperfocus']).optional(),
+  creativite: z.enum(['bloquee', 'faible', 'moyenne', 'bonne', 'excellente']).optional(),
+  rythmeCircadien: z.enum(['deregule', 'instable', 'stable', 'tres_regulier']).optional(),
 });
 
 type QuestionnaireFormData = z.infer<typeof questionnaireSchema>;
@@ -205,6 +233,18 @@ const sections = [
     title: 'Lifestyle & Substances',
     icon: Coffee,
     color: '#A78BFA',
+  },
+  {
+    id: 12,
+    title: 'Biomécanique & Mobilité',
+    icon: Move,
+    color: '#34D399',
+  },
+  {
+    id: 13,
+    title: 'Neurotransmetteurs & Cognition',
+    icon: Brain,
+    color: '#F472B6',
   },
 ];
 
@@ -282,7 +322,9 @@ export default function QuestionnairePage() {
     ['connaisHRV', 'hrvMoyenReveil', 'hrvPlusBasRecent', 'hrvPlusHautRecent', 'frequenceCardiaqueRepos', 'frequenceCardiaqueMax', 'tempsRecuperationFC', 'readyRecoveryScore'],
     ['analysesSanguines', 'vitamineD', 'ferritine', 'tsh', 'testosteroneTotale', 'glycemieJeun', 'utiliseCGM'],
     ['niveauStress', 'gestionStress', 'symptomesThyroide', 'resistanceInsuline', 'hypoglycemiesFrequentes', 'menstruationReguliere', 'symptomesSPM', 'menopauseAndropause'],
-    ['consommationAlcool', 'consommationCafeine', 'heureDernierCafe', 'tabac', 'hydratationLitresJour', 'supplementsActuels', 'medicamentsReguliers']
+    ['consommationAlcool', 'consommationCafeine', 'heureDernierCafe', 'tabac', 'hydratationLitresJour', 'supplementsActuels', 'medicamentsReguliers'],
+    ['photoFace', 'photoDos', 'photoProfil', 'douleursArticulaires', 'douleurDos', 'postureTravail', 'heuresAssisJour', 'flexibiliteGenerale', 'mobiliteEpaules', 'mobiliteHanches', 'equilibreUnipodal', 'pratiqueMobilite'],
+    ['clartesMentales', 'concentration', 'memoire', 'motivationGenerale', 'anxiete', 'humeurGenerale', 'irritabilite', 'addictionsComportementales', 'sensibiliteLumiere', 'qualiteAttention', 'creativite', 'rythmeCircadien']
   ];
 
   const nextSection = async () => {
@@ -1531,6 +1573,336 @@ export default function QuestionnairePage() {
                           rows={3}
                           placeholder="Liste des médicaments que vous prenez régulièrement..."
                         />
+                      </QuestionCard>
+                    </>
+                  )}
+
+                  {currentSection === 11 && (
+                    <>
+                      {/* Section 12: Biomécanique & Mobilité (12Q) */}
+                      <div className="mb-8 p-6 rounded-2xl bg-gradient-to-r from-[#34D399]/10 to-[#00F5D4]/10 border border-[#34D399]/30">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Camera className="w-8 h-8 text-[#34D399]" />
+                          <h3 className="text-xl font-bold text-[#34D399]">Photos d'Analyse Posturale</h3>
+                        </div>
+                        <p className="text-gray-400 mb-6">
+                          Uploadez 3 photos (Face, Dos, Profil) pour une analyse visuelle complète de votre posture,
+                          composition corporelle, déséquilibres et points forts/faibles.
+                        </p>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div className="relative">
+                            <label className="block text-sm font-medium mb-2 text-white">Photo Face</label>
+                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      const result = reader.result as string;
+                                      localStorage.setItem('photo_face', result);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
+                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
+                              <p className="text-xs text-gray-500 mt-1">Vue de face, bras le long du corps</p>
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            <label className="block text-sm font-medium mb-2 text-white">Photo Dos</label>
+                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      const result = reader.result as string;
+                                      localStorage.setItem('photo_dos', result);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
+                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
+                              <p className="text-xs text-gray-500 mt-1">Vue de dos, même posture</p>
+                            </div>
+                          </div>
+
+                          <div className="relative">
+                            <label className="block text-sm font-medium mb-2 text-white">Photo Profil</label>
+                            <div className="relative border-2 border-dashed border-[#34D399]/50 rounded-xl p-6 text-center hover:border-[#34D399] transition-all cursor-pointer bg-white/5">
+                              <input
+                                type="file"
+                                accept="image/*"
+                                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                onChange={(e) => {
+                                  const file = e.target.files?.[0];
+                                  if (file) {
+                                    const reader = new FileReader();
+                                    reader.onloadend = () => {
+                                      const result = reader.result as string;
+                                      localStorage.setItem('photo_profil', result);
+                                    };
+                                    reader.readAsDataURL(file);
+                                  }
+                                }}
+                              />
+                              <Camera className="w-10 h-10 mx-auto mb-2 text-[#34D399]" />
+                              <p className="text-sm text-gray-400">Cliquez pour uploader</p>
+                              <p className="text-xs text-gray-500 mt-1">Vue de profil (gauche ou droite)</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <QuestionCard title="106. Douleurs articulaires (sélection multiple)" error={errors.douleursArticulaires?.message}>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                          {['Épaules', 'Coudes', 'Poignets', 'Hanches', 'Genoux', 'Chevilles', 'Cou/Cervicales', 'Lombaires', 'Aucune'].map((zone) => (
+                            <label key={zone} className="flex items-center gap-2 text-sm p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                              <input
+                                type="checkbox"
+                                value={zone}
+                                {...register('douleursArticulaires')}
+                                className="checkbox-field"
+                              />
+                              <span>{zone}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </QuestionCard>
+
+                      <QuestionCard title="107. Fréquence douleurs de dos" error={errors.douleurDos?.message}>
+                        <select {...register('douleurDos')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="jamais">Jamais</option>
+                          <option value="rare">Rare (quelques fois par an)</option>
+                          <option value="parfois">Parfois (1-2x par mois)</option>
+                          <option value="souvent">Souvent (1-2x par semaine)</option>
+                          <option value="chronique">Chronique (quotidien)</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="108. Posture de travail principale" error={errors.postureTravail?.message}>
+                        <select {...register('postureTravail')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="assis_bureau">Assis au bureau</option>
+                          <option value="debout">Debout prolongé</option>
+                          <option value="mixte">Mixte assis/debout</option>
+                          <option value="actif_physique">Travail physiquement actif</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="109. Heures assis par jour (moyenne)" error={errors.heuresAssisJour?.message}>
+                        <input
+                          type="number"
+                          step="0.5"
+                          {...register('heuresAssisJour', { valueAsNumber: true })}
+                          className="input-field"
+                          placeholder="Ex: 8"
+                        />
+                      </QuestionCard>
+
+                      <QuestionCard title="110. Flexibilité générale perçue" error={errors.flexibiliteGenerale?.message}>
+                        <select {...register('flexibiliteGenerale')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="tres_raide">Très raide</option>
+                          <option value="raide">Raide</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="souple">Souple</option>
+                          <option value="tres_souple">Très souple</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="111. Mobilité des épaules" error={errors.mobiliteEpaules?.message}>
+                        <select {...register('mobiliteEpaules')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="limitee">Limitée (difficile de lever les bras)</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente (amplitude complète)</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="112. Mobilité des hanches" error={errors.mobiliteHanches?.message}>
+                        <select {...register('mobiliteHanches')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="limitee">Limitée (squat difficile)</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente (squat profond aisé)</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="113. Équilibre unipodal (debout sur une jambe, yeux fermés)" error={errors.equilibreUnipodal?.message}>
+                        <select {...register('equilibreUnipodal')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="moins_10s">Moins de 10 secondes</option>
+                          <option value="10_30s">10-30 secondes</option>
+                          <option value="30_60s">30-60 secondes</option>
+                          <option value="plus_60s">Plus de 60 secondes</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="114. Pratique de mobilité/étirements" error={errors.pratiqueMobilite?.message}>
+                        <select {...register('pratiqueMobilite')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="jamais">Jamais</option>
+                          <option value="rare">Rarement</option>
+                          <option value="hebdo">Hebdomadaire</option>
+                          <option value="quotidien">Quotidien</option>
+                        </select>
+                      </QuestionCard>
+                    </>
+                  )}
+
+                  {currentSection === 12 && (
+                    <>
+                      {/* Section 13: Neurotransmetteurs & Cognition (12Q) */}
+                      <QuestionCard title="115. Clarté mentale générale" error={errors.clartesMentales?.message}>
+                        <select {...register('clartesMentales')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="brouillard">Brouillard mental fréquent</option>
+                          <option value="parfois_clair">Parfois clair</option>
+                          <option value="generalement_clair">Généralement clair</option>
+                          <option value="tres_clair">Très clair et vif</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="116. Capacité de concentration" error={errors.concentration?.message}>
+                        <select {...register('concentration')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="tres_difficile">Très difficile</option>
+                          <option value="difficile">Difficile</option>
+                          <option value="normale">Normale</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="117. Qualité de la mémoire" error={errors.memoire?.message}>
+                        <select {...register('memoire')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="tres_mauvaise">Très mauvaise</option>
+                          <option value="mauvaise">Mauvaise</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="118. Niveau de motivation générale" error={errors.motivationGenerale?.message}>
+                        <select {...register('motivationGenerale')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="aucune">Aucune motivation</option>
+                          <option value="faible">Faible</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="tres_forte">Très forte</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="119. Fréquence d'anxiété" error={errors.anxiete?.message}>
+                        <select {...register('anxiete')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="jamais">Jamais</option>
+                          <option value="rare">Rarement</option>
+                          <option value="parfois">Parfois</option>
+                          <option value="souvent">Souvent</option>
+                          <option value="constant">Constant</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="120. Humeur générale" error={errors.humeurGenerale?.message}>
+                        <select {...register('humeurGenerale')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="deprime">Déprimée</option>
+                          <option value="basse">Basse</option>
+                          <option value="neutre">Neutre</option>
+                          <option value="positive">Positive</option>
+                          <option value="tres_positive">Très positive</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="121. Fréquence d'irritabilité" error={errors.irritabilite?.message}>
+                        <select {...register('irritabilite')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="jamais">Jamais</option>
+                          <option value="rare">Rarement</option>
+                          <option value="parfois">Parfois</option>
+                          <option value="souvent">Souvent</option>
+                          <option value="constant">Constant</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="122. Tendances addictives/compulsives (sélection multiple)" error={errors.addictionsComportementales?.message}>
+                        <div className="grid grid-cols-2 gap-2">
+                          {['Réseaux sociaux', 'Jeux vidéo', 'Shopping', 'Nourriture', 'Travail', 'Sport excessif', 'Aucune'].map((addiction) => (
+                            <label key={addiction} className="flex items-center gap-2 text-sm p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer">
+                              <input
+                                type="checkbox"
+                                value={addiction}
+                                {...register('addictionsComportementales')}
+                                className="checkbox-field"
+                              />
+                              <span>{addiction}</span>
+                            </label>
+                          ))}
+                        </div>
+                      </QuestionCard>
+
+                      <QuestionCard title="123. Sensibilité à la lumière" error={errors.sensibiliteLumiere?.message}>
+                        <select {...register('sensibiliteLumiere')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="non">Non</option>
+                          <option value="legere">Légère</option>
+                          <option value="moderee">Modérée</option>
+                          <option value="forte">Forte</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="124. Qualité de l'attention" error={errors.qualiteAttention?.message}>
+                        <select {...register('qualiteAttention')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="tres_dispersee">Très dispersée (TDAH-like)</option>
+                          <option value="dispersee">Dispersée</option>
+                          <option value="normale">Normale</option>
+                          <option value="focusee">Focalisée</option>
+                          <option value="hyperfocus">Hyperfocus</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="125. Niveau de créativité" error={errors.creativite?.message}>
+                        <select {...register('creativite')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="bloquee">Bloquée</option>
+                          <option value="faible">Faible</option>
+                          <option value="moyenne">Moyenne</option>
+                          <option value="bonne">Bonne</option>
+                          <option value="excellente">Excellente</option>
+                        </select>
+                      </QuestionCard>
+
+                      <QuestionCard title="126. Régularité du rythme circadien" error={errors.rythmeCircadien?.message}>
+                        <select {...register('rythmeCircadien')} className="input-field">
+                          <option value="">Sélectionner...</option>
+                          <option value="deregule">Complètement dérégulé</option>
+                          <option value="instable">Instable</option>
+                          <option value="stable">Stable</option>
+                          <option value="tres_regulier">Très régulier</option>
+                        </select>
                       </QuestionCard>
                     </>
                   )}
