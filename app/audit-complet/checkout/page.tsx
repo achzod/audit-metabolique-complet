@@ -169,13 +169,13 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className={`bg-[#2C2C2E] rounded-3xl p-8 cursor-pointer transition-all border-2 relative ${
+            className={`bg-[#2C2C2E] rounded-3xl p-8 pt-12 cursor-pointer transition-all border-2 relative overflow-visible ${
               selectedPlan === 'PREMIUM' ? 'border-[#9990EA]' : 'border-transparent hover:border-[#3A3A3C]'
             }`}
             onClick={() => handleSelectPlan('PREMIUM')}
           >
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#5EECC5] to-[#9990EA] text-black px-4 py-1 rounded-full text-xs font-bold">
-              POPULAIRE
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#5EECC5] to-[#9990EA] text-black px-6 py-2 rounded-full text-sm font-bold shadow-lg z-10 whitespace-nowrap">
+              ⭐ LE + POPULAIRE
             </div>
 
             <div className="text-center mb-6">
@@ -198,27 +198,31 @@ export default function CheckoutPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
+                <span>Neurotransmetteurs profond</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-green-400">✓</span>
+                <span>Cascade Hormonale complète</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-green-400">✓</span>
+                <span>Axe HPA & Stress chronique</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-green-400">✓</span>
+                <span>Mitochondries & Énergie</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-green-400">✓</span>
                 <span>Digestion & Microbiome</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Hormones & Signaux</span>
+                <span>Détox Hépatique & Inflammation</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400">✓</span>
-                <span>Performance & Récupération</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-green-400">✓</span>
-                <span>Biomécanique & Mobilité</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-green-400">✓</span>
-                <span>Plan Nutritionnel Personnalisé</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <span className="text-green-400">✓</span>
-                <span>Protocole Entraînement</span>
+                <span>Analyses sanguines à demander</span>
               </li>
             </ul>
 
@@ -238,13 +242,13 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className={`bg-[#2C2C2E] rounded-3xl p-8 cursor-pointer transition-all border-2 relative ${
+            className={`bg-[#2C2C2E] rounded-3xl p-8 pt-12 cursor-pointer transition-all border-2 relative overflow-visible ${
               selectedPlan === 'ELITE' ? 'border-[#FF6B9D]' : 'border-transparent hover:border-[#3A3A3C]'
             }`}
             onClick={() => handleSelectPlan('ELITE')}
           >
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF6B9D] to-[#9990EA] text-white px-4 py-1 rounded-full text-xs font-bold">
-              BEST VALUE
+            <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FF6B9D] to-[#9990EA] text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg z-10 whitespace-nowrap">
+              👑 BEST VALUE
             </div>
 
             <div className="text-center mb-6">
