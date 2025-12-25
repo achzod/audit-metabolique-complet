@@ -314,7 +314,12 @@ export default function QuestionnairePage() {
   // Direct submit without strict validation
   const handleDirectSubmit = () => {
     const currentValues = watch();
+
+    // Save only text responses to localStorage (photos stay in memory)
+    // Photos are too large for localStorage (~5MB limit)
     localStorage.setItem('questionnaire_responses', JSON.stringify(currentValues));
+
+    // Photos are in window.__photos and will be retrieved during checkout/audit generation
     router.push('/audit-complet/checkout');
   };
 
@@ -1992,24 +1997,16 @@ function PhotoUploadGrid() {
     profil: false
   });
 
-  useEffect(() => {
-    // Load existing photos from localStorage
-    const savedFace = localStorage.getItem('photo_face');
-    const savedDos = localStorage.getItem('photo_dos');
-    const savedProfil = localStorage.getItem('photo_profil');
-    setPhotos({
-      face: savedFace,
-      dos: savedDos,
-      profil: savedProfil
-    });
-  }, []);
-
+  // Store photos in memory (not localStorage) - they will be sent with the form
   const handleUpload = (type: 'face' | 'dos' | 'profil', file: File) => {
     setUploading(prev => ({ ...prev, [type]: true }));
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const result = reader.result as string;
-      localStorage.setItem(`photo_${type}`, result);
+      // Store in window object to access later during submit
+      (window as any).__photos = (window as any).__photos || {};
+      (window as any).__photos[type] = result;
       setPhotos(prev => ({ ...prev, [type]: result }));
       setUploading(prev => ({ ...prev, [type]: false }));
     };
@@ -2017,7 +2014,9 @@ function PhotoUploadGrid() {
   };
 
   const removePhoto = (type: 'face' | 'dos' | 'profil') => {
-    localStorage.removeItem(`photo_${type}`);
+    if ((window as any).__photos) {
+      delete (window as any).__photos[type];
+    }
     setPhotos(prev => ({ ...prev, [type]: null }));
   };
 
