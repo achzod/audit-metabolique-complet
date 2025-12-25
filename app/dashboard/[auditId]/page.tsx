@@ -6,8 +6,9 @@ import Link from 'next/link'
 export default async function AuditDetailPage({
   params,
 }: {
-  params: { auditId: string }
+  params: Promise<{ auditId: string }>
 }) {
+  const { auditId } = await params
   const session = await auth()
 
   if (!session?.user) {
@@ -17,7 +18,7 @@ export default async function AuditDetailPage({
   // Get audit
   const audit = await prisma.audit.findUnique({
     where: {
-      id: params.auditId,
+      id: auditId,
       userId: session.user.id,
     },
   })
@@ -47,7 +48,7 @@ export default async function AuditDetailPage({
   }
 
   // If audit has an error
-  if (audit.status === 'ERROR') {
+  if (audit.status === 'FAILED') {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="glass gradient-border rounded-3xl p-12 text-center max-w-md">
@@ -100,12 +101,12 @@ export default async function AuditDetailPage({
           </Link>
           <span
             className={`text-sm font-bold px-4 py-2 rounded-full ${
-              audit.type === 'PREMIUM'
+              audit.version === 'PREMIUM'
                 ? 'bg-gradient-to-r from-cyan-400 to-purple-400 text-dark'
                 : 'bg-light/10 text-light'
             }`}
           >
-            {audit.type === 'PREMIUM' ? '💎 Premium' : '🎁 Gratuit'}
+            {audit.version === 'PREMIUM' ? '💎 Premium' : '🎁 Gratuit'}
           </span>
         </div>
 
@@ -118,7 +119,7 @@ export default async function AuditDetailPage({
         </div>
 
         {/* Upgrade CTA for free users */}
-        {audit.type === 'GRATUIT' && (
+        {audit.version === 'GRATUIT' && (
           <div className="mt-12 glass gradient-border rounded-3xl p-8 text-center">
             <h2 className="text-3xl font-bold gradient-text mb-4">
               Débloquer l'analyse complète

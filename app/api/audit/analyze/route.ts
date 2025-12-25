@@ -48,7 +48,7 @@ export async function POST(request: Request) {
     const { auditId } = await request.json()
     await prisma.audit.update({
       where: { id: auditId },
-      data: { status: 'ERROR' },
+      data: { status: 'FAILED' },
     })
 
     return NextResponse.json(

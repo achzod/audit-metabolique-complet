@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
@@ -213,16 +213,45 @@ export default function QuestionnairePage() {
   const router = useRouter();
   const [currentSection, setCurrentSection] = useState(0);
   const [completedSections, setCompletedSections] = useState<number[]>([]);
+  const [showSaveToast, setShowSaveToast] = useState(false);
+
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('questionnaire_responses');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // We use reset from react-hook-form to populate the form
+        reset(parsed);
+      } catch (e) {
+        console.error('Failed to parse saved questionnaire data');
+      }
+    }
+  }, []);
 
   const {
     register,
     handleSubmit,
     watch,
+    reset,
+    trigger,
     formState: { errors },
   } = useForm<QuestionnaireFormData>({
     resolver: zodResolver(questionnaireSchema),
     mode: 'onChange',
   });
+
+  // Auto-save every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const currentValues = watch();
+      localStorage.setItem('questionnaire_responses', JSON.stringify(currentValues));
+      setShowSaveToast(true);
+      setTimeout(() => setShowSaveToast(false), 2000);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [watch]);
 
   // Watch conditional fields
   const balanceImpedancemetre = watch('balanceImpedancemetre');
@@ -236,14 +265,32 @@ export default function QuestionnairePage() {
 
   const onSubmit = (data: QuestionnaireFormData) => {
     // Save to localStorage
-    localStorage.setItem('questionnaireData', JSON.stringify(data));
+    localStorage.setItem('questionnaire_responses', JSON.stringify(data));
 
     // Redirect to checkout
     router.push('/audit-complet/checkout');
   };
 
-  const nextSection = () => {
-    if (currentSection < sections.length - 1) {
+  // List of fields per section for validation
+  const sectionFields: (keyof QuestionnaireFormData)[][] = [
+    ['age', 'sexe', 'poidsActuel', 'taille', 'tourDeTaille', 'tourDeHanches', 'poidsObjectif', 'timelineObjectif', 'objectifPrincipal', 'motivationPrincipale'],
+    ['balanceImpedancemetre', 'massGrasseActuel', 'masseMusculaireActuel', 'graisseViscerale', 'wearableTracker', 'wearableDepuis', 'consultationDonnees', 'photosProgression'],
+    ['energieMatin', 'energieMidi', 'energieApresMidi', 'energieSoir', 'heureCoupBarre', 'frequenceCoupsPompe', 'cravingsSucre', 'cravingsSale', 'temperatureCorporelle', 'perceptionMetabolisme'],
+    ['suiviAlimentation', 'suiviAlimentationDepuis', 'connaisMacros', 'proteinesJour', 'glucidesJour', 'lipidesJour', 'caloriesMoyennesJour', 'nombreRepasJour', 'jeuneIntermittent', 'fenetreAlimentation', 'nutritionPreWorkout', 'nutritionPostWorkout'],
+    ['ballonnements', 'transitIntestinal', 'frequenceSelles', 'douleursAbdominales', 'intolerances', 'refluxGastrique', 'priseProbiotiques', 'qualiteDigestion'],
+    ['frequenceEntrainement', 'repartitionCardio', 'repartitionMusculation', 'repartitionSport', 'intensiteMoyenne', 'dureeSessionMoyenne', 'vo2Max', 'pbDeveloppe', 'pbSquat', 'pbDeadlift', 'nombrePasJour', 'progressionPerformance'],
+    ['heuresCoucher', 'heuresReveil', 'heuresSommeilNuit', 'qualiteSommeil', 'difficulteEndormissement', 'reveilsNocturnes', 'reveilleMatin', 'chronotype', 'wearableTrackSommeil', 'scoreSommeilMoyen', 'sommeilProfond', 'sommeilLeger', 'sommeilREM', 'frequenceCardiaqueNocturne', 'hrvNocturne'],
+    ['connaisHRV', 'hrvMoyenReveil', 'hrvPlusBasRecent', 'hrvPlusHautRecent', 'frequenceCardiaqueRepos', 'frequenceCardiaqueMax', 'tempsRecuperationFC', 'readyRecoveryScore'],
+    ['analysesSanguines', 'vitamineD', 'ferritine', 'tsh', 'testosteroneTotale', 'glycemieJeun', 'utiliseCGM'],
+    ['niveauStress', 'gestionStress', 'symptomesThyroide', 'resistanceInsuline', 'hypoglycemiesFrequentes', 'menstruationReguliere', 'symptomesSPM', 'menopauseAndropause'],
+    ['consommationAlcool', 'consommationCafeine', 'heureDernierCafe', 'tabac', 'hydratationLitresJour', 'supplementsActuels', 'medicamentsReguliers']
+  ];
+
+  const nextSection = async () => {
+    const fieldsToValidate = sectionFields[currentSection];
+    const result = await trigger(fieldsToValidate as any);
+
+    if (result && currentSection < sections.length - 1) {
       if (!completedSections.includes(currentSection)) {
         setCompletedSections([...completedSections, currentSection]);
       }
@@ -266,6 +313,18 @@ export default function QuestionnairePage() {
     <div className="min-h-screen bg-[#0A0A0F] text-white">
       {/* Header with Progress */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-[#0A0A0F]/80 backdrop-blur-xl border-b border-white/5">
+        <AnimatePresence>
+          {showSaveToast && (
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-4 px-4 py-2 bg-[#00F5D4]/20 border border-[#00F5D4]/30 rounded-full text-xs text-[#00F5D4] backdrop-blur-md"
+            >
+              Sauvegarde automatique...
+            </motion.div>
+          )}
+        </AnimatePresence>
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] bg-clip-text text-transparent">
@@ -292,13 +351,12 @@ export default function QuestionnairePage() {
               <button
                 key={section.id}
                 onClick={() => setCurrentSection(idx)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${
-                  idx === currentSection
-                    ? 'bg-gradient-to-r from-[#00F5D4]/20 to-[#A78BFA]/20 border border-[#00F5D4]'
-                    : completedSections.includes(idx)
+                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${idx === currentSection
+                  ? 'bg-gradient-to-r from-[#00F5D4]/20 to-[#A78BFA]/20 border border-[#00F5D4]'
+                  : completedSections.includes(idx)
                     ? 'bg-white/5 border border-white/10 text-gray-400'
                     : 'bg-white/5 border border-white/5 text-gray-500'
-                }`}
+                  }`}
               >
                 {completedSections.includes(idx) && <Check className="w-3 h-3" />}
                 {section.title}
@@ -1303,7 +1361,7 @@ export default function QuestionnairePage() {
                         </>
                       )}
 
-                      <QuestionCard title="90. Utilises-tu un CGM (Continuous Glucose Monitor) ?" error={errors.utiliseCGM?.message}>
+                      <QuestionCard title="90. Utilises-tu un capteur de glucose en continu (type CGM / FreeStyle Libre) ?" error={errors.utiliseCGM?.message}>
                         <select {...register('utiliseCGM')} className="input-field">
                           <option value="">Sélectionner...</option>
                           <option value="oui">Oui, actuellement</option>

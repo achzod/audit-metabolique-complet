@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,12 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum AuditType {
+  METABOLIQUE
+  HORMONAL
+}
+
+enum AuditStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
 model User {
   id            String    @id @default(cuid())
   email         String    @unique
-  password      String
+  password      String?
   name          String?
-  emailVerified DateTime?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -26,48 +41,44 @@ model User {
 }
 
 model Audit {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            String       @id @default(cuid())
+  userId        String
+  type          AuditType
+  version       String
+  status        AuditStatus  @default(PENDING)
+  responses     Json
+  analysis      Json?
+  htmlContent   String?      @db.Text
+  completedAt   DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
 
-  type           String   // "GRATUIT" ou "PREMIUM"
-  status         String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "ERROR"
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  payment       Payment?
 
-  // Données du questionnaire (JSON)
-  responses      Json
-
-  // Résultats de l'audit (HTML généré par Claude)
-  htmlContent    String?  @db.Text
-
-  // Métadonnées
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  completedAt    DateTime?
-
-  payment        Payment?
-
+  @@index([userId])
+  @@index([type])
+  @@index([status])
   @@map("audits")
 }
 
 model Payment {
-  id              String   @id @default(cuid())
-  userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String        @id @default(cuid())
+  userId            String
+  auditId           String        @unique
+  amount            Int
+  provider          String
+  productType       AuditType
+  status            PaymentStatus @default(PENDING)
+  stripeSessionId   String?       @unique
+  stripePaymentId   String?       @unique
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
-  auditId         String   @unique
-  audit           Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  audit             Audit         @relation(fields: [auditId], references: [id], onDelete: Cascade)
 
-  amount          Float    // 79.00 pour premium
-  currency        String   @default("EUR")
-
-  provider        String   // "STRIPE" ou "PAYPAL"
-  providerPaymentId String? // ID de transaction du provider
-
-  status          String   @default("PENDING") // "PENDING", "COMPLETED", "FAILED", "REFUNDED"
-
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  paidAt          DateTime?
-
+  @@index([userId])
+  @@index([status])
   @@map("payments")
 }

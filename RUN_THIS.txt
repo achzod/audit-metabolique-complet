@@ -1,0 +1,30 @@
+╔══════════════════════════════════════════════════╗
+║  🚀 COPIE-COLLE CETTE COMMANDE DANS TON TERMINAL ║
+╚══════════════════════════════════════════════════╝
+
+1. Récupère tes API keys:
+   • Render: https://dashboard.render.com/u/settings#api-keys
+   • Claude: https://console.anthropic.com/settings/keys
+   • Stripe: https://dashboard.stripe.com/test/apikeys
+
+2. Remplace les XXX par tes vraies clés dans la commande ci-dessous:
+
+RENDER_API_KEY='rnd_XXX' \
+ANTHROPIC_API_KEY='sk-ant-api03-XXX' \
+STRIPE_SECRET_KEY='sk_test_XXX' \
+STRIPE_PUBLISHABLE_KEY='pk_test_XXX' \
+./deploy_render_auto.sh
+
+3. Lance la commande!
+
+Ça va automatiquement:
+✅ Créer la database PostgreSQL
+✅ Créer le web service
+✅ Configurer toutes les env vars
+✅ Déployer l'app
+✅ Push le schema Prisma
+
+En 3-5 minutes, ton app sera LIVE sur:
+https://achzod-audit-platform.onrender.com
+
+🔥 C'EST TOUT! 🔥

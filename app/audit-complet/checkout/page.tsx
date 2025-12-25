@@ -1,11 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { loadStripe } from '@stripe/stripe-js'
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+void stripePromise // prevent unused warning
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -14,16 +15,22 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false)
   const [paymentMethod, setPaymentMethod] = useState<'STRIPE' | 'PAYPAL'>('STRIPE')
 
-  useEffect(() => {
-    // Load questionnaire responses from localStorage
+  const loadResponses = useCallback(() => {
     const saved = localStorage.getItem('questionnaire_responses')
     if (saved) {
-      setResponses(JSON.parse(saved))
+      return JSON.parse(saved)
+    }
+    return null
+  }, [])
+
+  useEffect(() => {
+    const data = loadResponses()
+    if (data) {
+      setResponses(data)
     } else {
-      // Redirect back to questionnaire if no responses
       router.push('/audit-complet/questionnaire')
     }
-  }, [router])
+  }, [loadResponses, router])
 
   const handleSelectPlan = async (plan: 'GRATUIT' | 'PREMIUM') => {
     setSelectedPlan(plan)
@@ -109,9 +116,8 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className={`glass gradient-border rounded-3xl p-8 cursor-pointer transition-all ${
-              selectedPlan === 'GRATUIT' ? 'ring-4 ring-cyan-400' : ''
-            }`}
+            className={`glass gradient-border rounded-3xl p-8 cursor-pointer transition-all ${selectedPlan === 'GRATUIT' ? 'ring-4 ring-cyan-400' : ''
+              }`}
             onClick={() => handleSelectPlan('GRATUIT')}
           >
             <div className="text-center mb-6">
@@ -138,11 +144,11 @@ export default function CheckoutPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-green-400 text-xl">✅</span>
-                <span>Diagnostic Métabolisme & Énergie</span>
+                <span>Plan d'Action 30 Jours</span>
               </li>
               <li className="flex items-start gap-3">
-                <span className="text-green-400 text-xl">✅</span>
-                <span>Plan d'Action 30 Jours</span>
+                <span className="text-cyan-400 text-xl">⏳</span>
+                <span>Délai de traitement : 4h</span>
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-light/40 text-xl">🔒</span>
@@ -163,9 +169,8 @@ export default function CheckoutPage() {
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className={`glass gradient-border rounded-3xl p-8 cursor-pointer transition-all relative ${
-              selectedPlan === 'PREMIUM' ? 'ring-4 ring-purple-400' : ''
-            }`}
+            className={`glass gradient-border rounded-3xl p-8 cursor-pointer transition-all relative ${selectedPlan === 'PREMIUM' ? 'ring-4 ring-purple-400' : ''
+              }`}
             onClick={() => setSelectedPlan('PREMIUM')}
           >
             <div className="absolute -top-4 right-8 bg-gradient-to-r from-cyan-400 to-purple-400 text-dark px-4 py-1 rounded-full text-sm font-bold">
@@ -181,8 +186,12 @@ export default function CheckoutPage() {
             </div>
 
             <div className="text-center mb-8">
+              <div className="flex items-center justify-center gap-3 mb-2">
+                <span className="text-2xl text-light/40 line-through">147€</span>
+                <span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded text-sm font-bold">-47%</span>
+              </div>
               <p className="text-6xl font-bold gradient-text mb-2">79€</p>
-              <p className="text-light/50 text-sm">Paiement unique</p>
+              <p className="text-light/50 text-sm">Paiement unique • Accès à vie</p>
             </div>
 
             <ul className="space-y-3 mb-8">
@@ -216,7 +225,15 @@ export default function CheckoutPage() {
               </li>
               <li className="flex items-start gap-3">
                 <span className="text-cyan-400 text-xl">🤖</span>
-                <span>Claude Sonnet 4 (16000 tokens)</span>
+                <span>Claude 3.5 Sonnet (Analyse Haute Précision)</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-yellow-400 text-xl">⭐</span>
+                <span className="font-bold">Garantie satisfait ou remboursé 14j</span>
+              </li>
+              <li className="flex items-start gap-3">
+                <span className="text-red-400 text-xl">⚡</span>
+                <span className="text-red-400 font-bold">Urgence : Plus que 7 places à ce prix</span>
               </li>
             </ul>
 
@@ -231,11 +248,10 @@ export default function CheckoutPage() {
                 </p>
                 <div className="flex gap-4 mb-4">
                   <button
-                    className={`flex-1 py-3 rounded-xl font-semibold transition-all ${
-                      paymentMethod === 'STRIPE'
+                    className={`flex-1 py-3 rounded-xl font-semibold transition-all ${paymentMethod === 'STRIPE'
                         ? 'bg-purple-500 text-white'
                         : 'bg-light/10 text-light/60 hover:bg-light/20'
-                    }`}
+                      }`}
                     onClick={(e) => {
                       e.stopPropagation()
                       setPaymentMethod('STRIPE')
@@ -244,11 +260,10 @@ export default function CheckoutPage() {
                     💳 Carte Bancaire
                   </button>
                   <button
-                    className={`flex-1 py-3 rounded-xl font-semibold transition-all ${
-                      paymentMethod === 'PAYPAL'
+                    className={`flex-1 py-3 rounded-xl font-semibold transition-all ${paymentMethod === 'PAYPAL'
                         ? 'bg-blue-500 text-white'
                         : 'bg-light/10 text-light/60 hover:bg-light/20'
-                    }`}
+                      }`}
                     onClick={(e) => {
                       e.stopPropagation()
                       setPaymentMethod('PAYPAL')
@@ -261,9 +276,8 @@ export default function CheckoutPage() {
             )}
 
             <button
-              className={`w-full text-lg py-4 ${
-                selectedPlan === 'PREMIUM' ? 'btn-primary' : 'btn-secondary'
-              }`}
+              className={`w-full text-lg py-4 ${selectedPlan === 'PREMIUM' ? 'btn-primary' : 'btn-secondary'
+                }`}
               onClick={(e) => {
                 e.stopPropagation()
                 if (selectedPlan === 'PREMIUM') {

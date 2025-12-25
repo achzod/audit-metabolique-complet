@@ -13,7 +13,7 @@ export async function generateAuditWithClaude(
     : await import("./prompts/metabolique-premium")
 
   const message = await anthropic.messages.create({
-    model: "claude-sonnet-4-20250514",
+    model: "claude-3-5-sonnet-20240620",
     max_tokens: type === "GRATUIT" ? 4000 : 16000,
     messages: [
       {
