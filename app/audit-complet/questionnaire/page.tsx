@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3, Camera, Brain, Move } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Check, Activity, TrendingUp, Zap, Heart, Dumbbell, Moon, Coffee, Target, Scale, Utensils, BarChart3, Camera, Brain, Move, ChevronDown } from 'lucide-react';
 import BackToHomeButton from '@/components/BackToHomeButton';
 
 // Zod validation schema
@@ -274,6 +274,7 @@ export default function QuestionnairePage() {
     watch,
     reset,
     trigger,
+    setValue,
     formState: { errors },
   } = useForm<QuestionnaireFormData>({
     // Remove strict validation to allow partial submissions
@@ -460,12 +461,15 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="2. Quel est votre sexe biologique ?" error={errors.sexe?.message}>
-                        <select {...register('sexe')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="homme">Homme</option>
-                          <option value="femme">Femme</option>
-                          <option value="autre">Autre</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'homme', label: 'Homme' },
+                            { value: 'femme', label: 'Femme' },
+                            { value: 'autre', label: 'Autre' },
+                          ]}
+                          value={watch('sexe')}
+                          onChange={(val) => setValue('sexe', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="3. Quel est votre poids actuel ? (kg)" error={errors.poidsActuel?.message}>
@@ -498,25 +502,31 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="6. Dans quelle timeline souhaitez-vous atteindre votre objectif ?" error={errors.timelineObjectif?.message}>
-                        <select {...register('timelineObjectif')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="1_3_mois">1-3 mois</option>
-                          <option value="3_6_mois">3-6 mois</option>
-                          <option value="6_12_mois">6-12 mois</option>
-                          <option value="plus_12_mois">Plus de 12 mois</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: '1_3_mois', label: '1-3 mois' },
+                            { value: '3_6_mois', label: '3-6 mois' },
+                            { value: '6_12_mois', label: '6-12 mois' },
+                            { value: 'plus_12_mois', label: 'Plus de 12 mois' },
+                          ]}
+                          value={watch('timelineObjectif')}
+                          onChange={(val) => setValue('timelineObjectif', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="7. Quel est votre objectif principal ?" error={errors.objectifPrincipal?.message}>
-                        <select {...register('objectifPrincipal')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="perte_graisse">Perte de graisse</option>
-                          <option value="gain_muscle">Gain de masse musculaire</option>
-                          <option value="recomposition">Recomposition corporelle</option>
-                          <option value="performance">Amélioration performance</option>
-                          <option value="sante">Amélioration santé générale</option>
-                          <option value="energie">Augmentation énergie / vitalité</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'perte_graisse', label: 'Perte de graisse' },
+                            { value: 'gain_muscle', label: 'Gain de masse musculaire' },
+                            { value: 'recomposition', label: 'Recomposition corporelle' },
+                            { value: 'performance', label: 'Amélioration performance' },
+                            { value: 'sante', label: 'Amélioration santé générale' },
+                            { value: 'energie', label: 'Augmentation énergie / vitalité' },
+                          ]}
+                          value={watch('objectifPrincipal')}
+                          onChange={(val) => setValue('objectifPrincipal', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="8. Quelle est votre motivation principale ?" error={errors.motivationPrincipale?.message}>
@@ -534,11 +544,14 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 2: Composition Corporelle & Tracking (8Q) */}
                       <QuestionCard title="11. As-tu une balance impédancemètre ?" error={errors.balanceImpedancemetre?.message}>
-                        <select {...register('balanceImpedancemetre')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui</option>
-                          <option value="non">Non</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui', label: 'Oui' },
+                            { value: 'non', label: 'Non' },
+                          ]}
+                          value={watch('balanceImpedancemetre')}
+                          onChange={(val) => setValue('balanceImpedancemetre', val)}
+                        />
                       </QuestionCard>
 
                       {balanceImpedancemetre === 'oui' && (
@@ -575,15 +588,18 @@ export default function QuestionnairePage() {
                       )}
 
                       <QuestionCard title="15. Utilises-tu un wearable/tracker ?" error={errors.wearableTracker?.message}>
-                        <select {...register('wearableTracker')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="whoop">Whoop</option>
-                          <option value="oura">Oura Ring</option>
-                          <option value="apple_watch">Apple Watch</option>
-                          <option value="garmin">Garmin</option>
-                          <option value="fitbit">Fitbit</option>
-                          <option value="aucun">Aucun</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'whoop', label: 'Whoop' },
+                            { value: 'oura', label: 'Oura Ring' },
+                            { value: 'apple_watch', label: 'Apple Watch' },
+                            { value: 'garmin', label: 'Garmin' },
+                            { value: 'fitbit', label: 'Fitbit' },
+                            { value: 'aucun', label: 'Aucun' },
+                          ]}
+                          value={watch('wearableTracker')}
+                          onChange={(val) => setValue('wearableTracker', val)}
+                        />
                       </QuestionCard>
 
                       {wearableTracker !== 'aucun' && wearableTracker && (
@@ -598,24 +614,30 @@ export default function QuestionnairePage() {
                           </QuestionCard>
 
                           <QuestionCard title="17. Consultes-tu tes données régulièrement ?" error={errors.consultationDonnees?.message}>
-                            <select {...register('consultationDonnees')} className="input-field">
-                              <option value="">Sélectionner...</option>
-                              <option value="quotidien">Quotidien</option>
-                              <option value="hebdo">Hebdomadaire</option>
-                              <option value="rarement">Rarement</option>
-                              <option value="jamais">Jamais</option>
-                            </select>
+                            <SelectField
+                              options={[
+                                { value: 'quotidien', label: 'Quotidien' },
+                                { value: 'hebdo', label: 'Hebdomadaire' },
+                                { value: 'rarement', label: 'Rarement' },
+                                { value: 'jamais', label: 'Jamais' },
+                              ]}
+                              value={watch('consultationDonnees')}
+                              onChange={(val) => setValue('consultationDonnees', val)}
+                            />
                           </QuestionCard>
                         </>
                       )}
 
                       <QuestionCard title="18. Prends-tu des photos de progression ?" error={errors.photosProgression?.message}>
-                        <select {...register('photosProgression')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui_regulier">Oui régulièrement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="jamais">Jamais</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui_regulier', label: 'Oui régulièrement' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'jamais', label: 'Jamais' },
+                          ]}
+                          value={watch('photosProgression')}
+                          onChange={(val) => setValue('photosProgression', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -688,58 +710,73 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="24. Fréquence des coups de pompe" error={errors.frequenceCoupsPompe?.message}>
-                        <select {...register('frequenceCoupsPompe')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('frequenceCoupsPompe')}
+                          onChange={(val) => setValue('frequenceCoupsPompe', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="25. Cravings de sucre" error={errors.cravingsSucre?.message}>
-                        <select {...register('cravingsSucre')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="constant">Constant</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'constant', label: 'Constant' },
+                          ]}
+                          value={watch('cravingsSucre')}
+                          onChange={(val) => setValue('cravingsSucre', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="26. Cravings de salé" error={errors.cravingsSale?.message}>
-                        <select {...register('cravingsSale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="constant">Constant</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'constant', label: 'Constant' },
+                          ]}
+                          value={watch('cravingsSale')}
+                          onChange={(val) => setValue('cravingsSale', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="27. Température corporelle perçue" error={errors.temperatureCorporelle?.message}>
-                        <select {...register('temperatureCorporelle')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="toujours_froid">Toujours froid</option>
-                          <option value="souvent_froid">Souvent froid</option>
-                          <option value="normal">Normal</option>
-                          <option value="souvent_chaud">Souvent chaud</option>
-                          <option value="toujours_chaud">Toujours chaud</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'toujours_froid', label: 'Toujours froid' },
+                            { value: 'souvent_froid', label: 'Souvent froid' },
+                            { value: 'normal', label: 'Normal' },
+                            { value: 'souvent_chaud', label: 'Souvent chaud' },
+                            { value: 'toujours_chaud', label: 'Toujours chaud' },
+                          ]}
+                          value={watch('temperatureCorporelle')}
+                          onChange={(val) => setValue('temperatureCorporelle', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="28. Comment percevez-vous votre métabolisme ?" error={errors.perceptionMetabolisme?.message}>
-                        <select {...register('perceptionMetabolisme')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_lent">Très lent</option>
-                          <option value="lent">Lent</option>
-                          <option value="normal">Normal</option>
-                          <option value="rapide">Rapide</option>
-                          <option value="tres_rapide">Très rapide</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_lent', label: 'Très lent' },
+                            { value: 'lent', label: 'Lent' },
+                            { value: 'normal', label: 'Normal' },
+                            { value: 'rapide', label: 'Rapide' },
+                            { value: 'tres_rapide', label: 'Très rapide' },
+                          ]}
+                          value={watch('perceptionMetabolisme')}
+                          onChange={(val) => setValue('perceptionMetabolisme', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -748,13 +785,16 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 4: Nutrition & Tracking Alimentaire (12Q) */}
                       <QuestionCard title="29. Suis-tu ton alimentation ?" error={errors.suiviAlimentation?.message}>
-                        <select {...register('suiviAlimentation')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="myfitnesspal">MyFitnessPal</option>
-                          <option value="autre_app">Autre application</option>
-                          <option value="carnet">Carnet papier/notes</option>
-                          <option value="non">Non</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'myfitnesspal', label: 'MyFitnessPal' },
+                            { value: 'autre_app', label: 'Autre application' },
+                            { value: 'carnet', label: 'Carnet papier/notes' },
+                            { value: 'non', label: 'Non' },
+                          ]}
+                          value={watch('suiviAlimentation')}
+                          onChange={(val) => setValue('suiviAlimentation', val)}
+                        />
                       </QuestionCard>
 
                       {suiviAlimentation !== 'non' && suiviAlimentation && (
@@ -769,12 +809,15 @@ export default function QuestionnairePage() {
                       )}
 
                       <QuestionCard title="31. Connais-tu tes macros actuelles ?" error={errors.connaisMacros?.message}>
-                        <select {...register('connaisMacros')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui_precisement">Oui précisément</option>
-                          <option value="approximativement">Approximativement</option>
-                          <option value="non">Non</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui_precisement', label: 'Oui précisément' },
+                            { value: 'approximativement', label: 'Approximativement' },
+                            { value: 'non', label: 'Non' },
+                          ]}
+                          value={watch('connaisMacros')}
+                          onChange={(val) => setValue('connaisMacros', val)}
+                        />
                       </QuestionCard>
 
                       {(connaisMacros === 'oui_precisement' || connaisMacros === 'approximativement') && (
@@ -818,56 +861,71 @@ export default function QuestionnairePage() {
                       )}
 
                       <QuestionCard title="36. Nombre de repas par jour" error={errors.nombreRepasJour?.message}>
-                        <select {...register('nombreRepasJour')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="1">1 repas</option>
-                          <option value="2">2 repas</option>
-                          <option value="3">3 repas</option>
-                          <option value="4">4 repas</option>
-                          <option value="5_plus">5 repas ou plus</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: '1', label: '1 repas' },
+                            { value: '2', label: '2 repas' },
+                            { value: '3', label: '3 repas' },
+                            { value: '4', label: '4 repas' },
+                            { value: '5_plus', label: '5 repas ou plus' },
+                          ]}
+                          value={watch('nombreRepasJour')}
+                          onChange={(val) => setValue('nombreRepasJour', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="37. Pratiques-tu le jeûne intermittent ?" error={errors.jeuneIntermittent?.message}>
-                        <select {...register('jeuneIntermittent')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui</option>
-                          <option value="non">Non</option>
-                          <option value="parfois">Parfois</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui', label: 'Oui' },
+                            { value: 'non', label: 'Non' },
+                            { value: 'parfois', label: 'Parfois' },
+                          ]}
+                          value={watch('jeuneIntermittent')}
+                          onChange={(val) => setValue('jeuneIntermittent', val)}
+                        />
                       </QuestionCard>
 
                       {(jeuneIntermittent === 'oui' || jeuneIntermittent === 'parfois') && (
                         <QuestionCard title="38. Si oui, quelle fenêtre d'alimentation ?" error={errors.fenetreAlimentation?.message}>
-                          <select {...register('fenetreAlimentation')} className="input-field">
-                            <option value="">Sélectionner...</option>
-                            <option value="16_8">16/8 (jeûne 16h, alimentation 8h)</option>
-                            <option value="18_6">18/6 (jeûne 18h, alimentation 6h)</option>
-                            <option value="20_4">20/4 (jeûne 20h, alimentation 4h)</option>
-                            <option value="omad">OMAD (1 repas par jour)</option>
-                            <option value="autre">Autre</option>
-                          </select>
+                          <SelectField
+                            options={[
+                              { value: '16_8', label: '16/8 (jeûne 16h, alimentation 8h)' },
+                              { value: '18_6', label: '18/6 (jeûne 18h, alimentation 6h)' },
+                              { value: '20_4', label: '20/4 (jeûne 20h, alimentation 4h)' },
+                              { value: 'omad', label: 'OMAD (1 repas par jour)' },
+                              { value: 'autre', label: 'Autre' },
+                            ]}
+                            value={watch('fenetreAlimentation')}
+                            onChange={(val) => setValue('fenetreAlimentation', val)}
+                          />
                         </QuestionCard>
                       )}
 
                       <QuestionCard title="39. Nutrition pré-workout" error={errors.nutritionPreWorkout?.message}>
-                        <select {...register('nutritionPreWorkout')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="glucides">Glucides</option>
-                          <option value="proteines">Protéines</option>
-                          <option value="rien">Rien</option>
-                          <option value="ne_entraine_pas">Ne m'entraîne pas</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'glucides', label: 'Glucides' },
+                            { value: 'proteines', label: 'Protéines' },
+                            { value: 'rien', label: 'Rien' },
+                            { value: 'ne_entraine_pas', label: "Ne m'entraîne pas" },
+                          ]}
+                          value={watch('nutritionPreWorkout')}
+                          onChange={(val) => setValue('nutritionPreWorkout', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="40. Nutrition post-workout" error={errors.nutritionPostWorkout?.message}>
-                        <select {...register('nutritionPostWorkout')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="proteines_glucides">Protéines + Glucides</option>
-                          <option value="proteines_seules">Protéines seules</option>
-                          <option value="rien">Rien</option>
-                          <option value="ne_entraine_pas">Ne m'entraîne pas</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'proteines_glucides', label: 'Protéines + Glucides' },
+                            { value: 'proteines_seules', label: 'Protéines seules' },
+                            { value: 'rien', label: 'Rien' },
+                            { value: 'ne_entraine_pas', label: "Ne m'entraîne pas" },
+                          ]}
+                          value={watch('nutritionPostWorkout')}
+                          onChange={(val) => setValue('nutritionPostWorkout', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -876,46 +934,58 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 5: Digestion & Microbiome (8Q) */}
                       <QuestionCard title="41. Ballonnements" error={errors.ballonnements?.message}>
-                        <select {...register('ballonnements')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('ballonnements')}
+                          onChange={(val) => setValue('ballonnements', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="42. Transit intestinal" error={errors.transitIntestinal?.message}>
-                        <select {...register('transitIntestinal')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="constipation">Constipation</option>
-                          <option value="normal">Normal</option>
-                          <option value="diarrhee">Diarrhée</option>
-                          <option value="alterne">Alterne</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'constipation', label: 'Constipation' },
+                            { value: 'normal', label: 'Normal' },
+                            { value: 'diarrhee', label: 'Diarrhée' },
+                            { value: 'alterne', label: 'Alterne' },
+                          ]}
+                          value={watch('transitIntestinal')}
+                          onChange={(val) => setValue('transitIntestinal', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="43. Fréquence de selles par jour" error={errors.frequenceSelles?.message}>
-                        <select {...register('frequenceSelles')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="moins_3_sem">Moins de 3 fois par semaine</option>
-                          <option value="3_6_sem">3-6 fois par semaine</option>
-                          <option value="1_jour">1 fois par jour</option>
-                          <option value="2_3_jour">2-3 fois par jour</option>
-                          <option value="3_plus_jour">3+ fois par jour</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'moins_3_sem', label: 'Moins de 3 fois par semaine' },
+                            { value: '3_6_sem', label: '3-6 fois par semaine' },
+                            { value: '1_jour', label: '1 fois par jour' },
+                            { value: '2_3_jour', label: '2-3 fois par jour' },
+                            { value: '3_plus_jour', label: '3+ fois par jour' },
+                          ]}
+                          value={watch('frequenceSelles')}
+                          onChange={(val) => setValue('frequenceSelles', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="44. Douleurs abdominales" error={errors.douleursAbdominales?.message}>
-                        <select {...register('douleursAbdominales')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('douleursAbdominales')}
+                          onChange={(val) => setValue('douleursAbdominales', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="45. Intolérances identifiées (sélection multiple)" error={errors.intolerances?.message}>
@@ -935,23 +1005,29 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="46. Reflux gastrique" error={errors.refluxGastrique?.message}>
-                        <select {...register('refluxGastrique')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('refluxGastrique')}
+                          onChange={(val) => setValue('refluxGastrique', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="47. Prise de probiotiques" error={errors.priseProbiotiques?.message}>
-                        <select {...register('priseProbiotiques')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="passe">Dans le passé</option>
-                          <option value="actuellement">Actuellement</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'passe', label: 'Dans le passé' },
+                            { value: 'actuellement', label: 'Actuellement' },
+                          ]}
+                          value={watch('priseProbiotiques')}
+                          onChange={(val) => setValue('priseProbiotiques', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="48. Qualité de digestion globale (1-10)" error={errors.qualiteDigestion?.message}>
@@ -974,14 +1050,17 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 6: Activité & Performance (12Q) */}
                       <QuestionCard title="49. Fréquence d'entraînement par semaine" error={errors.frequenceEntrainement?.message}>
-                        <select {...register('frequenceEntrainement')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="0">0 (Sédentaire)</option>
-                          <option value="1_2">1-2 fois</option>
-                          <option value="3_4">3-4 fois</option>
-                          <option value="5_6">5-6 fois</option>
-                          <option value="7_plus">7+ fois</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: '0', label: '0 (Sédentaire)' },
+                            { value: '1_2', label: '1-2 fois' },
+                            { value: '3_4', label: '3-4 fois' },
+                            { value: '5_6', label: '5-6 fois' },
+                            { value: '7_plus', label: '7+ fois' },
+                          ]}
+                          value={watch('frequenceEntrainement')}
+                          onChange={(val) => setValue('frequenceEntrainement', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="50. Répartition Cardio (%)" error={errors.repartitionCardio?.message}>
@@ -1019,13 +1098,16 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="53. Intensité moyenne des séances" error={errors.intensiteMoyenne?.message}>
-                        <select {...register('intensiteMoyenne')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="legere">Légère (conversation facile)</option>
-                          <option value="moderee">Modérée (conversation difficile)</option>
-                          <option value="intense">Intense (parler est difficile)</option>
-                          <option value="tres_intense">Très intense (impossible de parler)</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'legere', label: 'Légère (conversation facile)' },
+                            { value: 'moderee', label: 'Modérée (conversation difficile)' },
+                            { value: 'intense', label: 'Intense (parler est difficile)' },
+                            { value: 'tres_intense', label: 'Très intense (impossible de parler)' },
+                          ]}
+                          value={watch('intensiteMoyenne')}
+                          onChange={(val) => setValue('intensiteMoyenne', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="54. Durée moyenne d'une séance (minutes)" error={errors.dureeSessionMoyenne?.message}>
@@ -1084,14 +1166,17 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="60. Progression de performance" error={errors.progressionPerformance?.message}>
-                        <select {...register('progressionPerformance')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="regresse">Régression</option>
-                          <option value="stagne">Stagnation</option>
-                          <option value="lente">Progression lente</option>
-                          <option value="bonne">Bonne progression</option>
-                          <option value="excellente">Excellente progression</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'regresse', label: 'Régression' },
+                            { value: 'stagne', label: 'Stagnation' },
+                            { value: 'lente', label: 'Progression lente' },
+                            { value: 'bonne', label: 'Bonne progression' },
+                            { value: 'excellente', label: 'Excellente progression' },
+                          ]}
+                          value={watch('progressionPerformance')}
+                          onChange={(val) => setValue('progressionPerformance', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -1140,14 +1225,17 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="65. Difficulté d'endormissement" error={errors.difficulteEndormissement?.message}>
-                        <select {...register('difficulteEndormissement')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('difficulteEndormissement')}
+                          onChange={(val) => setValue('difficulteEndormissement', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="66. Réveils nocturnes par nuit" error={errors.reveilsNocturnes?.message}>
@@ -1160,32 +1248,41 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="67. Comment vous sentez-vous au réveil ?" error={errors.reveilleMatin?.message}>
-                        <select {...register('reveilleMatin')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_difficile">Très difficile</option>
-                          <option value="difficile">Difficile</option>
-                          <option value="normal">Normal</option>
-                          <option value="facile">Facile</option>
-                          <option value="tres_facile">Très facile</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_difficile', label: 'Très difficile' },
+                            { value: 'difficile', label: 'Difficile' },
+                            { value: 'normal', label: 'Normal' },
+                            { value: 'facile', label: 'Facile' },
+                            { value: 'tres_facile', label: 'Très facile' },
+                          ]}
+                          value={watch('reveilleMatin')}
+                          onChange={(val) => setValue('reveilleMatin', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="68. Chronotype" error={errors.chronotype?.message}>
-                        <select {...register('chronotype')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="matin">Personne du matin</option>
-                          <option value="intermediaire">Intermédiaire</option>
-                          <option value="soir">Personne du soir</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'matin', label: 'Personne du matin' },
+                            { value: 'intermediaire', label: 'Intermédiaire' },
+                            { value: 'soir', label: 'Personne du soir' },
+                          ]}
+                          value={watch('chronotype')}
+                          onChange={(val) => setValue('chronotype', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="69. Ton wearable track ton sommeil ?" error={errors.wearableTrackSommeil?.message}>
-                        <select {...register('wearableTrackSommeil')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui</option>
-                          <option value="non">Non</option>
-                          <option value="pas_de_wearable">Pas de wearable</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui', label: 'Oui' },
+                            { value: 'non', label: 'Non' },
+                            { value: 'pas_de_wearable', label: 'Pas de wearable' },
+                          ]}
+                          value={watch('wearableTrackSommeil')}
+                          onChange={(val) => setValue('wearableTrackSommeil', val)}
+                        />
                       </QuestionCard>
 
                       {wearableTrackSommeil === 'oui' && (
@@ -1252,12 +1349,15 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 8: HRV & Récupération Cardiaque (8Q) */}
                       <QuestionCard title="76. Connais-tu ton HRV ?" error={errors.connaisHRV?.message}>
-                        <select {...register('connaisHRV')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui_track">Oui, je le track régulièrement</option>
-                          <option value="jai_mesure">J'ai mesuré une fois</option>
-                          <option value="non">Non</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui_track', label: 'Oui, je le track régulièrement' },
+                            { value: 'jai_mesure', label: "J'ai mesuré une fois" },
+                            { value: 'non', label: 'Non' },
+                          ]}
+                          value={watch('connaisHRV')}
+                          onChange={(val) => setValue('connaisHRV', val)}
+                        />
                       </QuestionCard>
 
                       {(connaisHRV === 'oui_track' || connaisHRV === 'jai_mesure') && (
@@ -1308,14 +1408,17 @@ export default function QuestionnairePage() {
                           </QuestionCard>
 
                           <QuestionCard title="82. Temps de récupération FC post-effort" error={errors.tempsRecuperationFC?.message}>
-                            <select {...register('tempsRecuperationFC')} className="input-field">
-                              <option value="">Sélectionner...</option>
-                              <option value="moins_1min">Moins de 1 minute</option>
-                              <option value="1_2min">1-2 minutes</option>
-                              <option value="2_3min">2-3 minutes</option>
-                              <option value="3plus_min">3+ minutes</option>
-                              <option value="ne_sais_pas">Ne sais pas</option>
-                            </select>
+                            <SelectField
+                              options={[
+                                { value: 'moins_1min', label: 'Moins de 1 minute' },
+                                { value: '1_2min', label: '1-2 minutes' },
+                                { value: '2_3min', label: '2-3 minutes' },
+                                { value: '3plus_min', label: '3+ minutes' },
+                                { value: 'ne_sais_pas', label: 'Ne sais pas' },
+                              ]}
+                              value={watch('tempsRecuperationFC')}
+                              onChange={(val) => setValue('tempsRecuperationFC', val)}
+                            />
                           </QuestionCard>
 
                           <QuestionCard title="83. Ready/Recovery Score de ton wearable (1-100) - Optionnel" error={errors.readyRecoveryScore?.message}>
@@ -1335,14 +1438,17 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 9: Analyses & Biomarqueurs (7Q) */}
                       <QuestionCard title="84. As-tu fait des analyses sanguines récentes ?" error={errors.analysesSanguines?.message}>
-                        <select {...register('analysesSanguines')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="moins_3mois">Moins de 3 mois</option>
-                          <option value="3_6mois">3-6 mois</option>
-                          <option value="6_12mois">6-12 mois</option>
-                          <option value="plus_12mois">Plus de 12 mois</option>
-                          <option value="jamais">Jamais</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'moins_3mois', label: 'Moins de 3 mois' },
+                            { value: '3_6mois', label: '3-6 mois' },
+                            { value: '6_12mois', label: '6-12 mois' },
+                            { value: 'plus_12mois', label: 'Plus de 12 mois' },
+                            { value: 'jamais', label: 'Jamais' },
+                          ]}
+                          value={watch('analysesSanguines')}
+                          onChange={(val) => setValue('analysesSanguines', val)}
+                        />
                       </QuestionCard>
 
                       {analysesSanguines !== 'jamais' && analysesSanguines && (
@@ -1398,12 +1504,15 @@ export default function QuestionnairePage() {
                       )}
 
                       <QuestionCard title="90. Utilises-tu un capteur de glucose en continu (type CGM / FreeStyle Libre) ?" error={errors.utiliseCGM?.message}>
-                        <select {...register('utiliseCGM')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui, actuellement</option>
-                          <option value="non">Non</option>
-                          <option value="jai_teste">J'ai testé dans le passé</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui', label: 'Oui, actuellement' },
+                            { value: 'non', label: 'Non' },
+                            { value: 'jai_teste', label: "J'ai testé dans le passé" },
+                          ]}
+                          value={watch('utiliseCGM')}
+                          onChange={(val) => setValue('utiliseCGM', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -1426,14 +1535,17 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="92. Gestion du stress" error={errors.gestionStress?.message}>
-                        <select {...register('gestionStress')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_mauvaise">Très mauvaise</option>
-                          <option value="mauvaise">Mauvaise</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_mauvaise', label: 'Très mauvaise' },
+                            { value: 'mauvaise', label: 'Mauvaise' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente' },
+                          ]}
+                          value={watch('gestionStress')}
+                          onChange={(val) => setValue('gestionStress', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="93. Symptômes thyroïde (sélection multiple)" error={errors.symptomesThyroide?.message}>
@@ -1453,32 +1565,41 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="94. Résistance à l'insuline diagnostiquée ?" error={errors.resistanceInsuline?.message}>
-                        <select {...register('resistanceInsuline')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="non">Non</option>
-                          <option value="soupconnee">Soupçonnée</option>
-                          <option value="diagnostiquee">Diagnostiquée</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'non', label: 'Non' },
+                            { value: 'soupconnee', label: 'Soupçonnée' },
+                            { value: 'diagnostiquee', label: 'Diagnostiquée' },
+                          ]}
+                          value={watch('resistanceInsuline')}
+                          onChange={(val) => setValue('resistanceInsuline', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="95. Hypoglycémies fréquentes ?" error={errors.hypoglycemiesFrequentes?.message}>
-                        <select {...register('hypoglycemiesFrequentes')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('hypoglycemiesFrequentes')}
+                          onChange={(val) => setValue('hypoglycemiesFrequentes', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="96. Menstruation régulière (si applicable)" error={errors.menstruationReguliere?.message}>
-                        <select {...register('menstruationReguliere')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="oui">Oui, régulière</option>
-                          <option value="non">Non, irrégulière</option>
-                          <option value="non_applicable">Non applicable</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'oui', label: 'Oui, régulière' },
+                            { value: 'non', label: 'Non, irrégulière' },
+                            { value: 'non_applicable', label: 'Non applicable' },
+                          ]}
+                          value={watch('menstruationReguliere')}
+                          onChange={(val) => setValue('menstruationReguliere', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="97. Symptômes SPM (sélection multiple)" error={errors.symptomesSPM?.message}>
@@ -1498,13 +1619,16 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="98. Ménopause/Andropause" error={errors.menopauseAndropause?.message}>
-                        <select {...register('menopauseAndropause')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="non">Non</option>
-                          <option value="pre">Pré-ménopause/andropause</option>
-                          <option value="en_cours">En cours</option>
-                          <option value="post">Post-ménopause/andropause</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'non', label: 'Non' },
+                            { value: 'pre', label: 'Pré-ménopause/andropause' },
+                            { value: 'en_cours', label: 'En cours' },
+                            { value: 'post', label: 'Post-ménopause/andropause' },
+                          ]}
+                          value={watch('menopauseAndropause')}
+                          onChange={(val) => setValue('menopauseAndropause', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -1513,25 +1637,31 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 11: Lifestyle & Substances (7Q) */}
                       <QuestionCard title="99. Consommation d'alcool par semaine" error={errors.consommationAlcool?.message}>
-                        <select {...register('consommationAlcool')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="aucune">Aucune</option>
-                          <option value="occasionnel">Occasionnel (événements spéciaux)</option>
-                          <option value="1_3_verres">1-3 verres</option>
-                          <option value="4_7_verres">4-7 verres</option>
-                          <option value="8_plus_verres">8+ verres</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'aucune', label: 'Aucune' },
+                            { value: 'occasionnel', label: 'Occasionnel (événements spéciaux)' },
+                            { value: '1_3_verres', label: '1-3 verres' },
+                            { value: '4_7_verres', label: '4-7 verres' },
+                            { value: '8_plus_verres', label: '8+ verres' },
+                          ]}
+                          value={watch('consommationAlcool')}
+                          onChange={(val) => setValue('consommationAlcool', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="100. Consommation de caféine par jour" error={errors.consommationCafeine?.message}>
-                        <select {...register('consommationCafeine')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="0">0 (aucune caféine)</option>
-                          <option value="1_cafe">1 café</option>
-                          <option value="2_3_cafes">2-3 cafés</option>
-                          <option value="4_5_cafes">4-5 cafés</option>
-                          <option value="6_plus_cafes">6+ cafés</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: '0', label: '0 (aucune caféine)' },
+                            { value: '1_cafe', label: '1 café' },
+                            { value: '2_3_cafes', label: '2-3 cafés' },
+                            { value: '4_5_cafes', label: '4-5 cafés' },
+                            { value: '6_plus_cafes', label: '6+ cafés' },
+                          ]}
+                          value={watch('consommationCafeine')}
+                          onChange={(val) => setValue('consommationCafeine', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="101. Heure du dernier café" error={errors.heureDernierCafe?.message}>
@@ -1543,13 +1673,16 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="102. Tabac" error={errors.tabac?.message}>
-                        <select {...register('tabac')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais fumé</option>
-                          <option value="ancien">Ancien fumeur</option>
-                          <option value="occasionnel">Occasionnel</option>
-                          <option value="regulier">Régulier</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais fumé' },
+                            { value: 'ancien', label: 'Ancien fumeur' },
+                            { value: 'occasionnel', label: 'Occasionnel' },
+                            { value: 'regulier', label: 'Régulier' },
+                          ]}
+                          value={watch('tabac')}
+                          onChange={(val) => setValue('tabac', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="103. Hydratation litres par jour" error={errors.hydratationLitresJour?.message}>
@@ -1622,24 +1755,30 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="107. Fréquence douleurs de dos" error={errors.douleurDos?.message}>
-                        <select {...register('douleurDos')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rare (quelques fois par an)</option>
-                          <option value="parfois">Parfois (1-2x par mois)</option>
-                          <option value="souvent">Souvent (1-2x par semaine)</option>
-                          <option value="chronique">Chronique (quotidien)</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rare (quelques fois par an)' },
+                            { value: 'parfois', label: 'Parfois (1-2x par mois)' },
+                            { value: 'souvent', label: 'Souvent (1-2x par semaine)' },
+                            { value: 'chronique', label: 'Chronique (quotidien)' },
+                          ]}
+                          value={watch('douleurDos')}
+                          onChange={(val) => setValue('douleurDos', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="108. Posture de travail principale" error={errors.postureTravail?.message}>
-                        <select {...register('postureTravail')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="assis_bureau">Assis au bureau</option>
-                          <option value="debout">Debout prolongé</option>
-                          <option value="mixte">Mixte assis/debout</option>
-                          <option value="actif_physique">Travail physiquement actif</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'assis_bureau', label: 'Assis au bureau' },
+                            { value: 'debout', label: 'Debout prolongé' },
+                            { value: 'mixte', label: 'Mixte assis/debout' },
+                            { value: 'actif_physique', label: 'Travail physiquement actif' },
+                          ]}
+                          value={watch('postureTravail')}
+                          onChange={(val) => setValue('postureTravail', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="109. Heures assis par jour (moyenne)" error={errors.heuresAssisJour?.message}>
@@ -1653,54 +1792,69 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="110. Flexibilité générale perçue" error={errors.flexibiliteGenerale?.message}>
-                        <select {...register('flexibiliteGenerale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_raide">Très raide</option>
-                          <option value="raide">Raide</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="souple">Souple</option>
-                          <option value="tres_souple">Très souple</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_raide', label: 'Très raide' },
+                            { value: 'raide', label: 'Raide' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'souple', label: 'Souple' },
+                            { value: 'tres_souple', label: 'Très souple' },
+                          ]}
+                          value={watch('flexibiliteGenerale')}
+                          onChange={(val) => setValue('flexibiliteGenerale', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="111. Mobilité des épaules" error={errors.mobiliteEpaules?.message}>
-                        <select {...register('mobiliteEpaules')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="limitee">Limitée (difficile de lever les bras)</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente (amplitude complète)</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'limitee', label: 'Limitée (difficile de lever les bras)' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente (amplitude complète)' },
+                          ]}
+                          value={watch('mobiliteEpaules')}
+                          onChange={(val) => setValue('mobiliteEpaules', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="112. Mobilité des hanches" error={errors.mobiliteHanches?.message}>
-                        <select {...register('mobiliteHanches')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="limitee">Limitée (squat difficile)</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente (squat profond aisé)</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'limitee', label: 'Limitée (squat difficile)' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente (squat profond aisé)' },
+                          ]}
+                          value={watch('mobiliteHanches')}
+                          onChange={(val) => setValue('mobiliteHanches', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="113. Équilibre unipodal (debout sur une jambe, yeux fermés)" error={errors.equilibreUnipodal?.message}>
-                        <select {...register('equilibreUnipodal')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="moins_10s">Moins de 10 secondes</option>
-                          <option value="10_30s">10-30 secondes</option>
-                          <option value="30_60s">30-60 secondes</option>
-                          <option value="plus_60s">Plus de 60 secondes</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'moins_10s', label: 'Moins de 10 secondes' },
+                            { value: '10_30s', label: '10-30 secondes' },
+                            { value: '30_60s', label: '30-60 secondes' },
+                            { value: 'plus_60s', label: 'Plus de 60 secondes' },
+                          ]}
+                          value={watch('equilibreUnipodal')}
+                          onChange={(val) => setValue('equilibreUnipodal', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="114. Pratique de mobilité/étirements" error={errors.pratiqueMobilite?.message}>
-                        <select {...register('pratiqueMobilite')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rarement</option>
-                          <option value="hebdo">Hebdomadaire</option>
-                          <option value="quotidien">Quotidien</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rarement' },
+                            { value: 'hebdo', label: 'Hebdomadaire' },
+                            { value: 'quotidien', label: 'Quotidien' },
+                          ]}
+                          value={watch('pratiqueMobilite')}
+                          onChange={(val) => setValue('pratiqueMobilite', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -1709,79 +1863,100 @@ export default function QuestionnairePage() {
                     <>
                       {/* Section 13: Neurotransmetteurs & Cognition (12Q) */}
                       <QuestionCard title="115. Clarté mentale générale" error={errors.clartesMentales?.message}>
-                        <select {...register('clartesMentales')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="brouillard">Brouillard mental fréquent</option>
-                          <option value="parfois_clair">Parfois clair</option>
-                          <option value="generalement_clair">Généralement clair</option>
-                          <option value="tres_clair">Très clair et vif</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'brouillard', label: 'Brouillard mental fréquent' },
+                            { value: 'parfois_clair', label: 'Parfois clair' },
+                            { value: 'generalement_clair', label: 'Généralement clair' },
+                            { value: 'tres_clair', label: 'Très clair et vif' },
+                          ]}
+                          value={watch('clartesMentales')}
+                          onChange={(val) => setValue('clartesMentales', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="116. Capacité de concentration" error={errors.concentration?.message}>
-                        <select {...register('concentration')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_difficile">Très difficile</option>
-                          <option value="difficile">Difficile</option>
-                          <option value="normale">Normale</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_difficile', label: 'Très difficile' },
+                            { value: 'difficile', label: 'Difficile' },
+                            { value: 'normale', label: 'Normale' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente' },
+                          ]}
+                          value={watch('concentration')}
+                          onChange={(val) => setValue('concentration', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="117. Qualité de la mémoire" error={errors.memoire?.message}>
-                        <select {...register('memoire')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_mauvaise">Très mauvaise</option>
-                          <option value="mauvaise">Mauvaise</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_mauvaise', label: 'Très mauvaise' },
+                            { value: 'mauvaise', label: 'Mauvaise' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente' },
+                          ]}
+                          value={watch('memoire')}
+                          onChange={(val) => setValue('memoire', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="118. Niveau de motivation générale" error={errors.motivationGenerale?.message}>
-                        <select {...register('motivationGenerale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="aucune">Aucune motivation</option>
-                          <option value="faible">Faible</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="tres_forte">Très forte</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'aucune', label: 'Aucune motivation' },
+                            { value: 'faible', label: 'Faible' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'tres_forte', label: 'Très forte' },
+                          ]}
+                          value={watch('motivationGenerale')}
+                          onChange={(val) => setValue('motivationGenerale', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="119. Fréquence d'anxiété" error={errors.anxiete?.message}>
-                        <select {...register('anxiete')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="constant">Constant</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rarement' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'constant', label: 'Constant' },
+                          ]}
+                          value={watch('anxiete')}
+                          onChange={(val) => setValue('anxiete', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="120. Humeur générale" error={errors.humeurGenerale?.message}>
-                        <select {...register('humeurGenerale')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="deprime">Déprimée</option>
-                          <option value="basse">Basse</option>
-                          <option value="neutre">Neutre</option>
-                          <option value="positive">Positive</option>
-                          <option value="tres_positive">Très positive</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'deprime', label: 'Déprimée' },
+                            { value: 'basse', label: 'Basse' },
+                            { value: 'neutre', label: 'Neutre' },
+                            { value: 'positive', label: 'Positive' },
+                            { value: 'tres_positive', label: 'Très positive' },
+                          ]}
+                          value={watch('humeurGenerale')}
+                          onChange={(val) => setValue('humeurGenerale', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="121. Fréquence d'irritabilité" error={errors.irritabilite?.message}>
-                        <select {...register('irritabilite')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="jamais">Jamais</option>
-                          <option value="rare">Rarement</option>
-                          <option value="parfois">Parfois</option>
-                          <option value="souvent">Souvent</option>
-                          <option value="constant">Constant</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'jamais', label: 'Jamais' },
+                            { value: 'rare', label: 'Rarement' },
+                            { value: 'parfois', label: 'Parfois' },
+                            { value: 'souvent', label: 'Souvent' },
+                            { value: 'constant', label: 'Constant' },
+                          ]}
+                          value={watch('irritabilite')}
+                          onChange={(val) => setValue('irritabilite', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="122. Tendances addictives/compulsives (sélection multiple)" error={errors.addictionsComportementales?.message}>
@@ -1801,45 +1976,57 @@ export default function QuestionnairePage() {
                       </QuestionCard>
 
                       <QuestionCard title="123. Sensibilité à la lumière" error={errors.sensibiliteLumiere?.message}>
-                        <select {...register('sensibiliteLumiere')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="non">Non</option>
-                          <option value="legere">Légère</option>
-                          <option value="moderee">Modérée</option>
-                          <option value="forte">Forte</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'non', label: 'Non' },
+                            { value: 'legere', label: 'Légère' },
+                            { value: 'moderee', label: 'Modérée' },
+                            { value: 'forte', label: 'Forte' },
+                          ]}
+                          value={watch('sensibiliteLumiere')}
+                          onChange={(val) => setValue('sensibiliteLumiere', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="124. Qualité de l'attention" error={errors.qualiteAttention?.message}>
-                        <select {...register('qualiteAttention')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="tres_dispersee">Très dispersée (TDAH-like)</option>
-                          <option value="dispersee">Dispersée</option>
-                          <option value="normale">Normale</option>
-                          <option value="focusee">Focalisée</option>
-                          <option value="hyperfocus">Hyperfocus</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'tres_dispersee', label: 'Très dispersée (TDAH-like)' },
+                            { value: 'dispersee', label: 'Dispersée' },
+                            { value: 'normale', label: 'Normale' },
+                            { value: 'focusee', label: 'Focalisée' },
+                            { value: 'hyperfocus', label: 'Hyperfocus' },
+                          ]}
+                          value={watch('qualiteAttention')}
+                          onChange={(val) => setValue('qualiteAttention', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="125. Niveau de créativité" error={errors.creativite?.message}>
-                        <select {...register('creativite')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="bloquee">Bloquée</option>
-                          <option value="faible">Faible</option>
-                          <option value="moyenne">Moyenne</option>
-                          <option value="bonne">Bonne</option>
-                          <option value="excellente">Excellente</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'bloquee', label: 'Bloquée' },
+                            { value: 'faible', label: 'Faible' },
+                            { value: 'moyenne', label: 'Moyenne' },
+                            { value: 'bonne', label: 'Bonne' },
+                            { value: 'excellente', label: 'Excellente' },
+                          ]}
+                          value={watch('creativite')}
+                          onChange={(val) => setValue('creativite', val)}
+                        />
                       </QuestionCard>
 
                       <QuestionCard title="126. Régularité du rythme circadien" error={errors.rythmeCircadien?.message}>
-                        <select {...register('rythmeCircadien')} className="input-field">
-                          <option value="">Sélectionner...</option>
-                          <option value="deregule">Complètement dérégulé</option>
-                          <option value="instable">Instable</option>
-                          <option value="stable">Stable</option>
-                          <option value="tres_regulier">Très régulier</option>
-                        </select>
+                        <SelectField
+                          options={[
+                            { value: 'deregule', label: 'Complètement dérégulé' },
+                            { value: 'instable', label: 'Instable' },
+                            { value: 'stable', label: 'Stable' },
+                            { value: 'tres_regulier', label: 'Très régulier' },
+                          ]}
+                          value={watch('rythmeCircadien')}
+                          onChange={(val) => setValue('rythmeCircadien', val)}
+                        />
                       </QuestionCard>
                     </>
                   )}
@@ -1997,6 +2184,17 @@ function PhotoUploadGrid() {
     profil: false
   });
 
+  // Sync photos state with window.__photos for form submission
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      (window as any).__photos = {
+        face: photos.face || undefined,
+        dos: photos.dos || undefined,
+        profil: photos.profil || undefined
+      };
+    }
+  }, [photos]);
+
   // Store photos in memory (not localStorage) - they will be sent with the form
   const handleUpload = (type: 'face' | 'dos' | 'profil', file: File) => {
     setUploading(prev => ({ ...prev, [type]: true }));
@@ -2004,9 +2202,6 @@ function PhotoUploadGrid() {
     const reader = new FileReader();
     reader.onloadend = () => {
       const result = reader.result as string;
-      // Store in window object to access later during submit
-      (window as any).__photos = (window as any).__photos || {};
-      (window as any).__photos[type] = result;
       setPhotos(prev => ({ ...prev, [type]: result }));
       setUploading(prev => ({ ...prev, [type]: false }));
     };
@@ -2014,17 +2209,15 @@ function PhotoUploadGrid() {
   };
 
   const removePhoto = (type: 'face' | 'dos' | 'profil') => {
-    if ((window as any).__photos) {
-      delete (window as any).__photos[type];
-    }
     setPhotos(prev => ({ ...prev, [type]: null }));
   };
 
-  const PhotoBox = ({ type, label, hint }: { type: 'face' | 'dos' | 'profil'; label: string; hint: string }) => (
-    <div className="relative">
+  const renderPhotoBox = (type: 'face' | 'dos' | 'profil', label: string, hint: string) => (
+    <div className="relative" key={type}>
       <label className="block text-sm font-medium mb-2 text-white">{label}</label>
       {photos[type] ? (
         <div className="relative rounded-xl overflow-hidden border-2 border-[#34D399]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={photos[type]!} alt={label} className="w-full h-48 object-cover" />
           <div className="absolute top-2 right-2 flex gap-2">
             <span className="px-2 py-1 bg-[#34D399] text-black text-xs font-bold rounded-full flex items-center gap-1">
@@ -2064,9 +2257,9 @@ function PhotoUploadGrid() {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <PhotoBox type="face" label="Photo Face" hint="Vue de face, bras le long du corps" />
-      <PhotoBox type="dos" label="Photo Dos" hint="Vue de dos, même posture" />
-      <PhotoBox type="profil" label="Photo Profil" hint="Vue de profil (gauche ou droite)" />
+      {renderPhotoBox('face', 'Photo Face', 'Vue de face, bras le long du corps')}
+      {renderPhotoBox('dos', 'Photo Dos', 'Vue de dos, même posture')}
+      {renderPhotoBox('profil', 'Photo Profil', 'Vue de profil (gauche ou droite)')}
     </div>
   );
 }
@@ -2090,6 +2283,99 @@ function QuestionCard({
           {error}
         </p>
       )}
+    </div>
+  );
+}
+
+// Custom Select Component - No more ugly grey dropdown!
+function SelectField({
+  options,
+  value,
+  onChange,
+  placeholder = 'Sélectionner...'
+}: {
+  options: { value: string; label: string }[];
+  value: string | undefined;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: (value: any) => void;
+  placeholder?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find(opt => opt.value === value);
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`
+          w-full px-4 py-3 rounded-xl text-left
+          bg-[#1a1a1f] border border-white/15
+          hover:border-[#5EECC5]/50
+          focus:border-[#5EECC5] focus:outline-none focus:ring-2 focus:ring-[#5EECC5]/20
+          transition-all duration-200
+          flex items-center justify-between gap-2
+          ${isOpen ? 'border-[#5EECC5] ring-2 ring-[#5EECC5]/20' : ''}
+        `}
+      >
+        <span className={selectedOption ? 'text-white' : 'text-gray-500'}>
+          {selectedOption ? selectedOption.label : placeholder}
+        </span>
+        <ChevronDown
+          className={`w-5 h-5 text-[#5EECC5] transition-transform duration-200 flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`}
+        />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute z-50 w-full mt-2 bg-[#1a1a1f] border border-white/20 rounded-xl shadow-2xl shadow-black/50 overflow-hidden"
+          >
+            <div className="max-h-60 overflow-y-auto custom-scrollbar">
+              {options.map((option) => (
+                <button
+                  key={option.value}
+                  type="button"
+                  onClick={() => {
+                    onChange(option.value);
+                    setIsOpen(false);
+                  }}
+                  className={`
+                    w-full px-4 py-3 text-left
+                    flex items-center justify-between gap-2
+                    transition-all duration-150
+                    ${value === option.value
+                      ? 'bg-[#5EECC5]/20 text-[#5EECC5]'
+                      : 'text-white hover:bg-white/10'
+                    }
+                  `}
+                >
+                  <span>{option.label}</span>
+                  {value === option.value && (
+                    <Check className="w-4 h-4 text-[#5EECC5] flex-shrink-0" />
+                  )}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
