@@ -4,13 +4,19 @@ import { prisma } from '@/lib/prisma';
 import { generatePremiumReport } from '@/lib/reports/generate-premium';
 import { sendAuditReport } from '@/lib/email';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-12-15.clover',
-});
+// Only initialize Stripe if API key is available
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+const stripe = stripeSecretKey
+  ? new Stripe(stripeSecretKey, { apiVersion: '2024-12-18.acacia' as any })
+  : null;
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
 export async function POST(request: Request) {
+  if (!stripe) {
+    return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 });
+  }
+
   try {
     const body = await request.text();
     const signature = request.headers.get('stripe-signature') || '';
