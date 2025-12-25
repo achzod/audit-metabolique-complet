@@ -1,8 +1,10 @@
 import NextAuth from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import Email from "next-auth/providers/nodemailer"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "./prisma"
 import bcrypt from "bcryptjs"
+import { sendMagicLink } from "./email"
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(prisma),
@@ -10,6 +12,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   providers: [
+    // Magic Link Login (prioritaire)
+    Email({
+      server: {
+        host: 'smtp.gmail.com',
+        port: 587,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      },
+      from: `AchZod Coaching <${process.env.MAIL_USER}>`,
+      async sendVerificationRequest({ identifier: email, url, provider }) {
+        // Extraire le token de l'URL
+        const urlObj = new URL(url);
+        const token = urlObj.searchParams.get('token') || '';
+
+        // Envoyer notre email personnalisé
+        await sendMagicLink({ email, token });
+      },
+    }),
+    // Login/Password (backup)
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },
@@ -26,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           },
         })
 
-        if (!user) {
+        if (!user || !user.password) {
           return null
         }
 
@@ -49,6 +72,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   pages: {
     signIn: "/auth/login",
+    verifyRequest: "/auth/verify-request",
   },
   callbacks: {
     async jwt({ token, user }) {
