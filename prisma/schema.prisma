@@ -34,7 +34,7 @@ model Audit {
   type           String   // "GRATUIT" ou "PREMIUM"
   status         String   @default("PENDING") // "PENDING", "PROCESSING", "COMPLETED", "ERROR"
 
-  // Données du questionnaire (JSON)
+  // Données du questionnaire complet (JSON - 100 questions)
   responses      Json
 
   // Photos téléchargées (URLs ou base64)
@@ -42,13 +42,28 @@ model Audit {
   photoBack      String?  @db.Text
   photoSide      String?  @db.Text
 
-  // Résultats de l'audit (HTML généré par Claude)
-  htmlContent    String?  @db.Text
+  // Scores calculés (JSON - 40 axes)
+  // Structure: { overall: 78, axes: { dopamine: 45, serotonin: 67, ... }, categories: { neurotransmitters: 56, ... } }
+  scores         Json?
+
+  // Résultats analyse IA (JSON)
+  // Structure: { morphotype: {...}, metabolicProfile: {...}, topBlockages: [...], topStrengths: [...] }
+  aiAnalysis     Json?
+
+  // Rapport HTML gratuit généré
+  htmlFree       String?  @db.Text
+
+  // Rapport HTML premium généré (si payé)
+  htmlPremium    String?  @db.Text
+
+  // URL PDF téléchargeable (si généré)
+  pdfUrl         String?
 
   // Métadonnées
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   completedAt    DateTime?
+  generatedAt    DateTime? // Date génération rapport
 
   payment        Payment?
 
