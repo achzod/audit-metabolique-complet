@@ -1,10 +1,13 @@
+// SendPulse SMTP configuration
 import nodemailer from 'nodemailer';
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp-pulse.com',
+  port: 465,
+  secure: true,
   auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
+    user: process.env.SENDPULSE_SMTP_USER,
+    pass: process.env.SENDPULSE_SMTP_PASS,
   },
 });
 
@@ -17,7 +20,7 @@ export async function sendMagicLink({ email, token }: SendMagicLinkParams) {
   const magicLinkUrl = `${process.env.NEXTAUTH_URL}/auth/verify?token=${token}`;
 
   const mailOptions = {
-    from: `AchZod Coaching <${process.env.MAIL_USER}>`,
+    from: `AchZod Coaching <${process.env.SENDPULSE_FROM_EMAIL || 'coaching@achzodcoaching.com'}>`,
     to: email,
     subject: '🔥 Connexion à ton Audit Métabolique',
     html: `
@@ -92,7 +95,7 @@ export async function sendAuditReport({
   const dashboardUrl = `${process.env.NEXTAUTH_URL}/dashboard/${auditId}`;
 
   const mailOptions = {
-    from: `AchZod Coaching <${process.env.MAIL_USER}>`,
+    from: `AchZod Coaching <${process.env.SENDPULSE_FROM_EMAIL || 'coaching@achzodcoaching.com'}>`,
     to: email,
     subject: isPremium
       ? '💎 Ton Audit Métabolique PREMIUM est prêt!'

@@ -13,14 +13,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     // Magic Link Login UNIQUEMENT
     Email({
       server: {
-        host: 'smtp.gmail.com',
-        port: 587,
+        host: 'smtp-pulse.com',
+        port: 465,
+        secure: true,
         auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASS,
+          user: process.env.SENDPULSE_SMTP_USER,
+          pass: process.env.SENDPULSE_SMTP_PASS,
         },
       },
-      from: `AchZod Coaching <${process.env.MAIL_USER}>`,
+      from: `AchZod Coaching <${process.env.SENDPULSE_FROM_EMAIL || 'coaching@achzodcoaching.com'}>`,
       async sendVerificationRequest({ identifier: email, url }) {
         // Extraire le token de l'URL
         const urlObj = new URL(url);
