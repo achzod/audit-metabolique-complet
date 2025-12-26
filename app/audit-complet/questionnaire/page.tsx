@@ -250,13 +250,23 @@ const sections = [
 
 export default function QuestionnairePage() {
   const router = useRouter();
-  const [currentSection, setCurrentSection] = useState(0);
+  const [currentSection, setCurrentSection] = useState(-1); // -1 = email capture, 0+ = questionnaire sections
   const [completedSections, setCompletedSections] = useState<number[]>([]);
   const [showSaveToast, setShowSaveToast] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   // Load saved data from localStorage on mount
   useEffect(() => {
+    const savedEmail = localStorage.getItem('questionnaire_email');
     const saved = localStorage.getItem('questionnaire_responses');
+
+    if (savedEmail) {
+      setUserEmail(savedEmail);
+      // If email exists, skip email capture step
+      setCurrentSection(0);
+    }
+
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -267,6 +277,24 @@ export default function QuestionnairePage() {
       }
     }
   }, []);
+
+  // Save progress to API
+  const saveProgressToAPI = async (email: string, section: number, responses: Record<string, unknown>) => {
+    try {
+      await fetch('/api/questionnaire/save-progress', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          currentSection: section + 1, // 1-indexed for display
+          totalSections: sections.length,
+          responses,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to save progress to API:', error);
+    }
+  };
 
   const {
     register,
@@ -282,17 +310,20 @@ export default function QuestionnairePage() {
     mode: 'onSubmit', // Only validate on submit, not onChange
   });
 
-  // Auto-save every 5 seconds
+  // Auto-save every 30 seconds (both localStorage and API)
   useEffect(() => {
+    if (currentSection < 0 || !userEmail) return; // Don't save before email capture
+
     const interval = setInterval(() => {
       const currentValues = watch();
       localStorage.setItem('questionnaire_responses', JSON.stringify(currentValues));
+      saveProgressToAPI(userEmail, currentSection, currentValues);
       setShowSaveToast(true);
       setTimeout(() => setShowSaveToast(false), 2000);
-    }, 5000);
+    }, 30000);
 
     return () => clearInterval(interval);
-  }, [watch]);
+  }, [watch, currentSection, userEmail]);
 
   // Watch conditional fields
   const balanceImpedancemetre = watch('balanceImpedancemetre');
@@ -341,6 +372,24 @@ export default function QuestionnairePage() {
     ['clartesMentales', 'concentration', 'memoire', 'motivationGenerale', 'anxiete', 'humeurGenerale', 'irritabilite', 'addictionsComportementales', 'sensibiliteLumiere', 'qualiteAttention', 'creativite', 'rythmeCircadien']
   ];
 
+  // Handle email submission (step -1 -> 0)
+  const handleEmailSubmit = async () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(userEmail)) {
+      setEmailError('Veuillez entrer une adresse email valide');
+      return;
+    }
+
+    setEmailError('');
+    localStorage.setItem('questionnaire_email', userEmail.toLowerCase().trim());
+
+    // Save initial progress to API
+    await saveProgressToAPI(userEmail.toLowerCase().trim(), 0, {});
+
+    setCurrentSection(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const nextSection = async () => {
     // Skip validation for now - allow navigation between sections freely
     // Validation will happen on final submit
@@ -348,6 +397,14 @@ export default function QuestionnairePage() {
       if (!completedSections.includes(currentSection)) {
         setCompletedSections([...completedSections, currentSection]);
       }
+
+      // Save progress to API when moving to next section
+      const currentValues = watch();
+      localStorage.setItem('questionnaire_responses', JSON.stringify(currentValues));
+      if (userEmail) {
+        saveProgressToAPI(userEmail, currentSection + 1, currentValues);
+      }
+
       setCurrentSection(currentSection + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -357,11 +414,15 @@ export default function QuestionnairePage() {
     if (currentSection > 0) {
       setCurrentSection(currentSection - 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (currentSection === 0) {
+      // Allow going back to email capture
+      setCurrentSection(-1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
-  const progress = ((currentSection + 1) / sections.length) * 100;
-  const CurrentIcon = sections[currentSection].icon;
+  const progress = currentSection >= 0 ? ((currentSection + 1) / sections.length) * 100 : 0;
+  const CurrentIcon = currentSection >= 0 ? sections[currentSection].icon : Activity;
 
   return (
     <div className="min-h-screen bg-[#0A0A0F] text-white">
@@ -386,7 +447,7 @@ export default function QuestionnairePage() {
               NEUROCORE 360°
             </h1>
             <div className="text-sm text-gray-400">
-              Section {currentSection + 1} / {sections.length}
+              {currentSection >= 0 ? `Section ${currentSection + 1} / ${sections.length}` : 'Commencer'}
             </div>
           </div>
 
@@ -400,30 +461,83 @@ export default function QuestionnairePage() {
             />
           </div>
 
-          {/* Section Pills */}
-          <div className="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
-            {sections.map((section, idx) => (
-              <button
-                key={section.id}
-                onClick={() => setCurrentSection(idx)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${idx === currentSection
-                  ? 'bg-gradient-to-r from-[#00F5D4]/20 to-[#A78BFA]/20 border border-[#00F5D4]'
-                  : completedSections.includes(idx)
-                    ? 'bg-white/5 border border-white/10 text-gray-400'
-                    : 'bg-white/5 border border-white/5 text-gray-500'
-                  }`}
-              >
-                {completedSections.includes(idx) && <Check className="w-3 h-3" />}
-                {section.title}
-              </button>
-            ))}
-          </div>
+          {/* Section Pills - Only show after email capture */}
+          {currentSection >= 0 && (
+            <div className="flex gap-2 mt-4 overflow-x-auto pb-2 scrollbar-hide">
+              {sections.map((section, idx) => (
+                <button
+                  key={section.id}
+                  onClick={() => setCurrentSection(idx)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs whitespace-nowrap transition-all ${idx === currentSection
+                    ? 'bg-gradient-to-r from-[#00F5D4]/20 to-[#A78BFA]/20 border border-[#00F5D4]'
+                    : completedSections.includes(idx)
+                      ? 'bg-white/5 border border-white/10 text-gray-400'
+                      : 'bg-white/5 border border-white/5 text-gray-500'
+                    }`}
+                >
+                  {completedSections.includes(idx) && <Check className="w-3 h-3" />}
+                  {section.title}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main Content */}
       <div className="pt-40 pb-20 px-4">
         <div className="max-w-4xl mx-auto">
+          {/* Email Capture Step */}
+          {currentSection === -1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="max-w-lg mx-auto"
+            >
+              <div className="mb-8 text-center">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-[#00F5D4]/20 to-[#A78BFA]/20 border border-[#00F5D4]/30 mb-4">
+                  <Activity className="w-8 h-8 text-[#00F5D4]" />
+                </div>
+                <h2 className="text-3xl font-bold mb-2 bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] bg-clip-text text-transparent">
+                  Commencer ton Audit
+                </h2>
+                <p className="text-gray-400">
+                  Entre ton email pour sauvegarder ta progression et recevoir ton audit personnalise
+                </p>
+              </div>
+
+              <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Ton adresse email
+                </label>
+                <input
+                  type="email"
+                  value={userEmail}
+                  onChange={(e) => setUserEmail(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleEmailSubmit()}
+                  placeholder="ton@email.com"
+                  className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#00F5D4] transition-colors"
+                />
+                {emailError && (
+                  <p className="text-red-400 text-sm mt-2">{emailError}</p>
+                )}
+                <p className="text-xs text-gray-500 mt-3">
+                  Nous ne partagerons jamais ton email. Il sert uniquement a sauvegarder ton questionnaire.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={handleEmailSubmit}
+                  className="w-full mt-6 px-6 py-3 bg-gradient-to-r from-[#00F5D4] to-[#A78BFA] text-black font-semibold rounded-xl hover:opacity-90 transition-opacity"
+                >
+                  Commencer le questionnaire
+                </button>
+              </div>
+            </motion.div>
+          )}
+
+          {/* Questionnaire Form */}
+          {currentSection >= 0 && (
           <form onSubmit={handleSubmit(onSubmit)}>
             <AnimatePresence mode="wait">
               <motion.div
@@ -442,7 +556,7 @@ export default function QuestionnairePage() {
                     {sections[currentSection].title}
                   </h2>
                   <p className="text-gray-400">
-                    Remplissez les informations suivantes avec précision
+                    Remplissez les informations suivantes avec precision
                   </p>
                 </div>
 
@@ -2068,6 +2182,7 @@ export default function QuestionnairePage() {
               )}
             </div>
           </form>
+          )}
         </div>
       </div>
 

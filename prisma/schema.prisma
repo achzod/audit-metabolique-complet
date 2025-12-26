@@ -150,3 +150,35 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verification_tokens")
 }
+
+// Track questionnaire progress for abandoned cart recovery
+model QuestionnaireProgress {
+  id              String   @id @default(cuid())
+  email           String   @unique
+
+  // Progress tracking
+  currentSection  Int      @default(1)
+  totalSections   Int      @default(13)
+  percentComplete Int      @default(0)
+
+  // Partial responses (JSON)
+  responses       Json     @default("{}")
+
+  // Status for email sequences
+  status          String   @default("STARTED") // "STARTED", "IN_PROGRESS", "COMPLETED", "ABANDONED"
+
+  // Timestamps
+  startedAt       DateTime @default(now())
+  lastActivityAt  DateTime @default(now())
+  abandonedAt     DateTime?
+  completedAt     DateTime?
+
+  // Relance tracking
+  remindersSent   Int      @default(0)
+  lastReminderAt  DateTime?
+
+  @@index([email])
+  @@index([status])
+  @@index([lastActivityAt])
+  @@map("questionnaire_progress")
+}
