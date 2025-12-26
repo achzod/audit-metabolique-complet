@@ -26,8 +26,28 @@ async function getAccessToken(): Promise<string> {
   return accessToken!;
 }
 
-async function sendEmail(to: string, subject: string, html: string, from: string = 'coaching@achzodcoaching.com') {
+async function sendEmail(to: string, subject: string, htmlContent: string, fromEmail: string = 'coaching@achzodcoaching.com') {
   const token = await getAccessToken();
+
+  const payload = {
+    email: {
+      html: htmlContent,
+      text: subject,
+      subject: subject,
+      from: {
+        name: 'AchZod Coaching',
+        email: fromEmail,
+      },
+      to: [
+        {
+          name: to.split('@')[0],
+          email: to,
+        },
+      ],
+    },
+  };
+
+  console.log('SendPulse payload:', JSON.stringify(payload, null, 2));
 
   const response = await fetch('https://api.sendpulse.com/smtp/emails', {
     method: 'POST',
@@ -35,22 +55,17 @@ async function sendEmail(to: string, subject: string, html: string, from: string
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      email: {
-        subject,
-        from: { name: 'AchZod Coaching', email: from },
-        to: [{ email: to }],
-        html,
-      },
-    }),
+    body: JSON.stringify(payload),
   });
 
+  const result = await response.json();
+  console.log('SendPulse response:', JSON.stringify(result, null, 2));
+
   if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`SendPulse error: ${error}`);
+    throw new Error(`SendPulse error: ${JSON.stringify(result)}`);
   }
 
-  return response.json();
+  return result;
 }
 
 interface SendMagicLinkParams {
@@ -59,59 +74,63 @@ interface SendMagicLinkParams {
 }
 
 export async function sendMagicLink({ email, token }: SendMagicLinkParams) {
-  const magicLinkUrl = `${process.env.NEXTAUTH_URL}/auth/verify?token=${token}`;
+  const magicLinkUrl = `${process.env.NEXTAUTH_URL}/api/auth/callback/nodemailer?callbackUrl=${encodeURIComponent(process.env.NEXTAUTH_URL + '/dashboard')}&token=${token}&email=${encodeURIComponent(email)}`;
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #0a0a0a; color: #ffffff; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .logo { font-size: 48px; margin-bottom: 20px; }
-        h1 { font-size: 32px; font-weight: 800; background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; margin: 30px 0; }
-        .button { display: inline-block; background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%); color: #0a0a0a; font-weight: 700; font-size: 18px; padding: 18px 40px; border-radius: 16px; text-decoration: none; margin: 20px 0; }
-        .info { color: rgba(255, 255, 255, 0.6); font-size: 14px; line-height: 1.6; margin-top: 30px; }
-        .footer { text-align: center; color: rgba(255, 255, 255, 0.4); font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <div class="logo">🔥</div>
-          <h1>Connexion Magique</h1>
-        </div>
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - AchZod Coaching</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f4f4f4; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #1a1a2e; padding: 30px 40px; border-radius: 8px 8px 0 0;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">AchZod Coaching</h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="margin: 0 0 20px 0; color: #1a1a2e; font-size: 22px;">Connexion a ton espace</h2>
+              <p style="margin: 0 0 25px 0; color: #555555; font-size: 16px; line-height: 1.6;">
+                Tu as demande un lien de connexion pour acceder a ton Audit Metabolique. Clique sur le bouton ci-dessous pour te connecter :
+              </p>
+              <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 30px 0;">
+                <tr>
+                  <td style="background-color: #5EECC5; border-radius: 6px;">
+                    <a href="${magicLinkUrl}" style="display: inline-block; padding: 16px 32px; color: #1a1a2e; text-decoration: none; font-weight: 600; font-size: 16px;">Se connecter</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin: 25px 0 0 0; color: #888888; font-size: 14px; line-height: 1.5;">
+                Ce lien expire dans 1 heure.<br>
+                Si tu n'as pas demande cette connexion, ignore simplement cet email.
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f8f8f8; padding: 25px 40px; border-radius: 0 0 8px 8px; border-top: 1px solid #eeeeee;">
+              <p style="margin: 0; color: #999999; font-size: 12px; text-align: center;">
+                2025 AchZod Coaching - Tous droits reserves<br>
+                coaching@achzodcoaching.com
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 
-        <div class="card">
-          <p style="font-size: 18px; margin: 0 0 30px 0;">
-            Clique sur le bouton ci-dessous pour te connecter à ton espace audit métabolique:
-          </p>
-
-          <div style="text-align: center;">
-            <a href="${magicLinkUrl}" class="button">
-              🚀 Se Connecter Maintenant
-            </a>
-          </div>
-
-          <div class="info">
-            <p><strong>⏰ Ce lien expire dans 1 heure</strong></p>
-            <p>Si tu n'as pas demandé cette connexion, ignore simplement cet email.</p>
-          </div>
-        </div>
-
-        <div class="footer">
-          <p>© 2025 AchZod Coaching - Tous droits réservés</p>
-          <p>coaching@achzodcoaching.com</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
-
-  await sendEmail(email, '🔥 Connexion à ton Audit Métabolique', html);
+  await sendEmail(email, 'Connexion a ton Audit Metabolique', html);
 }
 
 interface SendAuditReportParams {
@@ -131,86 +150,79 @@ export async function sendAuditReport({
   const dashboardUrl = `${process.env.NEXTAUTH_URL}/dashboard/${auditId}`;
 
   const subject = isPremium
-    ? '💎 Ton Audit Métabolique PREMIUM est prêt!'
-    : '🎁 Ton Audit Métabolique GRATUIT est prêt!';
+    ? 'Ton Audit Metabolique PREMIUM est pret'
+    : 'Ton Audit Metabolique est pret';
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; background: #0a0a0a; color: #ffffff; margin: 0; padding: 0; }
-        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-        .header { text-align: center; margin-bottom: 40px; }
-        .logo { font-size: 64px; margin-bottom: 20px; }
-        h1 { font-size: 36px; font-weight: 800; background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0; }
-        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 24px; padding: 40px; margin: 30px 0; text-align: center; }
-        .button { display: inline-block; background: linear-gradient(135deg, #00d4ff 0%, #a855f7 100%); color: #0a0a0a; font-weight: 700; font-size: 18px; padding: 18px 40px; border-radius: 16px; text-decoration: none; margin: 20px 0; }
-        .features { text-align: left; margin: 30px 0; }
-        .feature { margin: 15px 0; font-size: 16px; }
-        .footer { text-align: center; color: rgba(255, 255, 255, 0.4); font-size: 12px; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255, 255, 255, 0.1); }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <div class="logo">${isPremium ? '💎' : '🎁'}</div>
-          <h1>Ton Audit est Prêt!</h1>
-        </div>
+  const features = isPremium
+    ? `<li>40 axes metaboliques analyses en detail</li>
+       <li>Analyse morphotype ultra-precise</li>
+       <li>Protocole supplements personnalise</li>
+       <li>Plan nutrition sur mesure</li>
+       <li>Programme training optimise</li>
+       <li>Roadmap 90 jours detaillee</li>`
+    : `<li>Score metabolique global</li>
+       <li>Top 3 forces identifiees</li>
+       <li>Top 5 blocages analyses</li>
+       <li>Stack supplements baseline</li>
+       <li>Recommandations personnalisees</li>`;
 
-        <div class="card">
-          <p style="font-size: 20px; margin: 0 0 10px 0;">Salut <strong>${name}</strong> 👋</p>
-          <p style="font-size: 16px; color: rgba(255, 255, 255, 0.7); margin: 0 0 30px 0;">
-            Ton analyse métabolique complète a été générée avec succès!
-          </p>
-
-          <div class="features">
-            ${isPremium ? `
-              <div class="feature">✅ 40 axes métaboliques analysés en détail</div>
-              <div class="feature">✅ Analyse morphotype ultra-précise</div>
-              <div class="feature">✅ Protocole suppléments personnalisé (dosages, timing, cycles)</div>
-              <div class="feature">✅ Plan nutrition sur mesure</div>
-              <div class="feature">✅ Programme training optimisé</div>
-              <div class="feature">✅ Roadmap 90 jours détaillée</div>
-            ` : `
-              <div class="feature">✅ Score métabolique global</div>
-              <div class="feature">✅ Top 3 forces identifiées</div>
-              <div class="feature">✅ Top 5 blocages analysés</div>
-              <div class="feature">✅ Stack suppléments baseline</div>
-              <div class="feature">✅ Recommandations personnalisées</div>
-            `}
-          </div>
-
-          <a href="${dashboardUrl}" class="button">
-            📊 Voir Mon Audit Complet
-          </a>
-
-          <p style="font-size: 14px; color: rgba(255, 255, 255, 0.5); margin-top: 30px;">
-            Ton rapport est également accessible à tout moment depuis ton dashboard.
-          </p>
-        </div>
-
-        ${!isPremium ? `
-        <div class="card">
-          <h2 style="font-size: 24px; margin: 0 0 20px 0;">🚀 Passe au Premium</h2>
-          <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 20px;">
-            Débloque l'analyse complète des 40 axes + protocoles détaillés
-          </p>
-          <a href="${process.env.NEXTAUTH_URL}/audit-complet/checkout?auditId=${auditId}" class="button">
-            💎 Upgrade Premium - 79€
-          </a>
-        </div>
-        ` : ''}
-
-        <div class="footer">
-          <p>© 2025 AchZod Coaching - Tous droits réservés</p>
-          <p>coaching@achzodcoaching.com</p>
-        </div>
-      </div>
-    </body>
-    </html>
-  `;
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ton Audit est Pret - AchZod Coaching</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f4f4f4;">
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background-color: #f4f4f4; padding: 40px 20px;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="background-color: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #1a1a2e; padding: 30px 40px; border-radius: 8px 8px 0 0;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600;">AchZod Coaching</h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 40px;">
+              <h2 style="margin: 0 0 20px 0; color: #1a1a2e; font-size: 22px;">Ton Audit est Pret${isPremium ? ' - PREMIUM' : ''}</h2>
+              <p style="margin: 0 0 25px 0; color: #555555; font-size: 16px; line-height: 1.6;">
+                Bonjour ${name},<br><br>
+                Ton analyse metabolique complete a ete generee avec succes.
+              </p>
+              <p style="margin: 0 0 15px 0; color: #1a1a2e; font-size: 14px; font-weight: 600;">Ce que contient ton audit :</p>
+              <ul style="margin: 0 0 25px 0; padding-left: 20px; color: #555555; font-size: 14px; line-height: 1.8;">
+                ${features}
+              </ul>
+              <table role="presentation" cellspacing="0" cellpadding="0" style="margin: 30px 0;">
+                <tr>
+                  <td style="background-color: #5EECC5; border-radius: 6px;">
+                    <a href="${dashboardUrl}" style="display: inline-block; padding: 16px 32px; color: #1a1a2e; text-decoration: none; font-weight: 600; font-size: 16px;">Voir mon audit</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin: 25px 0 0 0; color: #888888; font-size: 14px; line-height: 1.5;">
+                Ton rapport est accessible a tout moment depuis ton dashboard.
+              </p>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f8f8f8; padding: 25px 40px; border-radius: 0 0 8px 8px; border-top: 1px solid #eeeeee;">
+              <p style="margin: 0; color: #999999; font-size: 12px; text-align: center;">
+                2025 AchZod Coaching - Tous droits reserves<br>
+                coaching@achzodcoaching.com
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
 
   await sendEmail(email, subject, html);
 }
