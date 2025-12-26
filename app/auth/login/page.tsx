@@ -18,14 +18,29 @@ export default function LoginPage() {
     setError('')
 
     try {
+      // Verifier si l'email existe dans la base de donnees
+      const checkResponse = await fetch('/api/auth/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.toLowerCase().trim() }),
+      })
+
+      const checkResult = await checkResponse.json()
+
+      if (!checkResult.exists) {
+        setError('Aucun compte associe a cet email. Tu dois d\'abord completer le questionnaire.')
+        setLoading(false)
+        return
+      }
+
       const result = await signIn('nodemailer', {
-        email,
+        email: email.toLowerCase().trim(),
         redirect: false,
         callbackUrl: '/dashboard',
       })
 
       if (result?.error) {
-        setError('Erreur lors de l\'envoi. Vérifie ton email.')
+        setError('Erreur lors de l\'envoi. Reessaie.')
         setLoading(false)
       } else {
         setSent(true)
@@ -111,7 +126,12 @@ export default function LoginPage() {
 
           {error && (
             <div className="bg-red-500/20 border border-red-500 text-red-400 px-4 py-3 rounded-xl mb-6">
-              {error}
+              <p>{error}</p>
+              {error.includes('questionnaire') && (
+                <Link href="/questionnaire" className="block mt-2 text-cyan-400 hover:underline font-medium">
+                  Faire le questionnaire maintenant
+                </Link>
+              )}
             </div>
           )}
 
