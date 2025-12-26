@@ -426,9 +426,9 @@ export default function LandingPage() {
               animate={{ backgroundPosition: ['0% center', '200% center'] }}
               transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
             >
-              NEUROCORE
+              Audit
             </motion.span>
-            <span className="block text-white">360°</span>
+            <span className="block text-white">Métabolique</span>
           </motion.h1>
 
           {/* Subtitle */}

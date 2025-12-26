@@ -2,13 +2,20 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { cookies } from 'next/headers'
 
+// Get the base URL for redirects - NEVER use request.url on Render (it's localhost:10000 internally)
+function getBaseUrl(): string {
+  return process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://audit-metabolique-v2.onrender.com'
+}
+
 export async function GET(request: Request) {
+  const baseUrl = getBaseUrl()
+
   try {
     const { searchParams } = new URL(request.url)
     const token = searchParams.get('token')
 
     if (!token) {
-      return NextResponse.redirect(new URL('/auth/error?error=invalid_link', request.url))
+      return NextResponse.redirect(`${baseUrl}/auth/error?error=invalid_link`)
     }
 
     // Find and validate magic token
@@ -26,7 +33,7 @@ export async function GET(request: Request) {
     })
 
     if (!magicToken) {
-      return NextResponse.redirect(new URL('/auth/error?error=expired_link', request.url))
+      return NextResponse.redirect(`${baseUrl}/auth/error?error=expired_link`)
     }
 
     // Mark token as used
@@ -55,10 +62,11 @@ export async function GET(request: Request) {
       path: '/',
     })
 
-    // Redirect to dashboard
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+    // Redirect to dashboard using explicit base URL
+    console.log(`[Verify] Redirecting user ${user.email} to ${baseUrl}/dashboard`)
+    return NextResponse.redirect(`${baseUrl}/dashboard`)
   } catch (error) {
     console.error('Verify token error:', error)
-    return NextResponse.redirect(new URL('/auth/error?error=server_error', request.url))
+    return NextResponse.redirect(`${baseUrl}/auth/error?error=server_error`)
   }
 }
