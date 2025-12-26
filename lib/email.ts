@@ -29,9 +29,12 @@ async function getAccessToken(): Promise<string> {
 async function sendEmail(to: string, subject: string, htmlContent: string, fromEmail: string = 'coaching@achzodcoaching.com') {
   const token = await getAccessToken();
 
+  // SendPulse API requires HTML content to be Base64 encoded
+  const htmlBase64 = Buffer.from(htmlContent, 'utf-8').toString('base64');
+
   const payload = {
     email: {
-      html: htmlContent,
+      html: htmlBase64,
       text: subject,
       subject: subject,
       from: {
@@ -47,7 +50,10 @@ async function sendEmail(to: string, subject: string, htmlContent: string, fromE
     },
   };
 
-  console.log('SendPulse payload:', JSON.stringify(payload, null, 2));
+  console.log('SendPulse payload (html truncated):', JSON.stringify({
+    ...payload,
+    email: { ...payload.email, html: payload.email.html.substring(0, 100) + '...' }
+  }, null, 2));
 
   const response = await fetch('https://api.sendpulse.com/smtp/emails', {
     method: 'POST',
