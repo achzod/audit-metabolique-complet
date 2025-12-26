@@ -10,24 +10,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: "jwt",
   },
   providers: [
-    // Magic Link Login UNIQUEMENT
+    // Magic Link Login via SendPulse API
     Email({
-      server: {
-        host: 'smtp-pulse.com',
-        port: 465,
-        secure: true,
-        auth: {
-          user: process.env.SENDPULSE_SMTP_USER,
-          pass: process.env.SENDPULSE_SMTP_PASS,
-        },
-      },
-      from: `AchZod Coaching <${process.env.SENDPULSE_FROM_EMAIL || 'coaching@achzodcoaching.com'}>`,
+      server: process.env.EMAIL_SERVER || "smtp://localhost:25", // Dummy, we use custom sendVerificationRequest
+      from: `AchZod Coaching <coaching@achzodcoaching.com>`,
       async sendVerificationRequest({ identifier: email, url }) {
         // Extraire le token de l'URL
         const urlObj = new URL(url);
         const token = urlObj.searchParams.get('token') || '';
 
-        // Envoyer notre email personnalisé
+        // Envoyer via SendPulse API
         await sendMagicLink({ email, token });
       },
     }),
