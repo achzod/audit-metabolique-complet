@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import crypto from 'crypto'
+import { sendMagicLinkEmail } from '@/lib/email'
 
 export async function POST(request: Request) {
   try {
@@ -53,23 +54,17 @@ export async function POST(request: Request) {
     }
 
     // Generate magic link URL
-    const magicLink = `${process.env.NEXT_PUBLIC_APP_URL}/api/auth/verify?token=${token}`
+    const baseUrl = process.env.NEXTAUTH_URL || process.env.NEXT_PUBLIC_APP_URL || 'https://audit-metabolique-v2.onrender.com'
+    const magicLink = `${baseUrl}/api/auth/verify?token=${token}`
 
-    // Log the magic link (in production, send via email)
     console.log('Magic Link for', email, ':', magicLink)
 
-    // TODO: Send email with SendGrid/Resend/etc
-    // await sendEmail({
-    //   to: email,
-    //   subject: 'Ton Audit Métabolique est prêt',
-    //   html: `<a href="${magicLink}">Clique ici pour accéder à ton audit</a>`
-    // })
+    // Send email via SendPulse
+    await sendMagicLinkEmail({ email, magicLink })
 
     return NextResponse.json({
       success: true,
       message: 'Magic link envoyé',
-      // Remove in production - only for debugging:
-      debugLink: process.env.NODE_ENV === 'development' ? magicLink : undefined
     })
   } catch (error) {
     console.error('Magic link error:', error)
