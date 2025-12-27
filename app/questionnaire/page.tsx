@@ -13,6 +13,7 @@ import Section7Digestion from '@/components/questionnaire/Section7Digestion';
 import Section8Inflammation from '@/components/questionnaire/Section8Inflammation';
 import Section9Sommeil from '@/components/questionnaire/Section9Sommeil';
 import Section10Training from '@/components/questionnaire/Section10Training';
+import BackToHomeButton from '@/components/BackToHomeButton';
 
 const TOTAL_SECTIONS = 10;
 
@@ -72,6 +73,7 @@ export default function QuestionnairePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-black text-white">
+      <BackToHomeButton />
       {/* Progress Bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-gray-900/80 backdrop-blur-sm">
         <div className="h-2 bg-gray-800">

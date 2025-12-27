@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 interface User {
   id: string
@@ -133,6 +134,7 @@ export default function AdminPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-white">
+      <BackToHomeButton />
       {/* Header */}
       <div className="bg-[#1C1C1E] border-b border-[#2C2C2E] px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">

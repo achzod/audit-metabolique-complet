@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { Mail, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { Suspense } from 'react'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 function CheckEmailContent() {
   const searchParams = useSearchParams()
@@ -74,6 +75,7 @@ function LoadingFallback() {
 export default function CheckEmailPage() {
   return (
     <div className="min-h-screen bg-[#1C1C1E] text-white flex items-center justify-center px-4">
+      <BackToHomeButton />
       <Suspense fallback={<LoadingFallback />}>
         <CheckEmailContent />
       </Suspense>

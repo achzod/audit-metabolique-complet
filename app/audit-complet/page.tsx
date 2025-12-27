@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, animate } f
 import { useRef, useState, useEffect } from 'react'
 import { ArrowRight, Brain, Heart, Activity, Moon, Dumbbell, Target, Check, X, Crown, Sparkles, RefreshCw, Flame, Beaker, Clock, Apple, Droplets, Zap, Move, Waves } from 'lucide-react'
 import Header from '@/components/Header'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 // ============================================
 // ANIMATED DNA HELIX - 3D ROTATING
@@ -362,6 +363,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-[#0A0A0B] text-white overflow-hidden">
+      <BackToHomeButton />
       {/* Header with Connexion button */}
       <Header />
 

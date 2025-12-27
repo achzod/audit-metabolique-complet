@@ -2,10 +2,12 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
+import BackToHomeButton from '@/components/BackToHomeButton'
 
 export default function VerifyRequestPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-dark">
+      <BackToHomeButton />
       <motion.div
         initial={{ opacity: 0, scale: 0.9 }}
         animate={{ opacity: 1, scale: 1 }}
