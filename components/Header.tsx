@@ -21,7 +21,7 @@ export default function Header() {
             width={40}
             height={40}
           />
-          <span className="hidden sm:block text-white font-semibold">Audit Métabolique</span>
+          <span className="hidden sm:block text-white font-semibold">NEUROCORE 360°</span>
         </Link>
 
         {/* Navigation */}

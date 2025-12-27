@@ -444,7 +444,7 @@ export default function QuestionnairePage() {
         <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-3">
             <h1 className="text-xl font-bold bg-gradient-to-r from-[#5EECC5] to-[#9990EA] bg-clip-text text-transparent">
-              Audit Métabolique
+              NEUROCORE 360°
             </h1>
             <div className="text-sm text-gray-400">
               {currentSection >= 0 ? `Section ${currentSection + 1} / ${sections.length}` : 'Commencer'}
