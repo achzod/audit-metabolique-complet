@@ -12,6 +12,118 @@
 - Plans : Gratuit (Decouverte) et Payants (Premium, Elite)
 - Dashboard utilisateur avec acces aux audits
 - Panel Admin pour gerer les utilisateurs et audits
+- Bouton Home sur TOUTES les pages
+
+---
+
+## Design & Branding
+
+### Nom de marque
+- **NEUROCORE 360°** - Affiche partout (header, questionnaire, checkout, landing)
+
+### Palette de couleurs
+```css
+/* Couleurs principales */
+--cyan-primary: #5EECC5;      /* Vert cyan - accent principal */
+--purple-primary: #9990EA;     /* Violet - accent secondaire */
+--pink-accent: #FF6B9D;        /* Rose - accent tertiaire */
+
+/* Fond sombre */
+--bg-dark: #0A0A0B;            /* Fond principal */
+--bg-card: #1C1C1E;            /* Fond cartes */
+--bg-input: #1a1a1f;           /* Fond inputs */
+--border-subtle: rgba(255,255,255,0.1);  /* Bordures subtiles */
+--border-hover: rgba(255,255,255,0.15);  /* Bordures hover */
+
+/* Texte */
+--text-primary: #FFFFFF;       /* Texte principal */
+--text-secondary: #9CA3AF;     /* Texte secondaire (gray-400) */
+--text-muted: #6B7280;         /* Texte muted (gray-500) */
+```
+
+### Gradients
+```css
+/* Gradient principal (titres, boutons) */
+background: linear-gradient(to right, #5EECC5, #9990EA);
+
+/* Gradient accent (headers animés) */
+background: linear-gradient(to right, #5EECC5, #9990EA, #FF6B9D);
+
+/* Gradient boutons CTA */
+background: linear-gradient(to right, #00F5D4, #A78BFA);
+```
+
+### Typographie
+- **Font principale** : System font stack (Inter-like)
+- **Titres** : Bold, gradient text avec `bg-clip-text text-transparent`
+- **Corps** : Regular, blanc ou gris selon importance
+
+### Composants UI
+
+#### Bouton Home (BackToHomeButton)
+- Position : fixed top-6 left-6, z-50
+- Style : glassmorphism (bg-white/5, backdrop-blur-md, border-white/10)
+- Icone : lucide-house + "Menu Principal" (cache sur mobile)
+- Hover : bg-white/10, text-cyan-400
+- **PRESENT SUR TOUTES LES PAGES**
+
+#### Inputs
+```css
+.input-field {
+  background: #1a1a1f;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.input-field:focus {
+  border-color: #5EECC5;
+  box-shadow: 0 0 0 2px rgba(94,236,197,0.2);
+}
+```
+
+#### Boutons CTA
+```css
+.btn-primary {
+  background: linear-gradient(to right, #00F5D4, #A78BFA);
+  color: black;
+  font-weight: 600;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.5rem;
+}
+.btn-primary:hover {
+  opacity: 0.9;
+}
+```
+
+#### Cartes
+```css
+.card {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 1rem;
+  backdrop-filter: blur(10px);
+}
+```
+
+#### Select Custom (pas de dropdown gris moche)
+- Composant SelectField custom dans questionnaire
+- Dropdown avec fond #1a1a1f, bordures blanches subtiles
+- Options avec hover bg-white/10
+- Option selectionnee avec bg-cyan/20 et check icon
+
+### Animations (Framer Motion)
+- Page transitions : fadeIn + slideUp
+- Boutons : scale on hover
+- Progress bar : animate width
+- Toast sauvegarde : fadeIn/fadeOut
+
+### Responsive
+- Mobile-first
+- Breakpoints : sm (640px), md (768px), lg (1024px)
+- Header texte "Menu Principal" cache sur mobile (icone seule)
+- Grilles adaptatives pour les questions
 
 ---
 
@@ -32,7 +144,7 @@
 
 ### Database
 ```
-DATABASE_URL=postgresql://audit_metabolique_complet_user:xxxxx@dpg-xxxxx.oregon-postgres.render.com/audit_metabolique_complet
+DATABASE_URL=postgresql://achzod_audits_hormonal_user:xxxxxxxx@dpg-d55ua3shg0os73abnvl0-a.frankfurt-postgres.render.com/achzod_audits_hormonal
 ```
 
 ### App URLs
@@ -63,29 +175,30 @@ ADMIN_PASSWORD=<mot de passe admin>
 
 ```
 /app
-  /admin                    # Panel admin
+  /admin                    # Panel admin (avec BackToHomeButton)
   /api
     /auth
       /check-email          # Verifie si email existe
       /magic-link           # Genere et envoie magic link
       /verify               # Verifie token et cree session
-      /[...nextauth]        # NextAuth (pas utilise actuellement)
     /questionnaire
       /save-progress        # Sauvegarde progressive
   /audit-complet
-    /page.tsx               # Landing page NEUROCORE 360
-    /questionnaire          # Questionnaire 126 questions
-    /checkout               # Selection du plan
+    /page.tsx               # Landing page NEUROCORE 360 (avec BackToHomeButton)
+    /questionnaire          # Questionnaire 126 questions (avec BackToHomeButton)
+    /checkout               # Selection du plan (avec BackToHomeButton)
   /auth
-    /login                  # Page connexion
-    /check-email            # Page "verifie ta boite mail"
-    /verify-request         # Page verification email
-  /dashboard                # Dashboard utilisateur
-    /[auditId]              # Vue detail audit
+    /login                  # Page connexion (avec BackToHomeButton)
+    /check-email            # Page "verifie ta boite mail" (avec BackToHomeButton)
+    /verify-request         # Page verification email (avec BackToHomeButton)
+  /dashboard                # Dashboard utilisateur (avec BackToHomeButton)
+    /[auditId]              # Vue detail audit (avec BackToHomeButton)
+  /questionnaire            # Ancien questionnaire (avec BackToHomeButton)
 
 /components
-  /BackToHomeButton.tsx     # Bouton retour accueil (sur toutes pages)
-  /Header.tsx               # Header avec logo NEUROCORE 360
+  /BackToHomeButton.tsx     # Bouton retour accueil (OBLIGATOIRE sur toutes pages)
+  /Header.tsx               # Header avec logo NEUROCORE 360°
+  /FormSelect.tsx           # Select custom (pas de dropdown gris)
   /questionnaire/           # Composants sections questionnaire
 
 /lib
@@ -113,7 +226,7 @@ ADMIN_PASSWORD=<mot de passe admin>
 - id, token, userId, expiresAt, usedAt
 - Expire apres 24h, usage unique
 
-### QuestionnaireProgress (nouveau)
+### QuestionnaireProgress
 - id, email (unique)
 - currentSection, totalSections, percentComplete
 - responses (JSON)
@@ -175,7 +288,11 @@ return NextResponse.redirect(`${baseUrl}/dashboard`)
 
 ### 4. Perte donnees a chaque deploy
 **Probleme** : `prisma db push --force-reset` dans build script
-**Solution** : Retirer `--force-reset` du package.json
+**Solution** : Retirer `--force-reset`, utiliser `--accept-data-loss` pour migrations
+
+### 5. Dropdown Select gris moche
+**Probleme** : Les select natifs HTML sont gris et moches
+**Solution** : Composant SelectField custom avec design coherent
 
 ---
 
@@ -204,10 +321,12 @@ npm run build
 ## URLs
 
 - **Production** : https://audit-metabolique-v2.onrender.com
+- **Landing** : https://audit-metabolique-v2.onrender.com/audit-complet
 - **Questionnaire** : https://audit-metabolique-v2.onrender.com/audit-complet/questionnaire
 - **Login** : https://audit-metabolique-v2.onrender.com/auth/login
 - **Admin** : https://audit-metabolique-v2.onrender.com/admin
 - **Dashboard Render** : https://dashboard.render.com/web/srv-d55tnl6uk2gs73c5rghg
+- **GitHub** : https://github.com/achzod/audit-metabolique-complet
 
 ---
 
